@@ -9,7 +9,16 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 ----------------------------------------------------------------------------------------------------
-# php artisan serve (untuk memulai project)
-# npm run dev (setelah memulai project)
+# untuk memulai project
+` php artisan serve `
+# setelah memulai project
+` npm run dev `
 
-# php artisan migrate (untuk membuat database di phpmyadmin)
+# untuk membuat database di phpmyadmin
+` php artisan migrate `
+
+# jika ada edit di database update menggunakan
+` php artisan migrate:fresh `
+
+# Untuk membuat component untuk view
+` php artisan make: component `
