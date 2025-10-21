@@ -21,6 +21,6 @@ class NavBarsetelahlogin extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.nav-barsetelahlogin');
+        return view('components.navbar.nav-barsetelahlogin');
     }
 }

@@ -21,6 +21,6 @@ class navMobile extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.nav-mobile');
+        return view('components.navbar.nav-mobile');
     }
 }

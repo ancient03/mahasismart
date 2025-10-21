@@ -3,23 +3,15 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('home');
+    return view('page/home');
 });
 
 Route::get('/register', function () {
-    return view('register');
+    return view('page/auth/register');
 });
 
 Route::get('/login', function () {
-    return view('login');
-});
-
-Route::get('/home', function () {
-    return view('home');
-});
-
-route::get('/homepage', function () {
-    return view('page/homepage');
+    return view('page/auth/login');
 });
 
 route::get('/search', function () {
@@ -27,13 +19,13 @@ route::get('/search', function () {
 });
 
 route::get('/profile', function () {
-    return view('page/profile');
+    return view('page/profile/profile');
 });
 
 route::get('/keranjang', function () {
-    return view('page/chart');
+    return view('page/product/chart');
 });
   
 route::get('/detailproduk', function () {
-    return view('detailproduk');
+    return view('page/products/detailproduk');
 });
