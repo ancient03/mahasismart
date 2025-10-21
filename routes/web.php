@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('page/homepage');
+    return view('home');
 });
 
 Route::get('/register', function () {
@@ -32,4 +32,8 @@ route::get('/profile', function () {
 
 route::get('/keranjang', function () {
     return view('page/chart');
+});
+  
+route::get('/detailproduk', function () {
+    return view('detailproduk');
 });
