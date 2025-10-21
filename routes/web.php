@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
 });
 
 Route::get('/register', function () {
@@ -18,6 +18,6 @@ Route::get('/home', function () {
     return view('home');
 });
 
-route::get('/percobaan', function () {
-    return view('percobaan');
+route::get('/detailproduk', function () {
+    return view('detailproduk');
 });
