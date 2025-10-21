@@ -12,6 +12,7 @@
   <title>Login Page</title>
 </head>
 <body>
-<x-NavBar />
+    <x-NavBar />
+    <x-nav-mobile/>
 </body>
 </html>
