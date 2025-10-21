@@ -13,18 +13,39 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     /**
-     * The attributes that are mass assignable.
+     * MODIFIKASI 1: Menentukan Primary Key
+     * Memberi tahu Laravel bahwa Primary Key tabel ini adalah 'id_user'.
+     */
+    protected $primaryKey = 'id_user';
+
+    /**
+     * MODIFIKASI 2: Menentukan Tipe Data Primary Key
+     * Menyesuaikan tipe data PK menjadi 'int' agar cocok dengan $table->increments().
+     */
+    protected $keyType = 'int';
+
+    /**
+     * MODIFIKASI 3: Menegaskan Auto-Increment
+     * Memberi tahu Laravel bahwa PK ini auto-increment.
+     */
+    public $incrementing = true;
+
+    /**
+     * MODIFIKASI 4: Kolom yang Boleh Diisi (Mass Assignable)
      *
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'username', // <-- Diubah dari 'name'
         'email',
         'password',
+        'no_hp',    // <-- Ditambahkan
+        'tanggal',  // <-- Ditambahkan
     ];
 
     /**
      * The attributes that should be hidden for serialization.
+     * (Tidak perlu diubah)
      *
      * @var list<string>
      */
@@ -35,6 +56,7 @@ class User extends Authenticatable
 
     /**
      * Get the attributes that should be cast.
+     * (Tidak perlu diubah)
      *
      * @return array<string, string>
      */
