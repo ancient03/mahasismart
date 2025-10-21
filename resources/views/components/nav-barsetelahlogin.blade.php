@@ -2,9 +2,13 @@
     
     <div class="hidden md:flex bg-[#00795E] items-center justify-between container mx-auto px-6 py-5">
       
-      <div class="flex-shrink-0">
-        <a href="/" class="text-yellow-500 text-3xl font-bold">MahasisMart</a>
-      </div>
+        <div class="flex-shrink-0">
+            <a href="/" class="text-yellow-500 text-3xl font-bold flex items-center space-x-2">
+                <img src="{{ asset('img/kuning-nobg.png') }}" alt="Logo MahasisMart" class="h-10 w-auto">
+    
+                <span class="text-2xl font-bold">MahasisMart</span>
+            </a>
+        </div>
 
       <div class="flex-grow max-w-xl mx-4">
         <input 

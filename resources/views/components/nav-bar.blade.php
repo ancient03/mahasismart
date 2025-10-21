@@ -2,9 +2,13 @@
     
     <div class="hidden md:flex bg-[#00795E] items-center justify-between container mx-auto px-6 py-5">
       
-      <div class="flex-shrink-0">
-        <a href="/" class="text-yellow-500 text-3xl font-bold">MahasisMart</a>
-      </div>
+        <div class="flex-shrink-0">
+            <a href="/" class="text-yellow-500 text-3xl font-bold flex items-center space-x-2">
+                <img src="{{ asset('img/kuning-nobg.png') }}" alt="Logo MahasisMart" class="h-10 w-auto">
+    
+                <span class="text-2xl font-bold">MahasisMart</span>
+            </a>
+        </div>
 
       <div class="flex-grow max-w-xl mx-4">
         <input 
@@ -16,13 +20,6 @@
       </div>
 
       <div class="flex-shrink-0 flex items-center space-x-4">
-        
-        <a href="/cart" class="text-white hover:text-gray-200" aria-label="Lihat Keranjang">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-7 h-7">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c.51 0 .96-.341 1.087-.835l1.833-6.143a.62.62 0 0 0-.58-.835H5.438M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75H6.75a.75.75 0 0 1-.75-.75v-.008Zm7.5 0a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75h-.008a.75.75 0 0 1-.75-.75v-.008Z" />
-          </svg>
-        </a>
-
         <a href="/login" class="bg-white text-black text-sm font-semibold px-5 py-2 rounded-xl hover:bg-gray-100 transition-colors">
           Masuk
         </a>
