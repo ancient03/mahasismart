@@ -23,7 +23,7 @@ route::get('/profile', function () {
 });
 
 route::get('/keranjang', function () {
-    return view('page/product/chart');
+    return view('page/products/chart');
 });
   
 route::get('/detailproduk', function () {
