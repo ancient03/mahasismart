@@ -28,7 +28,7 @@
     {{-- Right Section --}}
     <div class="w-full lg:w-1/2 pr-0 lg:pr-8 lg:ml-0 ml-2">
         {{-- Nama Produk --}}
-        <div class="text-3xl font-bold">
+        <div class="lg:text-3xl text-2xl font-bold">
             Baju Hitam
         </div>
 
@@ -39,7 +39,7 @@
         </div>
 
         {{-- harga --}}
-        <h1 class="font-bold text-4xl mt-3 ">Rp 100.000</h1>
+        <h1 class="font-bold lg:text-4xl text-3xl mt-3 ">Rp 100.000</h1>
 
         {{-- garis --}}
         <div class="border-b-2 border-zinc-200 mt-12 mb-10 lg:block hidden"></div>
