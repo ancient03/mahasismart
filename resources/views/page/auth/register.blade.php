@@ -8,45 +8,64 @@
 
     <!-- Register Form -->
     <div class="lg:bg-white bg-[#2E8BFD] rounded-xl w-full sm:w-[420px] p-6 sm:p-8">
-        <form actions="">
-            <p class="text-2xl md:text-3xl font-semibold mb-8 text-zinc-950 text-center">Register</p>
+                   <form method="POST" action="{{ route('register') }}" class="space-y-4">
+                    @csrf
+                    
+                    <p class="mb-6 text-center text-2xl font-semibold text-zinc-950 md:text-3xl">Register</p>
 
-            <!-- Input no. Hp -->
-            <input 
-            type="text"
-            placeholder="No. Handphone"
-            class="w-full border border-zinc-500 bg-zinc-200 lg:bg-white p-3 rounded-md mb-4 focus:outline-none focus-ring-2 focus:ring-[#FDBA38]">
+                    @if ($errors->any())
+                        <div class="rounded-md bg-red-50 p-4">
+                            <ul class="list-disc list-inside text-sm text-red-600">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
 
-            <!-- Tombol register -->
-             <button
-             type="submit"
-             class="bg-[#FDBA38] text-zinc-950 lg:text-zinc-500 cursor-pointer font-semibold w-full p-3 rounded-md hover:bg-[#e0a733] transition">
-                Register
-            </button>
+                    {{-- INPUT YANG DIBUTUHKAN OLEH CONTROLLER --}}
+                    
+                    <input type="text" name="username" placeholder="Username" value="{{ old('username') }}" required
+                        class="w-full rounded-md border border-zinc-500 bg-white p-3 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#FDBA38]">
 
-           <!-- Garis Pemisah "Atau" -->
-            <div class="flex items-center justify-center gap-4 mt=10">
-            <div class="flex-1 border-t border-zinc-400"></div>
-            <p class="text-sm lg:text-zinc-500 text-zinc-950 font-medium">Atau</p>
-            <div class="flex-1 border-t border-zinc-400"></div>    
-            </div>
+                    <input type="email" name="email" placeholder="Alamat email" value="{{ old('email') }}" required
+                        class="w-full rounded-md border border-zinc-500 bg-white p-3 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#FDBA38]">
 
-            <!-- Tombil google -->
-             <button
-             type="button"
-             class="bg-white cursor-pointer text-zinc-800 font-medium w-full p-3 mt-6 rounded-md border border-zinc-400
-            hover:bg-zinc-100 transition flex items-center justify-center gap-3">
-             <i class="fa-brands fa-google"></i>   
-             Google
-             </button>
+                    <input type="text" name="no_hp" placeholder="No. Handphone (Opsional)" value="{{ old('no_hp') }}"
+                        class="w-full rounded-md border border-zinc-500 bg-white p-3 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#FDBA38]">
 
-             <!-- Punya Akun = Login -->
-              <p class="text-center text-sm mt-8 text-zinc-600">
-                Sudah Punya Akun? 
-                <a href="/login" class="text-[#FDBA38] font-semibold hover:underline">Login</a>
-              </p>
+                    <input type="password" name="password" placeholder="Password" required
+                        class="w-full rounded-md border border-zinc-500 bg-white p-3 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#FDBA38]">
 
-        </form>
+                    <input type="password" name="password_confirmation" placeholder="Konfirmasi Password" required
+                        class="w-full rounded-md border border-zinc-500 bg-white p-3 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#FDBA38]">
+
+                    
+                    {{-- SISA DESAIN ANDA --}}
+
+                    <button type="submit"
+                        class="w-full cursor-pointer rounded-md bg-[#FDBA38] p-3 font-semibold text-zinc-950 transition hover:bg-[#e0a733]">
+                        Register
+                    </button>
+
+                    <div class="flex items-center justify-center gap-4 pt-4">
+                        <div class="flex-1 border-t border-zinc-400"></div>
+                        <p class="text-sm font-medium text-zinc-500">Atau</p>
+                        <div class="flex-1 border-t border-zinc-400"></div>
+                    </div>
+
+                    <button type="button"
+                        class="flex w-full cursor-pointer items-center justify-center gap-3 rounded-md border border-zinc-400 bg-white p-3 font-medium text-zinc-800 transition hover:bg-zinc-100">
+                        <i class="fa-brands fa-google"></i>
+                        Google
+                    </button>
+
+                    <p class="pt-4 text-center text-sm text-zinc-600">
+                        Sudah Punya Akun?
+                        <a href="login" class="font-semibold text-[#FDBA38] hover:underline">Login</a>
+                    </p>
+
+                </form>
     </div>
    </div>
 </x-layout.layout-clear>

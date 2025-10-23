@@ -15,12 +15,15 @@
 
 <body class="font-['Poppins']">
     <x-NavBarsetelahlogin />
-<div class="w-full h-1.5"></div>
+    <div class="container mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
 
-    <main class="py-8">
-        {{ $slot }}
-    </main>
+            <x-sidebar.sidebar-profile/>
 
+                {{ $slot }}
+
+        </div>
+    </div>
     <x-nav-mobile/>
 </body>
 </html>
