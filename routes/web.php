@@ -25,7 +25,13 @@ route::get('/detailproduk', function () {
 
 Route::get('/alamat', function () {
     return view('page/profile/alamat');
-})->middleware('auth')->name('alamat'); // <-- NAMA SUDAH ADA
+})->middleware('auth')->name('alamat'); 
+
+Route::get('/pesanan', function () {
+    return view('page/profile/pesanan');
+})->middleware('auth')->name('pesanan'); 
+
+
 
 /*
 |--------------------------------------------------------------------------
