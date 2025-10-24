@@ -36,10 +36,7 @@
                 <a href="/keranjang" class="text-white hover:text-gray-200" aria-label="Lihat Keranjang">
                     <i class="bi bi-cart3 text-2xl"></i>
                 </a>
-                {{-- Pesan --}}
-                <a href="/message" class="text-white hover:text-gray-200" aria-label="Lihat Pesan" >
-                    <i class="bi bi-chat-dots text-2xl"></i>
-                </a>
+
                 
                 {{-- =================================== --}}
                 {{-- Dropdown Notifikasi (BARU)       --}}
@@ -89,7 +86,10 @@
                 {{-- =================================== --}}
                 {{-- Akhir Dropdown Notifikasi      --}}
                 {{-- =================================== --}}
-
+                                {{-- Faq --}}
+                <a href="/faq" class="text-white hover:text-gray-200" aria-label="Lihat Pesan" >
+                    <i class="bi bi-question-circle text-2xl"></i>
+                </a>
               </div>
 
               <!-- Garis Pemisah Vertikal -->
