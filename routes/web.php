@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisteredUserController; 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\profile\ProfileController;
+use App\Http\Controllers\profile\AlamatController; 
 
 Route::get('/', function () {
     return view('page/home');
@@ -22,10 +23,6 @@ route::get('/detailproduk', function () {
     return view('page/products/detailproduk');
 });
 
-
-Route::get('/alamat', function () {
-    return view('page/profile/alamat');
-})->middleware('auth')->name('alamat'); 
 
 Route::get('/pesanan', function () {
     return view('page/profile/pesanan');
@@ -70,3 +67,7 @@ Route::get('/profile', [ProfileController::class, 'edit'])
 // PATCH /profile : Menyimpan data (method 'update' di controller)
 Route::patch('/profile', [ProfileController::class, 'update'])
     ->middleware('auth')->name('profile.update');
+
+
+Route::resource('alamat', AlamatController::class)->except(['show']); // 'show' tidak kita perlukan
+    
