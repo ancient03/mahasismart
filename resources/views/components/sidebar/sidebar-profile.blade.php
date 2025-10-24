@@ -1,5 +1,5 @@
             <aside class="md:col-span-1">
-                <div class="bg-white text-gray-800 rounded-lg shadow p-6">
+                <div class="bg-white text-gray-800 lg:rounded-lg shadow-md lg:p-6 p-4">
                     
                     <div class="flex items-center space-x-4 mb-6">
                         <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center">
@@ -35,11 +35,11 @@
     </a>
 
     <!-- Link Pesanan Saya (Ganti '#' dengan route Anda nanti) -->
-    <a href="#" 
+    <a href="pesanan" 
        @class([
            'flex items-center space-x-3 py-2 px-3 rounded-md',
-           // 'bg-green-100 text-green-700 font-semibold' => Route::is('pesanan'), // Aktifkan ini jika sudah ada rutenya
-           'text-gray-600 hover:bg-gray-100 hover:text-gray-900' // => !Route::is('pesanan')
+           'bg-green-100 text-green-700 font-semibold' => Route::is('pesanan'), // Aktifkan ini jika sudah ada rutenya
+           'text-gray-600 hover:bg-gray-100 hover:text-gray-900'  => !Route::is('pesanan')
        ])>
         <span>Pesanan Saya</span>
     </a>

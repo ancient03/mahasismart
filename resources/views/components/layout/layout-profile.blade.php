@@ -13,9 +13,9 @@
   <title>MahasisMart - Home</title>
 </head>
 
-<body class="font-['Poppins']">
+<body class="font-['Poppins'] bg-zinc-50">
     <x-NavBarsetelahlogin />
-    <div class="container mx-auto px-4 py-8">
+    <div class="container mx-auto lg:px-6 py-8">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
 
             <x-sidebar.sidebar-profile/>

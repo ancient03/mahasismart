@@ -1,6 +1,6 @@
 <x-layout.layout-profile>
             <section class="md:col-span-3">
-                <div class="bg-white text-gray-800 rounded-lg shadow p-6 md:p-8">
+                <div class="bg-white text-gray-800 lg:rounded-lg shadow p-6 md:p-8 mb-96">
                     
                     <h1 class="text-2xl font-bold mb-6">Alamat Saya</h1>
 
@@ -17,7 +17,7 @@
                                 <div>
                                     <h3 class="text-lg font-semibold">Alamat 1</h3>
                                     <p class="text-gray-700">
-                                        OIHHOHHOAJSDIJAIWJJOANFIPANGOIUGNIAWNPOMF SFAASFAWF
+                                        Jl. Siliwangi No.143, Kalibanteng Kulon, Kec. Semarang Barat, Kota Semarang, Jawa Tengah 50145
                                     </p>
                                     {{-- Nanti Anda bisa tambahkan info lain di sini --}}
                                     {{-- <p class="text-sm text-gray-600 mt-1">Nama Penerima | 0812xxxx</p> --}}
@@ -36,7 +36,7 @@
                                 <div>
                                     <h3 class="text-lg font-semibold">Alamat 2</h3>
                                     <p class="text-gray-700">
-                                        UGDAUDGIUYBAJXFBHYIBAUBSIUBDJUWYBAFIUBASJOFBO:w
+                                        296C+5RX, Jl. Hilir, Kembangarum, Kec. Semarang Barat, Kota Semarang, Jawa Tengah 50146
                                     </p>
                                 </div>
                             </div>
