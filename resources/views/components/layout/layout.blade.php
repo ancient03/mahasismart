@@ -21,6 +21,7 @@
         {{ $slot }}
     </main>
 
+    <x-navbar.chat/>
     <x-nav-mobile/>
 </body>
 </html>
