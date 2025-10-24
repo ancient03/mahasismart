@@ -31,6 +31,10 @@ Route::get('/pesanan', function () {
     return view('page/profile/pesanan');
 })->middleware('auth')->name('pesanan'); 
 
+Route::get('/checkout', function () {
+    return view('page/products/checkout');
+})->middleware('auth')->name('checkout'); 
+
 
 
 /*
