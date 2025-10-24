@@ -53,7 +53,7 @@ class RegisteredUserController extends Controller
         event(new Registered($user));
 
         // Login user secara otomatis
-        //Auth::login($user);
+        Auth::login($user);
 
         // Arahkan ke Halaman Home
         return redirect("login");
