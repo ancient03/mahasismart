@@ -53,7 +53,15 @@
                   <p class="text-white font-medium text-sm hover:text-gray-200" title="Pergi ke Profil">
                     Hi, {{ Auth::user()->username }}
                   </p>
-                  <img src="{{ asset('img/jokowikaget.jpg') }}" alt="Profile Picture" class="rounded-full w-8 h-8 object-cover">
+                  
+                  {{-- PERBAIKAN FOTO --}}
+                  @if (Auth::user()->foto_profil)
+                      <img src="{{ asset('img/fotoprofile/' . Auth::user()->foto_profil) }}" alt="Foto Profil" class="rounded-full w-8 h-8 object-cover">
+                  @else
+                      <img src="{{ asset('img/images.jpeg') }}" alt="Profile Picture" class="rounded-full w-8 h-8 object-cover">
+                  @endif
+                  {{-- AKHIR PERBAIKAN FOTO --}}
+                  
                 </button>
 
                 <!-- Menu Dropdown -->
