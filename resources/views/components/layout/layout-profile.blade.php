@@ -17,9 +17,11 @@
     <x-NavBarsetelahlogin />
     <div class="container mx-auto lg:px-6 py-8">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-
+            
+            <div>
             <x-sidebar.sidebar-profile/>
-
+            <x-sidebar.sidebar-toko/>
+            </div>
                 {{ $slot }}
 
         </div>

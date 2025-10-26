@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\RegisteredUserController; 
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\profile\ProfileController;
-use App\Http\Controllers\profile\AlamatController; 
+use App\Http\Controllers\profile\AlamatController;
 
 Route::get('/', function () {
     return view('page/home');
@@ -18,19 +18,19 @@ route::get('/search', function () {
 route::get('/keranjang', function () {
     return view('page/products/chart');
 });
-  
+
 route::get('/detailproduk', function () {
     return view('page/products/detailproduk');
 });
 
 
-Route::get('/pesanan', function () {
-    return view('page/profile/pesanan');
-})->middleware('auth')->name('pesanan'); 
+Route::get('/profil-toko', function () {
+    return view('page/profile/profil-toko');
+})->middleware('auth')->name('profil-toko');
 
 Route::get('/checkout', function () {
     return view('page/products/checkout');
-})->middleware('auth')->name('checkout'); 
+})->middleware('auth')->name('checkout');
 
 
 
@@ -42,26 +42,26 @@ Route::get('/checkout', function () {
 
 // BIARKAN BARIS INI (INI YANG BENAR)
 Route::get('register', [RegisteredUserController::class, 'create'])
-            ->middleware('guest')
-            ->name('register');
+    ->middleware('guest')
+    ->name('register');
 
 // Rute untuk MEMPROSES form registrasi (POST)
 Route::post('register', [RegisteredUserController::class, 'store'])
-            ->middleware('guest');
+    ->middleware('guest');
 
-            // --- Rute Login ---
+// --- Rute Login ---
 Route::get('login', [AuthenticatedSessionController::class, 'create'])
-            ->middleware('guest')
-            ->name('login'); // <-- Ini memperbaiki error "Route [login] not defined"
+    ->middleware('guest')
+    ->name('login'); // <-- Ini memperbaiki error "Route [login] not defined"
 
 Route::post('login', [AuthenticatedSessionController::class, 'store'])
-            ->middleware('guest');
+    ->middleware('guest');
 
 // --- Rute Logout ---
 // Kita butuh ini agar pengguna bisa keluar
 Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
-            ->middleware('auth') // Hanya bisa diakses jika SUDAH login
-            ->name('logout');
+    ->middleware('auth') // Hanya bisa diakses jika SUDAH login
+    ->name('logout');
 
 
 // GET /profile : Menampilkan form (method 'edit' di controller)
@@ -74,4 +74,26 @@ Route::patch('/profile', [ProfileController::class, 'update'])
 
 
 Route::resource('alamat', AlamatController::class)->except(['show']); // 'show' tidak kita perlukan
-    
+Route::get('/pesanan', fn() => view('page/profile/pesanan'))
+    ->middleware('auth')
+    ->name('pesanan');
+
+// Profil Toko
+Route::get('/profil-toko', fn() => view('page/toko/profil-toko'))
+    ->middleware('auth')
+    ->name('profil-toko');
+
+// Produk Saya
+Route::get('/produk-saya', fn() => view('page/toko/produk-saya'))
+    ->middleware('auth')
+    ->name('produk-saya');
+
+// Pesanan Masuk
+Route::get('/pesanan-masuk', fn() => view('page/toko/pesanan-masuk'))
+    ->middleware('auth')
+    ->name('pesanan-masuk');
+
+// Statistik Penjualan
+Route::get('/statistik-penjualan', fn() => view('page/toko/statistik-penjualan'))
+    ->middleware('auth')
+    ->name('statistik-penjualan');
