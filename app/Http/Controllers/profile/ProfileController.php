@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
-use Illuminate\Support\Facades\File; // <-- 1. TAMBAHKAN INI
+use Illuminate\Support\Facades\File; 
 
 class ProfileController extends Controller
 {
