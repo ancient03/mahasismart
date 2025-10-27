@@ -45,6 +45,15 @@
                         ])>
                             <span>Pesanan Saya</span>
                         </a>
+                        <a href="{{ route('register.toko.form') }}" @class([
+                            'flex items-center space-x-3 py-2 px-3 rounded-md',
+                            'bg-green-100 text-green-700 font-semibold' => Route::is(
+                                'register.toko.form'),
+                            'text-gray-600 hover:bg-gray-100 hover:text-gray-900' => !Route::is(
+                                'register.toko.form'),
+                        ])>
+                            <span>Buka Toko</span>
+                            </a>
                     </nav>
                 </div>
             </aside>

@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\profile\ProfileController;
 use App\Http\Controllers\profile\AlamatController;
+use App\Http\Controllers\Toko\TokoController;
 
 Route::get('/', function () {
     return view('page/home');
@@ -97,3 +98,13 @@ Route::get('/pesanan-masuk', fn() => view('page/toko/pesanan-masuk'))
 Route::get('/statistik-penjualan', fn() => view('page/toko/statistik-penjualan'))
     ->middleware('auth')
     ->name('statistik-penjualan');
+
+// regist toko
+Route::get('/register-toko', fn() => view('page/profile/register-toko'))
+    ->middleware('auth')
+    ->name('register.toko.form');
+
+// Proses penyimpanan data toko
+Route::post('/register-toko', [TokoController::class, 'store'])
+    ->middleware('auth')
+    ->name('register.toko');
