@@ -128,3 +128,23 @@ Route::get('/statistik-penjualan', fn() => view('page/toko/statistik-penjualan')
     // ... Rute toko lainnya ...
 
 }); 
+
+// admin
+Route::prefix('admin')->middleware('auth')->group(function () {
+    Route::get('/profile-admin', fn() => view('page.admin.profile-admin'))->name('admin.profile');
+});
+
+// list-toko
+Route::prefix('admin')->middleware('auth')->group(function () {
+    Route::get('/list-toko', fn() => view('page.admin.list-toko'))->name('admin.list-toko');
+});
+
+// list-admin
+Route::prefix('admin')->middleware('auth')->group(function () {
+    Route::get('/list-user', fn() => view('page.admin.list-user'))->name('admin.list-user');
+});
+
+// laporan
+Route::prefix('admin')->middleware('auth')->group(function () {
+    Route::get('/laporan', fn() => view('page.admin.laporan'))->name('admin.laporan');
+});
