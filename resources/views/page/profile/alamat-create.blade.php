@@ -36,49 +36,49 @@
                             <label for="label" class="block text-sm font-medium text-gray-700">Label Alamat <span class="text-red-500">*</span></label>
                             <input type="text" id="label" name="label" value="{{ old('label') }}" required 
                                    placeholder="Contoh: Rumah, Kantor"
-                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                                   class="px-4 py-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                         </div>
 
                         {{-- Nama Penerima --}}
                         <div>
                             <label for="nama_penerima" class="block text-sm font-medium text-gray-700">Nama Penerima <span class="text-red-500">*</span></label>
                             <input type="text" id="nama_penerima" name="nama_penerima" value="{{ old('nama_penerima') }}" required 
-                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                                   class="px-4 py-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                         </div>
 
                         {{-- No HP Penerima --}}
                         <div>
                             <label for="no_hp_penerima" class="block text-sm font-medium text-gray-700">No. Handphone Penerima <span class="text-red-500">*</span></label>
                             <input type="text" id="no_hp_penerima" name="no_hp_penerima" value="{{ old('no_hp_penerima') }}" required 
-                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                                   class="px-4 py-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                         </div>
                         
                         {{-- Provinsi --}}
                         <div>
                             <label for="provinsi" class="block text-sm font-medium text-gray-700">Provinsi <span class="text-red-500">*</span></label>
                             <input type="text" id="provinsi" name="provinsi" value="{{ old('provinsi') }}" required 
-                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                                   class="px-4 py-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                         </div>
 
                         {{-- Kota/Kabupaten --}}
                         <div>
                             <label for="kota" class="block text-sm font-medium text-gray-700">Kota/Kabupaten <span class="text-red-500">*</span></label>
                             <input type="text" id="kota" name="kota" value="{{ old('kota') }}" required 
-                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                                   class="px-4 py-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                         </div>
 
                         {{-- Kecamatan --}}
                         <div>
                             <label for="kecamatan" class="block text-sm font-medium text-gray-700">Kecamatan <span class="text-red-500">*</span></label>
                             <input type="text" id="kecamatan" name="kecamatan" value="{{ old('kecamatan') }}" required 
-                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                                   class="px-4 py-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                         </div>
 
                         {{-- Kode Pos --}}
                         <div>
                             <label for="kode_pos" class="block text-sm font-medium text-gray-700">Kode Pos <span class="text-red-500">*</span></label>
                             <input type="text" id="kode_pos" name="kode_pos" value="{{ old('kode_pos') }}" required 
-                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                                   class="px-4 py-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                         </div>
 
                         {{-- Detail Alamat --}}
@@ -86,7 +86,7 @@
                             <label for="detail_alamat" class="block text-sm font-medium text-gray-700">Detail Alamat <span class="text-red-500">*</span></label>
                             <textarea id="detail_alamat" name="detail_alamat" rows="3" required 
                                       placeholder="Nama Jalan, Nomor Rumah, RT/RW, Kelurahan, Patokan"
-                                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">{{ old('detail_alamat') }}</textarea>
+                                      class="px-4 py-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">{{ old('detail_alamat') }}</textarea>
                         </div>
 
                         {{-- Jadikan Alamat Utama? (Checkbox) --}}
