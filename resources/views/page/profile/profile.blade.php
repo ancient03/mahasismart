@@ -2,7 +2,7 @@
 <x-layout.layout-profile>
 
     {{-- Kolom Kanan Konten Profil --}}
-    <section class="md:col-span-3">
+    <section class="md:col-span-3 mb-96">
 
         {{-- 
           FORM UTAMA DIMULAI DI SINI
