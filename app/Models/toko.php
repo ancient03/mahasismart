@@ -20,6 +20,7 @@ class Toko extends Model
         'nama_toko',
         'no_hp_toko',
         'no_rek',
+        'logo_toko',  
     ];
 
     /**

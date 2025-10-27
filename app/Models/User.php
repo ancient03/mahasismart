@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 // 👇 PASTIKAN IMPORT INI ADA 👇
 use Illuminate\Database\Eloquent\Relations\HasMany; 
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class User extends Authenticatable
 {
@@ -53,4 +54,10 @@ class User extends Authenticatable
     // =============================================
     // 👆 AKHIR METHOD RELASI 👆
     // =============================================
+
+    public function toko(): HasOne 
+    {
+        // Parameter: Model terkait, Foreign key, Local key
+        return $this->hasOne(Toko::class, 'id_user', 'id_user');
+    }
 }
