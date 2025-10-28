@@ -32,7 +32,7 @@ class TokoController extends Controller
      * Menampilkan form untuk mengedit data toko.
      * Menggunakan Route Model Binding ($toko).
      */
-    public function edit(Toko $toko): View|RedirectResponse
+    public function edit(Barang $produk_saya): View
     {
         // Pastikan user hanya bisa mengedit tokonya sendiri
         if ($toko->id_user !== Auth::id()) {
