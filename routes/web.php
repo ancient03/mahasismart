@@ -152,3 +152,8 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 
 // Rute CRUD Barang (Menggunakan Resource Controller)
 Route::resource('produk-saya', BarangController::class)->middleware('auth'); 
+
+// chat
+Route::prefix('page')->middleware('auth')->group(function () {
+    Route::get('/chat', fn() => view('page.chat'))->name('page.chat');
+});
