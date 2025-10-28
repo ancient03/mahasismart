@@ -7,6 +7,7 @@ use App\Http\Controllers\profile\ProfileController;
 use App\Http\Controllers\profile\AlamatController;
 use App\Http\Controllers\Toko\TokoController;
 use App\Http\Controllers\toko\RegisterTokoController;
+use App\Http\Controllers\toko\BarangController;
 
 Route::get('/', function () {
     return view('page/home');
@@ -148,3 +149,6 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/laporan', fn() => view('page.admin.laporan'))->name('admin.laporan');
 });
+
+// Rute CRUD Barang (Menggunakan Resource Controller)
+Route::resource('produk-saya', BarangController::class)->middleware('auth'); 

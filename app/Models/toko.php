@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+// 👇 TAMBAHKAN IMPORT INI 👇
+use Illuminate\Database\Eloquent\Relations\HasMany; 
 
 class Toko extends Model
 {
@@ -19,15 +21,32 @@ class Toko extends Model
         'id_user',
         'nama_toko',
         'no_hp_toko',
-        'no_rek',
-        'logo_toko',  
+        'no_rek',     
+        'logo_toko',
     ];
 
     /**
-     * Mendapatkan user pemilik toko.
+     * Relasi ke User (pemilik toko).
      */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_user', 'id_user');
     }
+
+    // =============================================
+    // 👇 TAMBAHKAN METHOD RELASI BARANG INI 👇
+    // =============================================
+    /**
+     * Mendapatkan semua barang yang dimiliki oleh toko ini.
+     * Relasi HasMany (Satu Toko memiliki Banyak Barang).
+     */
+    public function barang(): HasMany 
+    {
+        // Parameter: Model terkait, Foreign key di tabel barang, Local key (PK di tabel toko)
+        return $this->hasMany(Barang::class, 'id_toko', 'id_toko');
+    }
+    // =============================================
+    // 👆 AKHIR METHOD RELASI BARANG 👆
+    // =============================================
 }
+
