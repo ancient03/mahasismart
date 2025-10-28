@@ -5,8 +5,8 @@
     <section class="md:col-span-3">
 
         {{-- FORM UTAMA EDIT BARANG --}}
-        {{-- 👇 PERBAIKI NAMA PARAMETER DI SINI ('barang' -> 'produk_saya') 👇 --}}
-        <form method="POST" action="{{ route('produk-saya.update', ['produk-saya' => $barang->id_barang]) }}" enctype="multipart/form-data">
+        {{-- PASTIKAN ACTION DAN PARAMETER SESUAI ROUTE 'produk-saya' --}}
+        <form method="POST" action="{{ route('produk-saya.update', ['produk_saya' => $barang->id_barang]) }}" enctype="multipart/form-data">
             @csrf          
             @method('PUT') 
 
@@ -14,7 +14,7 @@
                 
                 <div class="flex justify-between items-center mb-6 border-b pb-4">
                    <h1 class="text-2xl font-bold">Edit Produk: {{ $barang->nama_barang }}</h1>
-                   {{-- Link kembali ke daftar produk (nama route sudah benar) --}}
+                   {{-- PASTIKAN LINK KEMBALI SESUAI ROUTE 'produk-saya' --}}
                    <a href="{{ route('produk-saya.index') }}" class="text-blue-600 hover:underline text-sm">
                        &laquo; Kembali ke Daftar Produk
                    </a>
@@ -48,9 +48,9 @@
                             <label for="id_kategori" class="block text-sm font-medium text-gray-700">Kategori <span class="text-red-500">*</span></label>
                             <select id="id_kategori" name="id_kategori" required
                                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 @error('id_kategori') border-red-500 @enderror">
-                                <option value="" disabled {{ old('id_kategori', $barang->id_kategori) ? '' : 'selected' }}>-- Pilih Kategori --</option>
+                                <option value="" disabled {{ old('id_kategori', $barang->id_kategori ?? null) ? '' : 'selected' }}>-- Pilih Kategori --</option>
                                 @foreach($kategoriList as $kategori)
-                                    <option value="{{ $kategori->id_kategori }}" {{ old('id_kategori', $barang->id_kategori) == $kategori->id_kategori ? 'selected' : '' }}>
+                                    <option value="{{ $kategori->id_kategori }}" {{ old('id_kategori', $barang->id_kategori ?? null) == $kategori->id_kategori ? 'selected' : '' }}>
                                         {{ $kategori->nama_kategori }}
                                     </option>
                                 @endforeach
@@ -75,7 +75,7 @@
                     </div>
                     <!-- Akhir Bagian Kiri -->
 
-                    <!-- Bagian Kanan Form (Logo Toko) -->
+                    <!-- Bagian Kanan Form (Foto Barang) -->
                     <div class="lg:col-span-1 flex flex-col items-center space-y-4 pt-8 lg:pt-0">
                        {{-- ... (Kode upload foto tidak berubah) ... --}}
                         <label class="block text-sm font-medium text-gray-700 mb-2">Foto Barang (Opsional)</label>
@@ -99,16 +99,14 @@
             </div>
         </form>
 
-        <!-- Tombol Logout (TERPISAH DARI FORM EDIT) -->
-        {{-- Anda mungkin ingin menghapus tombol logout dari halaman edit ini --}}
-        {{-- <div class="bg-white text-gray-800 rounded-lg shadow p-6 md:p-8 mt-6"> ... </div> --}}
+        {{-- ... Tombol Logout (jika masih ada) ... --}}
     </section>
 
     {{-- JavaScript untuk Preview Foto --}}
     @push('scripts') 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const logoInput = document.getElementById('foto_barang'); // ID input file sudah benar 'foto_barang'
+            const logoInput = document.getElementById('foto_barang'); // ID input file
             const logoPreview = document.getElementById('fotoPreview');
             const defaultPreview = logoPreview.innerHTML; 
             const hapusCheckbox = document.getElementById('hapus_foto_barang');
@@ -150,7 +148,7 @@
                         fotoInput.value = ''; 
                         fotoPreview.innerHTML = `<div class="w-full h-full bg-gray-200 rounded-md flex items-center justify-center border border-gray-300"><svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg></div>`;
                     } else {
-                         fotoPreview.innerHTML = defaultPreview;
+                         logoPreview.innerHTML = defaultPreview;
                     }
                 });
             }
@@ -160,4 +158,3 @@
     @endpush 
 
 </x-layout.layout-profile>
-
