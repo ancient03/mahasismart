@@ -156,3 +156,4 @@ Route::resource('produk-saya', BarangController::class)->middleware('auth');
 Route::prefix('page')->middleware('auth')->group(function () {
     Route::get('/chat', fn() => view('page.chat'))->name('page.chat');
 });
+
