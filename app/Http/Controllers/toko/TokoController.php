@@ -41,7 +41,7 @@ class TokoController extends Controller
 
         // Arahkan ke view form edit (buat file ini nanti)
         // Pastikan path view 'page.toko.edit' sudah benar
-        return view('page.toko.edit', [
+        return view('page.toko.produk-saya-edit', [
             'toko' => $toko
         ]);
     }
