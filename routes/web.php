@@ -8,10 +8,9 @@ use App\Http\Controllers\profile\AlamatController;
 use App\Http\Controllers\Toko\TokoController;
 use App\Http\Controllers\toko\RegisterTokoController;
 use App\Http\Controllers\toko\BarangController;
+use App\Http\Controllers\HomeController;
 
-Route::get('/', function () {
-    return view('page/home');
-});
+Route::get('/', [HomeController::class, 'index'])->name('home'); 
 
 route::get('/search', function () {
     return view('page/search');
