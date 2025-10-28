@@ -1,53 +1,123 @@
 <?php
 
-namespace App\Http\Controllers\toko;
+// 1. Namespace sesuai lokasi file baru
+namespace App\Http\Controllers\toko; 
 
-use App\Http\Controllers\Controller;
+// 2. Import class yang dibutuhkan
+use App\Http\Controllers\Controller; // Import Controller utama
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Toko;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse; // <-- Tambahkan ini
+use Illuminate\Validation\Rule;      // <-- Tambahkan ini
+use Illuminate\Support\Facades\File; // <-- Tambahkan ini
 
-class TokoController extends Controller
+// 3. Nama class dan extends Controller
+class TokoController extends Controller 
 {
-    public function create()
+    /**
+     * Menampilkan halaman profil toko milik pengguna yang login.
+     */
+    public function showProfile(): View
     {
-            // Cek apakah user yang login SUDAH punya toko
-        if (Auth::user()->toko()->exists()) {
-            // Jika sudah punya, redirect ke halaman dashboard toko (misalnya)
-            // atau kembali ke profile dengan pesan error
-            // Ganti 'toko.dashboard' dengan nama rute halaman toko Anda nanti
-            // return redirect()->route('toko.dashboard')->with('info', 'Anda sudah memiliki toko.');
-            return redirect()->route('profile')->with('error', 'Anda sudah terdaftar memiliki toko.');
-        }
-
-        // Jika belum punya toko, tampilkan form create
-        return view('page.toko.create'); // Kita akan buat file ini
+        $user = Auth::user();
+        $toko = $user->toko()->firstOrFail(); 
+        return view('page.toko.profil-toko', [
+            'toko' => $toko 
+        ]);
     }
 
-    public function store(Request $request)
+    /**
+     * Menampilkan form untuk mengedit data toko.
+     * Menggunakan Route Model Binding ($toko).
+     */
+    public function edit(Toko $toko): View|RedirectResponse
     {
-        // Cek lagi (keamanan) apakah user sudah punya toko sebelum menyimpan
-        if (Auth::user()->toko()->exists()) {
-             return redirect()->route('profile')->with('error', 'Anda sudah terdaftar memiliki toko.');
+        // Pastikan user hanya bisa mengedit tokonya sendiri
+        if ($toko->id_user !== Auth::id()) {
+            abort(403, 'Akses ditolak.'); 
         }
 
-        // 1. Validasi Input dari Form
+        // Arahkan ke view form edit (buat file ini nanti)
+        // Pastikan path view 'page.toko.edit' sudah benar
+        return view('page.toko.edit', [
+            'toko' => $toko
+        ]);
+    }
+
+    /**
+     * Memperbarui data toko di database.
+     * Menggunakan Route Model Binding ($toko).
+     */
+    public function update(Request $request, Toko $toko): RedirectResponse
+    {
+        // Pastikan user hanya bisa mengupdate tokonya sendiri
+        if ($toko->id_user !== Auth::id()) {
+            abort(403, 'Akses ditolak.');
+        }
+
+        // 1. Validasi Input 
         $validated = $request->validate([
-            'nama_toko' => ['required', 'string', 'max:255', 'unique:toko,nama_toko'], // Nama toko harus unik
-            'no_hp_toko' => ['nullable', 'string', 'max:20'], // Opsional
-            'no_rek' => ['nullable', 'string', 'max:50'],    // Opsional, max:50 (sesuaikan)
+            // Nama toko harus unik, KECUALI untuk ID toko ini sendiri
+            'nama_toko' => [
+                'required', 'string', 'max:255', 
+                Rule::unique('toko', 'nama_toko')->ignore($toko->id_toko, 'id_toko')
+            ],
+            'no_hp_toko' => ['required', 'string', 'max:20'], 
+            'no_rek' => ['nullable', 'string', 'max:50'], // Tambahkan jika perlu
+            'logo_toko' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'], // Logo opsional
+        ], [
+            // Pesan error kustom (opsional)
+            'nama_toko.required' => 'Nama toko wajib diisi.',
+            'nama_toko.unique' => 'Nama toko ini sudah digunakan.',
+            'no_hp_toko.required' => 'Nomor handphone toko wajib diisi.',
+            'logo_toko.*' => 'Logo tidak valid (JPG/PNG/WEBP, maks 2MB).',
         ]);
 
-        // 2. Tambahkan id_user dari user yang sedang login
-        $validated['id_user'] = Auth::id();
+        // 2. Siapkan data update (data teks)
+        $updateData = [
+            'nama_toko' => $validated['nama_toko'],
+            'no_hp_toko' => $validated['no_hp_toko'],
+            'no_rek' => $validated['no_rek'] ?? $toko->no_rek, // Gunakan no rek lama jika tidak diisi
+        ];
 
-        // 3. Simpan ke database menggunakan Model Toko
-        $newToko = Toko::create($validated);
+        // 3. Proses Upload Logo Baru (jika ada)
+        if ($request->hasFile('logo_toko')) {
+            $file = $request->file('logo_toko');
+            $fileName = time() . '_' . str_replace(' ', '_', $validated['nama_toko']) . '.' . $file->getClientOriginalExtension();
+            $path = public_path('img/logotoko');
 
-        // 4. Redirect ke halaman toko yang baru dibuat (misalnya)
-        //    atau ke halaman profil dengan pesan sukses
-        // Ganti 'toko.show' dengan rute detail toko Anda nanti
-        // return redirect()->route('toko.show', $newToko->id_toko)->with('status', 'Toko Anda berhasil dibuat!');
-         return redirect()->route('profile')->with('status', 'Selamat! Toko Anda berhasil dibuat.');
+            // Hapus logo lama jika ada
+            if ($toko->logo_toko) {
+                $oldFilePath = $path . '/' . $toko->logo_toko;
+                if (File::exists($oldFilePath)) {
+                    File::delete($oldFilePath);
+                }
+            }
+
+             // Buat folder jika belum ada
+            if (!File::isDirectory($path)) {
+                File::makeDirectory($path, 0775, true, true);
+            }
+
+            // Pindahkan logo baru
+            try {
+                $file->move($path, $fileName);
+                $updateData['logo_toko'] = $fileName; // Simpan nama file baru
+            } catch (\Exception $e) {
+                return back()->withErrors(['logo_toko' => 'Gagal mengupload logo baru. Periksa permission folder.'])->withInput();
+            }
+        } 
+        // Jika tidak ada logo baru diupload, $updateData['logo_toko'] tidak akan di-set,
+        // sehingga nama logo lama di database tidak akan tertimpa.
+
+        // 4. Update data toko di database
+        $toko->update($updateData);
+
+        // 5. Redirect kembali ke profil toko dengan pesan sukses
+        // Anda bisa redirect ke route('profil-toko') atau route lain yang sesuai
+        return redirect()->route('profil-toko')->with('status', 'Profil toko berhasil diperbarui!');
     }
+
 }
