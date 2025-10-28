@@ -129,3 +129,8 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/laporan', fn() => view('page.admin.laporan'))->name('admin.laporan');
 });
+
+// chat
+Route::prefix('page')->middleware('auth')->group(function () {
+    Route::get('/chat', fn() => view('page.chat'))->name('page.chat');
+});
