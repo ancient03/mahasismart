@@ -172,19 +172,21 @@ class BarangController extends Controller
      * Method ini dipanggil oleh route GET /barang/{barang}/edit (barang.edit).
      * Laravel otomatis mencari $barang berdasarkan ID di URL (Route Model Binding).
      */
-    public function edit(Barang $barang): View
+    public function edit(Barang $produk_saya): View  //waspada error di class untuk memanggil edit
     {
         // 1. Pastikan user adalah pemilik barang ini
-        //$this->authorizeBarangOwner($barang); 
+        //    Gunakan variabel baru $produk_saya
+        $this->authorizeBarangOwner($produk_saya); 
 
         // 2. Ambil semua kategori untuk dropdown
         $kategoriList = Kategori::orderBy('nama_kategori')->get(); 
         
         // 3. Tampilkan view form edit barang
-        //    Pastikan path view ini benar: 'resources/views/page/toko/barang-edit.blade.php'
-        return view('page.toko.produk-saya-edit', [
-            'barang' => $barang, // Kirim data barang yang akan diedit
-            'kategoriList' => $kategoriList // Kirim daftar kategori
+        //    Kirim variabel dengan nama 'barang' agar view lama tetap berfungsi
+        //    ATAU ubah variabel di view menjadi $produk_saya
+        return view('page.toko.produk-saya-edit', [ // Pastikan nama view benar
+            'barang' => $produk_saya, // Kirim dengan nama 'barang' agar view tidak perlu diubah
+            'kategoriList' => $kategoriList 
         ]);
     }
 
