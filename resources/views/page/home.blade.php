@@ -21,17 +21,37 @@
       </div>
     </section>
 
-    <!-- Produk Pilihan -->
-    <section>
-      <h2 class="text-xl font-bold mb-4 text-gray-900">Produk Pilihan</h2>
+            <section>
+                <h2 class="text-xl font-bold mb-4">Semua Produk</h2>
+                
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+                    
+                    {{-- Loop data barang dari controller --}}
+                    @forelse ($barangList as $barang) 
+                        {{-- 
+                          👇 PERBAIKAN DI SINI 👇
+                          Kirim variabel '$barang' dari loop ke komponen 
+                          sebagai properti bernama 'barang'.
+                          Gunakan ':' sebelum nama properti.
+                          Pastikan nama komponen 'cardproduk.card' sudah benar.
+                        --}}
+                        <x-cardproduk.card :barang="$barang" /> 
+                        
+                    @empty
+                        {{-- Pesan jika tidak ada produk sama sekali --}}
+                        <p class="col-span-full text-center text-gray-500 py-10">
+                            Belum ada produk yang tersedia saat ini.
+                        </p>
+                    @endforelse
 
-      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-        {{-- Komponen Card dipanggil di sini --}}
-        @for ($i = 0; $i < 10; $i++)
-          <x-card />
-        @endfor
-      </div>
-    </section>
+                </div>
+
+                 {{-- Tampilkan Link Pagination --}}
+                 <div class="mt-8">
+                     {{ $barangList->links() }} 
+                 </div>
+
+            </section>
 
   </div>
 </x-layout>
