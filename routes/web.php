@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\profile\ProfileController;
 use App\Http\Controllers\profile\AlamatController;
 use App\Http\Controllers\Toko\TokoController;
+use App\Http\Controllers\toko\RegisterTokoController;
 
 Route::get('/', function () {
     return view('page/home');
@@ -99,16 +100,34 @@ Route::get('/statistik-penjualan', fn() => view('page/toko/statistik-penjualan')
     ->middleware('auth')
     ->name('statistik-penjualan');
 
-// regist toko
-Route::get('/register-toko', fn() => view('page/profile/register-toko'))
-    ->middleware('auth')
-    ->name('register.toko.form');
 
-// Proses penyimpanan data toko
-Route::post('/register-toko', [TokoController::class, 'store'])
-    ->middleware('auth')
-    ->name('register.toko');
+        // 👇 RUTE UNTUK REGISTER TOKO (MENGGUNAKAN CONTROLLER BARU) 👇
 
+
+    Route::middleware('auth')->group(function () {
+
+    // ... Rute profile, alamat, dll. ...
+
+    // Rute Register Toko
+    Route::get('/register-toko', [RegisterTokoController::class, 'create'])->name('register.toko.create');
+    Route::post('/register-toko', [RegisterTokoController::class, 'store'])->name('register.toko.store');
+
+    // 👇 INI RUTE UNTUK METHOD showProfile() 👇
+    Route::get('/profil-toko', [TokoController::class, 'showProfile'])
+        ->name('profil-toko'); 
+
+        // 👇 RUTE UNTUK EDIT PROFIL TOKO 👇
+    // Menampilkan form edit (GET)
+    // {toko} adalah parameter route model binding, merujuk ke ID toko
+    Route::get('/toko/{toko}/edit', [TokoController::class, 'edit'])->name('toko.edit');
+    
+    // Menyimpan perubahan (PUT/PATCH)
+    // Method di form Anda adalah PUT (@method('PUT'))
+    Route::put('/toko/{toko}', [TokoController::class, 'update'])->name('toko.update'); 
+
+    // ... Rute toko lainnya ...
+
+}); 
 
 // admin
 Route::prefix('admin')->middleware('auth')->group(function () {
