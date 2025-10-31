@@ -9,8 +9,9 @@ use App\Http\Controllers\Toko\TokoController;
 use App\Http\Controllers\toko\RegisterTokoController;
 use App\Http\Controllers\toko\BarangController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\admin\KategoriController;
 
-Route::get('/', [HomeController::class, 'index'])->name('home'); 
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 route::get('/search', function () {
     return view('page/search');
@@ -101,10 +102,10 @@ Route::get('/statistik-penjualan', fn() => view('page/toko/statistik-penjualan')
     ->name('statistik-penjualan');
 
 
-        // 👇 RUTE UNTUK REGISTER TOKO (MENGGUNAKAN CONTROLLER BARU) 👇
+// 👇 RUTE UNTUK REGISTER TOKO (MENGGUNAKAN CONTROLLER BARU) 👇
 
 
-    Route::middleware('auth')->group(function () {
+Route::middleware('auth')->group(function () {
 
     // ... Rute profile, alamat, dll. ...
 
@@ -114,20 +115,20 @@ Route::get('/statistik-penjualan', fn() => view('page/toko/statistik-penjualan')
 
     // 👇 INI RUTE UNTUK METHOD showProfile() 👇
     Route::get('/profil-toko', [TokoController::class, 'showProfile'])
-        ->name('profil-toko'); 
+        ->name('profil-toko');
 
-        // 👇 RUTE UNTUK EDIT PROFIL TOKO 👇
+    // 👇 RUTE UNTUK EDIT PROFIL TOKO 👇
     // Menampilkan form edit (GET)
     // {toko} adalah parameter route model binding, merujuk ke ID toko
     Route::get('/toko/{toko}/edit', [TokoController::class, 'edit'])->name('toko.edit');
-    
+
     // Menyimpan perubahan (PUT/PATCH)
     // Method di form Anda adalah PUT (@method('PUT'))
-    Route::put('/toko/{toko}', [TokoController::class, 'update'])->name('toko.update'); 
+    Route::put('/toko/{toko}', [TokoController::class, 'update'])->name('toko.update');
 
     // ... Rute toko lainnya ...
 
-}); 
+});
 
 // admin
 Route::prefix('admin')->middleware('auth')->group(function () {
@@ -149,11 +150,29 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/laporan', fn() => view('page.admin.laporan'))->name('admin.laporan');
 });
 
+// Kategori
+Route::prefix('admin')->middleware('auth')->group(function () {
+    // Daftar kategori
+    Route::get('/kategori', [KategoriController::class, 'index'])->name('admin.kategori');
+
+    // Tambah kategori
+    Route::get('/kategori/tambah-kategori', [KategoriController::class, 'create'])->name('admin.tambah-kategori');
+    Route::post('/kategori/store', [KategoriController::class, 'store'])->name('admin.kategori.store');
+
+    // Edit kategori
+    Route::get('/kategori/{id}/edit', [KategoriController::class, 'edit'])->name('admin.kategori.edit');
+    Route::put('/kategori/{id}', [KategoriController::class, 'update'])->name('admin.kategori.update');
+});
+
+// iklan
+Route::prefix('admin')->middleware('auth')->group(function () {
+    Route::get('/iklan', fn() => view('page.admin.iklan'))->name('admin.iklan');
+});
+
 // Rute CRUD Barang (Menggunakan Resource Controller)
-Route::resource('produk-saya', BarangController::class)->middleware('auth'); 
+Route::resource('produk-saya', BarangController::class)->middleware('auth');
 
 // chat
 Route::prefix('page')->middleware('auth')->group(function () {
     Route::get('/chat', fn() => view('page.chat'))->name('page.chat');
 });
-
