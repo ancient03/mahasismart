@@ -22,6 +22,7 @@ class Barang extends Model
         'nama_barang',
         'harga',
         'foto_barang', // Pastikan ini ada
+        'deskripsi', 
     ];
 
     /**

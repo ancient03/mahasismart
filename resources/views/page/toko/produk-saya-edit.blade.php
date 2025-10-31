@@ -45,6 +45,15 @@
                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 @error('nama_barang') border-red-500 @enderror" />
                              @error('nama_barang') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
                         </div>
+                        
+                        {{-- Deskripsi --}}
+                        <div>
+                            <label for="deskripsi" class="block text-sm font-medium text-gray-700">Deskripsi Produk</label>
+                            <textarea id="deskripsi" name="deskripsi" rows="4"
+                                      placeholder="Masukkan deskripsi produk Anda"
+                                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 @error('deskripsi') border-red-500 @enderror">{{ old('deskripsi', $barang->deskripsi) }}</textarea>
+                            @error('deskripsi') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
+                        </div>
 
                         {{-- Kategori (Dropdown) --}}
                         <div>
