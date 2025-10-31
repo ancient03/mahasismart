@@ -46,8 +46,10 @@ class Kategori extends Model
      */
     protected $fillable = [
         'nama_kategori',
-        'total_produk', // Jika Anda mengelola ini
+        'gambar',
+        'total_produk',
     ];
+
 
     /**
      * Menentukan apakah model harus memiliki timestamps (created_at, updated_at).
@@ -60,9 +62,8 @@ class Kategori extends Model
     /**
      * Mendapatkan semua barang dalam kategori ini.
      */
-    public function barang(): HasMany
+    public function barang()
     {
-        // Parameter: Model terkait, Foreign key di tabel barang, Local key (PK di tabel kategori)
         return $this->hasMany(Barang::class, 'id_kategori', 'id_kategori');
     }
 }
