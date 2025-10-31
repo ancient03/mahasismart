@@ -1,12 +1,18 @@
+{{-- 
+  Kode ini adalah gabungan dari 2 file 'rating.blade.php' yang Anda berikan.
+  File 'produk.blade.php' Anda sebelumnya mengandung bagian atas dari file ini.
+  Saya pindahkan ke sini agar komponen ini utuh.
+--}}
 <div>
     {{-- Judul --}}
     <h1 class="text-xl lg:text-2xl font-semibold">Penilaian Produk</h1>
 
     {{-- Jumlah dan Filter --}}
     <div class="p-6 bg-zinc-100 rounded-lg flex flex-col lg:flex-row lg:items-center mt-6 gap-8">
+        
         {{-- Bagian Rating + Dropdown (mobile) --}}
         <div class="w-full flex justify-between items-center lg:block lg:w-auto">
-            {{-- Rating --}}
+            {{-- Rating (Statis) --}}
             <div class="text-center">
                 <h1 class="text-2xl lg:text-4xl font-bold">
                     <span>4.5</span>
@@ -24,9 +30,7 @@
 
             {{-- Dropdown (mobile) --}}
             <div class="block lg:hidden w-1/2">
-                <select
-                    class="w-full p-2 rounded-md bg-zinc-200 border border-zinc-300 cursor-pointer text-sm focus:ring-2 focus:ring-[#00795E] focus:outline-none"
-                >
+                <select class="w-full p-2 rounded-md bg-zinc-200 border border-zinc-300 cursor-pointer text-sm focus:ring-2 focus:ring-[#00795E] focus:outline-none">
                     <option value="all">Semua</option>
                     <option value="5">5 Bintang (10)</option>
                     <option value="4">4 Bintang (12)</option>
