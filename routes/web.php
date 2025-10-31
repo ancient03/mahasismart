@@ -9,6 +9,8 @@ use App\Http\Controllers\Toko\TokoController;
 use App\Http\Controllers\toko\RegisterTokoController;
 use App\Http\Controllers\toko\BarangController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\SearchController;
+use App\Http\Controllers\ProductDetailController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home'); 
 
@@ -21,9 +23,13 @@ route::get('/keranjang', function () {
     return view('page/products/chart');
 });
 
-route::get('/detailproduk', function () {
-    return view('page/products/detailproduk');
-});
+// 👇 RUTE LAMA (DIKOMENTARI/HAPUS) 👇
+// route::get('/detailproduk', function () {
+//     return view('page/products/detailproduk');
+// });
+// 👇 RUTE BARU UNTUK DETAIL PRODUK 👇
+Route::get('/detailproduk/{barang}', [ProductDetailController::class, 'show'])->name('detailproduk.show');
+
 
 
 Route::get('/profil-toko', function () {
@@ -157,3 +163,4 @@ Route::prefix('page')->middleware('auth')->group(function () {
     Route::get('/chat', fn() => view('page.chat'))->name('page.chat');
 });
 
+Route::get('/search', [SearchController::class, 'index'])->name('search');
