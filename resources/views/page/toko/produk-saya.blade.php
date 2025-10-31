@@ -53,6 +53,9 @@
                         @if($itemBarang->kategori)
                             <span class="text-xs bg-gray-200 text-gray-700 px-2 py-0.5 rounded-full">{{ $itemBarang->kategori->nama_kategori }}</span>
                         @endif
+                        <p class="text-gray-600 mt-2 text-sm md:text-base">
+                            {{ Str::limit($itemBarang->deskripsi, 50, '...') }}
+                        </p>
                         <p class="text-xl md:text-2xl font-bold text-zinc-800 mt-1">Rp {{ number_format($itemBarang->harga, 0, ',', '.') }}</p>
                     </div>
 

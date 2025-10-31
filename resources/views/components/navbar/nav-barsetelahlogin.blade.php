@@ -16,13 +16,21 @@
 
     <!-- Search Bar (Tengah) -->
     <div class="flex-grow max-w-xl mx-4">
-      <input 
-        type="text" 
-        class="w-full bg-white rounded-xl py-2 px-4 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-300"
-        placeholder="Cari..."
-        aria-label="Search"
-      >
+    <form action="{{ route('search') }}" method="GET">
+        <input 
+          type="text" 
+          name="q" {{-- 1. Tambah name="q" --}}
+          class="w-full bg-white rounded-xl py-2 pl-4 pr-10 ..."
+          placeholder="Cari..."
+          aria-label="Search"
+          value="{{ request('q') ?? '' }}" {{-- 2. Tampilkan query pencarian --}}
+        >
+        <button type="submit" class="absolute top-0 right-0 ...">
+            <i class=""></i>
+        </button>
+    </form>
     </div>
+
 
     <!-- Tombol (Kanan) -->
     <div class="flex-shrink-0 flex items-center space-x-6"> 

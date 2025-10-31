@@ -1,6 +1,6 @@
 {{-- Pastikan variabel $barang tersedia (misal: dari @forelse ($barangList as $barang)) --}}
 <div class="w-full bg-white shadow-sm rounded-lg overflow-hidden border border-gray-200 hover:bg-gray-100 transition duration-300 cursor-pointer"
-     onclick="window.location.href='{{-- route('detailproduk', $barang->id_barang) --}}'"> {{-- Link ke detail produk --}}
+     onclick="window.location.href='{{ route('detailproduk.show', $barang->id_barang) }}'">
 
     {{-- Foto Barang --}}
     <div class="w-full h-36 bg-gray-200 flex items-center justify-center"> {{-- Tambahkan flex & center untuk placeholder --}}
