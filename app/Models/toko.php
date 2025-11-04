@@ -48,5 +48,16 @@ class Toko extends Model
     // =============================================
     // 👆 AKHIR METHOD RELASI BARANG 👆
     // =============================================
+
+        // ==========================================================
+    // 👇 TAMBAHKAN RELASI INI 👇
+    // ==========================================================
+    /**
+     * Mendapatkan semua item pesanan (detail transaksi) untuk toko ini.
+     */
+    public function detailTransaksi(): HasMany
+    {
+        return $this->hasMany(DetailTransaksi::class, 'id_toko', 'id_toko');
+    }
 }
 

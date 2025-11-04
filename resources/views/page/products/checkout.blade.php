@@ -1,110 +1,169 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-  {{-- Tailwind + font.css --}}
-  @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/css/font.css'])
-
-  {{-- CDN Bootstrap Icons --}}
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-
-  <title>MahasisMart - Checkout</title>
-</head>
-<body class="font-[poppins] bg-zinc-50">
-
-  {{-- Navbar Checkout --}}
-  <x-navbar.nav-checkout />
-
-  <section class="mt-24 lg:px-6 py-4">
-    <!-- Judul -->
-    <h1 class="text-2xl font-semibold mb-6 px-4 lg:px-0">Checkout</h1>
-
-    <div class="flex flex-col lg:flex-row gap-6">
-      <!-- Kiri: Alamat + Daftar Barang -->
-      <div class="flex-1 space-y-6">
-        
-        <!-- Alamat Pengiriman -->
-        <div class="p-4 bg-zinc-100 lg:rounded-lg shadow-md flex justify-between items-start">
-          <div>
-            <h2 class="text-lg font-semibold mb-1">Alamat Pengiriman</h2>
-            <p class="text-sm text-zinc-700 flex items-center gap-2">
-              <i class="bi bi-geo-alt text-lg"></i>
-              UDINUS GEDUNG G
-            </p>
-          </div>
-          <button class="bg-white text-sm border border-zinc-300 px-4 py-1 rounded-md hover:bg-zinc-200 transition">
-            Ganti Alamat
-          </button>
-        </div>
-
-        <!-- Daftar Barang -->
-        <div class="p-4 bg-zinc-100 lg:rounded-lg shadow-md space-y-6">
-          
-          <!-- Toko -->
-          <div class="flex items-center gap-3 border-zinc-300">
-            <img src="{{ asset('img/kuning.png') }}" alt="Toko" class="h-8 w-8 rounded-full object-cover">
-            <h1 class="text-lg font-semibold">Toko Taufan Afandi</h1>
-          </div>
-
-          <!-- Barang -->
-          <div class="flex items-start gap-4">
-            <!-- Gambar Produk -->
-            <div class="w-38 h-26 bg-white rounded-md overflow-hidden flex items-center justify-center">
-              <img 
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQssFrYujuBrf5Et_UF5x0IbeDzh4q6qGuFFw&s"
-                alt="Produk 1"
-                class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-              >
-            </div>
-
-            <!-- Info Produk -->
-            <div class="flex-1 relative">
-              <div>
-                <h3 class="font-semibold text-lg">Judul Barang</h3>
-                <p class="text-2xl font-semibold text-zinc-800 py-3">Rp 5.000</p>
-                <p class="text-md font-medium text-zinc-600">Sisa 1</p>
-              </div>
-
-              <!-- Jumlah & Tombol Sampah di kanan bawah -->
-              <div class="absolute bottom-0 right-0 flex items-center gap-3">
-                <!-- Input Jumlah -->
-                <div class="flex items-center border rounded-lg overflow-hidden">
-                  <button class="px-3 py-1 hover:bg-zinc-200 transition">-</button>
-                  <span class="px-3">1</span>
-                  <button class="px-3 py-1 hover:bg-zinc-200 transition">+</button>
+<x-layout>
+    <form method="POST" action="{{ route('checkout.store') }}">
+        @csrf
+        <main class="py-8 bg-gray-100 min-h-screen">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                
+                {{-- Judul --}}
+                <div class="mb-6">
+                    <h1 class="text-3xl font-bold text-gray-900">Checkout</h1>
                 </div>
 
-                <!-- Tombol Sampah -->
-                <button class="text-zinc-600 hover:text-red-600 transition">
-                  <i class="bi bi-trash text-xl"></i>
-                </button>
-              </div>
+                {{-- Tampilkan error validasi (jika ada) --}}
+                @if ($errors->any())
+                    <div class="mb-4 rounded-md bg-red-100 p-4 text-sm font-medium text-red-700">
+                        <strong>Harap perbaiki error berikut:</strong>
+                        <ul class="mt-2 list-inside list-disc">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                
+                {{-- Grid Utama (2 kolom di desktop) --}}
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                    {{-- =================================== --}}
+                    {{-- KOLOM KIRI (Alamat & Daftar Barang) --}}
+                    {{-- =================================== --}}
+                    <section class="lg:col-span-2 space-y-6">
+                        
+                        <!-- 1. Pilihan Alamat Pengiriman -->
+                        <div class="bg-white rounded-lg shadow-md p-6">
+                            <h2 class="text-xl font-bold text-gray-900 mb-4">Pilih Alamat Pengiriman</h2>
+                            
+                            @if ($alamatList->isEmpty())
+                                {{-- Tampilan jika user tidak punya alamat --}}
+                                <div class="text-center text-gray-500 py-6 border border-dashed rounded-lg">
+                                    <i class="bi bi-geo-alt text-4xl mb-2"></i>
+                                    <p>Anda belum memiliki alamat tersimpan.</p>
+                                    <a href="{{ route('alamat.create', ['redirect' => 'checkout']) }}" {{-- Redirect kembali ke checkout --}}
+                                       class="mt-4 inline-block bg-green-100 text-green-700 py-2 px-4 rounded-lg font-semibold hover:bg-green-200 transition-colors text-sm">
+                                        + Tambah Alamat Baru
+                                    </a>
+                                </div>
+                            @else
+                                {{-- Loop untuk menampilkan semua alamat user --}}
+                                <div class="space-y-4">
+                                    @foreach ($alamatList as $alamat)
+                                        <label for="alamat-{{ $alamat->id_alamat }}" 
+                                               class="flex items-start space-x-4 border rounded-lg p-4 cursor-pointer hover:bg-gray-50 {{ $alamat->is_default ? 'border-green-500 bg-green-50' : 'border-gray-200' }}">
+                                            {{-- Radio Button --}}
+                                            <input type="radio" 
+                                                   name="id_alamat" 
+                                                   id="alamat-{{ $alamat->id_alamat }}" 
+                                                   value="{{ $alamat->id_alamat }}" 
+                                                   class="mt-1 text-green-600 focus:ring-green-500" 
+                                                   {{ $alamat->is_default ? 'checked' : '' }} {{-- Pilih alamat default --}}
+                                                   required>
+                                            
+                                            {{-- Info Alamat --}}
+                                            <div class="flex-grow">
+                                                <div class="flex justify-between items-center mb-1">
+                                                    <h3 class="text-lg font-semibold">
+                                                        {{ $alamat->label }}
+                                                        @if($alamat->is_default)
+                                                            <span class="ml-2 text-xs font-medium bg-green-200 text-green-800 px-2 py-0.5 rounded-full">Utama</span>
+                                                        @endif
+                                                    </h3>
+                                                </div>
+                                                <p class="font-medium text-gray-800">{{ $alamat->nama_penerima }}</p>
+                                                <p class="text-sm text-gray-600">{{ $alamat->no_hp_penerima }}</p>
+                                                <p class="text-sm text-gray-600 mt-1">
+                                                    {{ $alamat->detail_alamat }}, {{ $alamat->kecamatan }}, {{ $alamat->kota }}, {{ $alamat->provinsi }}, {{ $alamat->kode_pos }}
+                                                </p>
+                                            </div>
+                                        </label>
+                                    @endforeach
+                                </div>
+                                 <a href="{{ route('alamat.create', ['redirect' => 'checkout']) }}" 
+                                    class="mt-4 inline-block text-sm text-blue-600 hover:underline">
+                                    + Tambah alamat baru lainnya
+                                 </a>
+                            @endif
+                        </div>
+
+                        <!-- 2. Ringkasan Barang yang Dipesan -->
+                        <div class="bg-white rounded-lg shadow-md p-6">
+                            <h2 class="text-xl font-bold text-gray-900 mb-4">Ringkasan Barang</h2>
+                            <div class="space-y-4">
+                                @forelse ($items as $item)
+                                    <div class="flex space-x-4 border-b pb-4 last:border-b-0 last:pb-0">
+                                        <!-- Gambar -->
+                                        <div class="flex-shrink-0 w-20 h-20 bg-gray-200 rounded-lg">
+                                            @if ($item->foto_barang)
+                                                <img src="{{ asset('img/fotobarang/' . $item->foto_barang) }}" alt="{{ $item->nama_barang }}" class="w-full h-full object-cover rounded-lg">
+                                            @else
+                                                <div class="w-full h-full flex items-center justify-center text-gray-400"><i class="bi bi-image"></i></div>
+                                            @endif
+                                        </div>
+                                        <!-- Info -->
+                                        <div class="flex-grow">
+                                            <h3 class="font-semibold text-gray-900">{{ $item->nama_barang }}</h3>
+                                            <p class="text-sm text-gray-600">dari {{ $item->toko->nama_toko }}</p>
+                                            <p class="text-sm text-gray-500">{{ $item->pivot->kuantitas }} x Rp {{ number_format($item->harga, 0, ',', '.') }}</p>
+                                        </div>
+                                        <!-- Subtotal -->
+                                        <div class="flex-shrink-0 text-right">
+                                            <span class="font-semibold text-gray-900">Rp {{ number_format($item->harga * $item->pivot->kuantitas, 0, ',', '.') }}</span>
+                                        </div>
+                                    </div>
+                                @empty
+                                    <p class="text-gray-500">Keranjang Anda kosong.</p>
+                                @endforelse
+                            </div>
+                        </div>
+
+                    </section>
+
+                    {{-- =================================== --}}
+                    {{-- KOLOM KANAN (Total & Tombol Bayar) --}}
+                    {{-- =================================== --}}
+                    <section class="lg:col-span-1">
+                        <div class="bg-white rounded-lg shadow-md p-6 sticky top-28">
+                            <h2 class="text-xl font-bold text-gray-900 mb-4">Ringkasan Belanja</h2>
+                            
+                            {{-- Hanya tampilkan jika keranjang & alamat tidak kosong --}}
+                            @if ($items->isNotEmpty() && $alamatList->isNotEmpty())
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-gray-600">Total Harga ({{ $items->sum('pivot.kuantitas') }} barang)</span>
+                                    <span class="text-gray-900 font-medium">Rp. {{ number_format($totalHarga, 0, ',', '.') }}</span>
+                                </div>
+                                
+                                <div class="border-t border-gray-200 my-4"></div>
+
+                                <div class="flex justify-between items-center mb-4">
+                                    <span class="text-xl font-bold text-gray-900">Total</span>
+                                    <span class="text-xl font-bold text-gray-900">Rp. {{ number_format($totalHarga, 0, ',', '.') }}</span>
+                                </div>
+
+                                {{-- Tombol "Bayar" (Submit Form) --}}
+                                <button type="submit"
+                                        class="bg-green-600 hover:bg-green-700 text-white w-full py-3 rounded-lg font-bold text-lg transition-colors">
+                                    Buat Pesanan
+                                </button>
+                            @else
+                                {{-- Tampilan jika keranjang/alamat kosong --}}
+                                <p class="text-sm text-gray-500 mb-4">
+                                    @if($items->isEmpty())
+                                        Keranjang Anda kosong. Silakan isi keranjang Anda terlebih dahulu.
+                                    @elseif($alamatList->isEmpty())
+                                        Anda belum memiliki alamat. Harap tambahkan alamat pengiriman terlebih dahulu.
+                                    @endif
+                                </p>
+                                <button type="button"
+                                        class="bg-gray-300 text-gray-500 w-full py-3 rounded-lg font-bold text-lg cursor-not-allowed"
+                                        disabled>
+                                    Buat Pesanan
+                                </button>
+                            @endif {{-- <-- INI @endif YANG HILANG --}}
+                        </div>
+                    </section>
+
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Kanan: Ringkasan Pembayaran -->
-      <div class="w-full lg:w-1/3 bg-zinc-100 lg:rounded-lg shadow-md p-4 h-fit">
-        <h2 class="text-lg font-semibold mb-2">Metode Pembayaran</h2>
-        <p class="text-xl font-bold">COD <i class="bi bi-cash-coin"></i></p>
-
-        <div class="mt-4 text-sm text-zinc-700 space-y-2">
-          <p class="font-semibold">Ringkasan transaksi</p>
-          <div class="flex justify-between"><span>Total Harga (2 Barang)</span><span>Rp. 6.000.000</span></div>
-          <div class="flex justify-between"><span>Total Ongkir</span><span>Rp. 67.000</span></div>
-          <div class="flex justify-between"><span>Biaya Jasa Aplikasi</span><span>Rp. 2.500</span></div>
-        </div>
-
-        <button class="w-full mt-6 text-white bg-[#00795E] py-3 rounded-md font-semibold hover:bg-[#005a47] transition duration-500">
-          Beli Sekarang
-        </button>
-      </div>
-    </div>
-  </section>
-
-</body>
-</html>
+        </main>
+    </form> {{-- Akhir Form --}}
+      </x-layout>

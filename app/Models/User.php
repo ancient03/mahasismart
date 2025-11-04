@@ -8,6 +8,7 @@ use Illuminate\Notifications\Notifiable;
 // 👇 PASTIKAN IMPORT INI ADA 👇
 use Illuminate\Database\Eloquent\Relations\HasMany; 
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable
 {
@@ -59,5 +60,18 @@ class User extends Authenticatable
     {
         // Parameter: Model terkait, Foreign key, Local key
         return $this->hasOne(Toko::class, 'id_user', 'id_user');
+    }
+
+    public function keranjang(): BelongsToMany
+    {
+        return $this->belongsToMany(Barang::class, 'keranjang', 'id_user', 'id_barang')
+                    ->withPivot('kuantitas') // Penting: Ambil info kuantitas juga
+                    ->withTimestamps(); // Ambil info kapan ditambahkan
+    }
+
+        public function transaksi(): HasMany
+    {
+        // Relasi satu user memiliki banyak transaksi
+        return $this->hasMany(Transaksi::class, 'id_user', 'id_user');
     }
 }

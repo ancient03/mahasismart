@@ -11,14 +11,34 @@
     <section class="bg-white p-5 rounded-xl shadow">
       <h2 class="text-xl font-bold mb-4 text-gray-900">Kategori</h2>
 
-      <div class="flex overflow-x-auto space-x-3 pb-2 scrollbar-thin scrollbar-thumb-gray-300">
-        @for ($i = 0; $i < 9; $i++)
-          <div class="flex-shrink-0 w-20 text-center">
-            <div class="w-16 h-16 bg-gray-200 rounded-full mx-auto mb-2"></div>
-            <p class="text-sm font-medium text-gray-700 truncate">Kategori {{ $i + 1 }}</p>
-          </div>
-        @endfor
-      </div>
+                <div class="flex overflow-x-auto space-x-3 pb-2 scrollbar-thin scrollbar-thumb-gray-300">
+                    @forelse ($kategoriList as $kategori)
+                        {{-- Link ke halaman pencarian untuk kategori ini (buat rutenya nanti) --}}
+                        <a href="{{-- route('search.kategori', $kategori->id_kategori) --}}" 
+                           class="flex-shrink-0 w-20 text-center group">
+                            
+                            {{-- Tampilkan Gambar Kategori --}}
+                            <div class="w-16 h-16 bg-gray-200 rounded-full mx-auto mb-2 overflow-hidden border-2 border-transparent group-hover:border-green-500 transition">
+                                @if($kategori->gambar)
+                                    {{-- Controller Anda menyimpan path lengkap 'img/fotokategori/...' --}}
+                                    <img src="{{ asset($kategori->gambar) }}" alt="{{ $kategori->nama_kategori }}" class="w-full h-full object-cover">
+                                @else
+                                    {{-- Placeholder jika tidak ada gambar --}}
+                                    <span class="flex items-center justify-center h-full text-3xl text-gray-400">
+                                        <i class="bi bi-tag-fill"></i>
+                                    </span>
+                                @endif
+                            </div>
+                            
+                            {{-- Tampilkan Nama Kategori --}}
+                            <p class="text-sm font-medium text-gray-700 truncate group-hover:text-green-600" title="{{ $kategori->nama_kategori }}">
+                                {{ $kategori->nama_kategori }}
+                            </p>
+                        </a>
+                    @empty
+                        <p class="text-sm text-gray-500">Belum ada kategori yang tersedia.</p>
+                    @endforelse
+                </div>
     </section>
 
             <section>

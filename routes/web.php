@@ -12,6 +12,10 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\ProductDetailController;
 use App\Http\Controllers\admin\KategoriController;
+use App\Http\Controllers\transaksi\KeranjangController;
+use App\Http\Controllers\transaksi\CheckoutController;
+use App\Http\Controllers\profile\PesananController;
+use App\Http\Controllers\toko\PesananMasukController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -37,10 +41,12 @@ Route::get('/profil-toko', function () {
     return view('page/profile/profil-toko');
 })->middleware('auth')->name('profil-toko');
 
-Route::get('/checkout', function () {
-    return view('page/products/checkout');
-})->middleware('auth')->name('checkout');
 
+    // --- RUTE CHECKOUT (BARU) ---
+    // Menampilkan halaman pilih alamat & konfirmasi
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index'); 
+    // Memproses pesanan (saat tombol "Buat Pesanan" diklik)
+    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 
 
 /*
@@ -83,9 +89,8 @@ Route::patch('/profile', [ProfileController::class, 'update'])
 
 
 Route::resource('alamat', AlamatController::class)->except(['show']); // 'show' tidak kita perlukan
-Route::get('/pesanan', fn() => view('page/profile/pesanan'))
-    ->middleware('auth')
-    ->name('pesanan');
+
+    Route::get('/pesanan', [PesananController::class, 'index'])->name('pesanan');
 
 // Profil Toko
 Route::get('/profil-toko', fn() => view('page/toko/profil-toko'))
@@ -98,9 +103,10 @@ Route::get('/produk-saya', fn() => view('page/toko/produk-saya'))
     ->name('produk-saya');
 
 // Pesanan Masuk
-Route::get('/pesanan-masuk', fn() => view('page/toko/pesanan-masuk'))
-    ->middleware('auth')
-    ->name('pesanan-masuk');
+        // Pesanan Masuk (INI YANG BARU)
+        Route::get('/pesanan-masuk', [PesananMasukController::class, 'index'])->name('pesanan-masuk');
+        Route::post('/pesanan-masuk/{transaksi}/update-status', [PesananMasukController::class, 'updateStatus'])
+            ->name('pesanan-masuk.update-status'); // <-- NAMA DIPERBAIKI DI SINI
 
 // Statistik Penjualan
 Route::get('/statistik-penjualan', fn() => view('page/toko/statistik-penjualan'))
@@ -185,3 +191,16 @@ Route::prefix('page')->middleware('auth')->group(function () {
 
 // search
 Route::get('/search', [SearchController::class, 'index']) -> name('search');
+
+    // 1. Menampilkan halaman keranjang (dipanggil oleh <x-layout.app-layout>)
+    Route::get('/keranjang', [KeranjangController::class, 'index'])->name('keranjang.index');
+    
+    // 2. Menambah barang ke keranjang (dipanggil dari hal. detail produk)
+    Route::post('/keranjang/tambah/{barang}', [KeranjangController::class, 'store'])->name('keranjang.store');
+    
+    // 3. Mengupdate kuantitas (dipanggil oleh <x-cardproduk.card-chart>)
+    // {id_barang} di sini BUKAN model binding, tapi ID dari tabel keranjang/barang
+    Route::patch('/keranjang/update/{id_barang}', [KeranjangController::class, 'update'])->name('keranjang.update');
+    
+    // 4. Menghapus barang (dipanggil oleh <x-cardproduk.card-chart>)
+    Route::delete('/keranjang/hapus/{id_barang}', [KeranjangController::class, 'destroy'])->name('keranjang.destroy');
