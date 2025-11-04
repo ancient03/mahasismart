@@ -67,12 +67,20 @@
 
             <a href="{{ route('admin.iklan') }}" @class([
                 'flex items-center space-x-3 py-2 px-3 rounded-md',
-                'bg-green-100 text-green-700 font-semibold' => Route::is('admin.iklan'),
-                'text-gray-600 hover:bg-gray-100 hover:text-gray-900' => !Route::is(
-                    'admin.iklan'),
+                // aktif kalau di halaman iklan, tambah iklan, atau edit iklan
+                'bg-green-100 text-green-700 font-semibold' =>
+                    Route::is('admin.iklan') ||
+                    Route::is('admin.tambah-iklan') ||
+                    Route::is('admin.edit-iklan'),
+                'text-gray-600 hover:bg-gray-100 hover:text-gray-900' => !(
+                    Route::is('admin.iklan') ||
+                    Route::is('admin.tambah-iklan') ||
+                    Route::is('admin.edit-iklan')
+                ),
             ])>
                 <span>Iklan</span>
             </a>
+
 
         </nav>
     </div>
