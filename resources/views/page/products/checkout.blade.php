@@ -1,10 +1,14 @@
 
 <x-layout>
+    {{-- Form ini mengirimkan 'id_alamat' dan 'id_metode_pembayaran' yang DIPILIH --}}
     <form method="POST" action="{{ route('checkout.store') }}">
         @csrf
         <main class="py-8 bg-gray-100 min-h-screen">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                 
+                {{-- Padding Top untuk Navbar Fixed --}}
+                <div class="pt-[90px] md:pt-[100px]"></div>
+
                 {{-- Judul --}}
                 <div class="mb-6">
                     <h1 class="text-3xl font-bold text-gray-900">Checkout</h1>
@@ -32,14 +36,14 @@
                         
                         <!-- 1. Pilihan Alamat Pengiriman -->
                         <div class="bg-white rounded-lg shadow-md p-6">
-                            <h2 class="text-xl font-bold text-gray-900 mb-4">Pilih Alamat Pengiriman</h2>
+                            <h2 class="text-xl font-bold text-gray-900 mb-4">Pilih Alamat Pengiriman <span class="text-red-500">*</span></h2>
                             
                             @if ($alamatList->isEmpty())
                                 {{-- Tampilan jika user tidak punya alamat --}}
                                 <div class="text-center text-gray-500 py-6 border border-dashed rounded-lg">
                                     <i class="bi bi-geo-alt text-4xl mb-2"></i>
                                     <p>Anda belum memiliki alamat tersimpan.</p>
-                                    <a href="{{ route('alamat.create', ['redirect' => 'checkout']) }}" {{-- Redirect kembali ke checkout --}}
+                                    <a href="{{ route('alamat.create', ['redirect' => 'checkout.index']) }}" {{-- Redirect kembali ke checkout --}}
                                        class="mt-4 inline-block bg-green-100 text-green-700 py-2 px-4 rounded-lg font-semibold hover:bg-green-200 transition-colors text-sm">
                                         + Tambah Alamat Baru
                                     </a>
@@ -49,14 +53,15 @@
                                 <div class="space-y-4">
                                     @foreach ($alamatList as $alamat)
                                         <label for="alamat-{{ $alamat->id_alamat }}" 
-                                               class="flex items-start space-x-4 border rounded-lg p-4 cursor-pointer hover:bg-gray-50 {{ $alamat->is_default ? 'border-green-500 bg-green-50' : 'border-gray-200' }}">
+                                               class="flex items-start space-x-4 border rounded-lg p-4 cursor-pointer hover:bg-gray-50 has-[:checked]:bg-green-50 has-[:checked]:border-green-500 {{ $alamat->is_default ? 'border-green-500 bg-green-50' : 'border-gray-200' }}">
                                             {{-- Radio Button --}}
                                             <input type="radio" 
                                                    name="id_alamat" 
                                                    id="alamat-{{ $alamat->id_alamat }}" 
                                                    value="{{ $alamat->id_alamat }}" 
                                                    class="mt-1 text-green-600 focus:ring-green-500" 
-                                                   {{ $alamat->is_default ? 'checked' : '' }} {{-- Pilih alamat default --}}
+                                                   {{-- Cek jika ini adalah alamat default ATAU alamat yang dipilih sebelumnya --}}
+                                                   {{ (old('id_alamat') == $alamat->id_alamat) || (!$errors->any() && $alamat->is_default) ? 'checked' : '' }}
                                                    required>
                                             
                                             {{-- Info Alamat --}}
@@ -78,10 +83,10 @@
                                         </label>
                                     @endforeach
                                 </div>
-                                 <a href="{{ route('alamat.create', ['redirect' => 'checkout']) }}" 
+                                 <a href="{{ route('alamat.create', ['redirect' => 'checkout.index']) }}" 
                                     class="mt-4 inline-block text-sm text-blue-600 hover:underline">
                                     + Tambah alamat baru lainnya
-                                 </a>
+                                  </a>
                             @endif
                         </div>
 
@@ -102,7 +107,7 @@
                                         <!-- Info -->
                                         <div class="flex-grow">
                                             <h3 class="font-semibold text-gray-900">{{ $item->nama_barang }}</h3>
-                                            <p class="text-sm text-gray-600">dari {{ $item->toko->nama_toko }}</p>
+                                            <p class="text-sm text-gray-600">dari {{ $item->toko?->nama_toko ?? 'Toko Dihapus' }}</p>
                                             <p class="text-sm text-gray-500">{{ $item->pivot->kuantitas }} x Rp {{ number_format($item->harga, 0, ',', '.') }}</p>
                                         </div>
                                         <!-- Subtotal -->
@@ -125,8 +130,46 @@
                         <div class="bg-white rounded-lg shadow-md p-6 sticky top-28">
                             <h2 class="text-xl font-bold text-gray-900 mb-4">Ringkasan Belanja</h2>
                             
-                            {{-- Hanya tampilkan jika keranjang & alamat tidak kosong --}}
-                            @if ($items->isNotEmpty() && $alamatList->isNotEmpty())
+                            {{-- Pilihan Metode Pembayaran --}}
+                            <div class="mb-4">
+                                <h3 class="text-md font-semibold text-gray-700 mb-2">Metode Pembayaran <span class="text-red-500">*</span></h3>
+                                @if(isset($metodePembayaranList) && $metodePembayaranList->isNotEmpty())
+                                    <div class="space-y-3">
+                                        @foreach($metodePembayaranList as $metode)
+                                            <label for="metode-{{ $metode->id_metode_pembayaran }}" 
+                                                   class="flex justify-between items-center border rounded-lg p-3 cursor-pointer hover:bg-gray-50 has-[:checked]:bg-green-50 has-[:checked]:border-green-500">
+                                                <div class="flex items-center gap-3">
+                                                    @if($metode->gambar_logo)
+                                                        <img src="{{ asset($metode->gambar_logo) }}" alt="{{ $metode->nama_metode }}" class="w-10 h-6 object-contain">
+                                                    @elseif($metode->kode_metode == 'COD')
+                                                        <i class="bi bi-cash-coin text-green-600 text-xl w-10 text-center"></i>
+                                                    @else
+                                                        <i class="bi bi-credit-card text-gray-600 text-xl w-10 text-center"></i>
+                                                    @endif
+                                                    <div>
+                                                        <span class="font-medium text-gray-900">{{ $metode->nama_metode }}</span>
+                                                        <p class="text-xs text-gray-500 mt-1">{{ $metode->deskripsi }}</p>
+                                                    </div>
+                                                </div>
+                                                <input type="radio" 
+                                                       name="id_metode_pembayaran" 
+                                                       id="metode-{{ $metode->id_metode_pembayaran }}" 
+                                                       value="{{ $metode->id_metode_pembayaran }}"
+                                                       class="text-green-600 focus:ring-green-500"
+                                                       {{ (old('id_metode_pembayaran') == $metode->id_metode_pembayaran) || (!$errors->any() && $metode->kode_metode == 'COD') || (!$errors->any() && $loop->first) ? 'checked' : '' }}
+                                                       required>
+                                            </label>
+                                        @endforeach
+                                    </div>
+                                @else
+                                    <div class="border rounded-lg p-3 bg-red-50 text-red-700 text-sm">
+                                        Tidak ada metode pembayaran yang aktif saat ini.
+                                    </div>
+                                @endif
+                            </div>
+                            
+                            {{-- Cek jika semua data siap untuk checkout --}}
+                            @if ($items->isNotEmpty() && $alamatList->isNotEmpty() && $metodePembayaranList->isNotEmpty())
                                 <div class="flex justify-between items-center mb-2">
                                     <span class="text-gray-600">Total Harga ({{ $items->sum('pivot.kuantitas') }} barang)</span>
                                     <span class="text-gray-900 font-medium">Rp. {{ number_format($totalHarga, 0, ',', '.') }}</span>
@@ -145,12 +188,14 @@
                                     Buat Pesanan
                                 </button>
                             @else
-                                {{-- Tampilan jika keranjang/alamat kosong --}}
+                                {{-- Tampilan jika ada data yang kurang --}}
                                 <p class="text-sm text-gray-500 mb-4">
                                     @if($items->isEmpty())
-                                        Keranjang Anda kosong. Silakan isi keranjang Anda terlebih dahulu.
+                                        Keranjang Anda kosong.
                                     @elseif($alamatList->isEmpty())
-                                        Anda belum memiliki alamat. Harap tambahkan alamat pengiriman terlebih dahulu.
+                                        Anda belum memiliki alamat.
+                                    @elseif($metodePembayaranList->isEmpty())
+                                        Metode pembayaran tidak tersedia.
                                     @endif
                                 </p>
                                 <button type="button"
@@ -158,7 +203,7 @@
                                         disabled>
                                     Buat Pesanan
                                 </button>
-                            @endif {{-- <-- INI @endif YANG HILANG --}}
+                            @endif 
                         </div>
                     </section>
 
