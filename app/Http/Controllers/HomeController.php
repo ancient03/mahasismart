@@ -3,29 +3,41 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Barang; // Import model Barang
+use App\Models\Barang;
 use App\Models\Kategori;
+use App\Models\Iklan;
+use Carbon\Carbon;
 use Illuminate\View\View;
 
 class HomeController extends Controller
 {
-    /**
-     * Menampilkan halaman utama dengan semua produk.
-     */
     public function index(): View
     {
-        // Ambil semua barang, eager load relasi 'toko'
-        // Anda bisa menambahkan ->latest() atau ->orderBy() jika perlu
-        // Anda juga bisa menambahkan ->paginate(12) untuk pagination
-        $barangList = Barang::with('toko')->latest()->paginate(12); // Contoh: Ambil 12 terbaru per halaman
-        
+        // Ambil semua barang (produk)
+        $barangList = Barang::with('toko')->latest()->paginate(12);
+
+        // Ambil semua kategori
         $kategoriList = Kategori::orderBy('nama_kategori')->get();
 
-        // Kirim data ke view home
-        // Pastikan path view 'page.home' benar
+        // Ambil hanya iklan yang status-nya aktif dan sedang dalam rentang waktu aktif
+        $iklanAktif = Iklan::where('status', 'aktif')
+            ->where('dimulai', '<=', Carbon::now())
+            ->where('berakhir', '>=', Carbon::now())
+            ->latest()
+            ->get();
+
+        // Kirim semua data ke view
         return view('page.home', [
-            'barangList' => $barangList ,
-            'kategoriList' => $kategoriList 
+            'barangList' => $barangList,
+            'kategoriList' => $kategoriList,
+            'iklanAktif' => $iklanAktif
         ]);
+    }
+
+    // Detail iklan
+    public function show($id)
+    {
+        $iklan = Iklan::findOrFail($id);
+        return view('page.detail-iklan', compact('iklan'));
     }
 }

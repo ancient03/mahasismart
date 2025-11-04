@@ -6,9 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+    // Jalankan migrasi
     public function up(): void
     {
         Schema::create('iklan', function (Blueprint $table) {
@@ -17,15 +15,17 @@ return new class extends Migration
             $table->string('slogan')->nullable();
             $table->text('deskripsi')->nullable();
             $table->string('gambar')->nullable();
-            $table->dateTime('dimulai'); // tanggal, bulan, tahun, jam, menit, detik
+            $table->dateTime('dimulai');
             $table->dateTime('berakhir');
+
+            // ✅ Tambahkan kolom status dengan dua opsi: aktif / tidak_aktif
+            $table->enum('status', ['aktif', 'tidak_aktif'])->default('tidak_aktif');
+
             $table->timestamps(); // created_at & updated_at
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
+    // Balik migrasi
     public function down(): void
     {
         Schema::dropIfExists('iklan');
