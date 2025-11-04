@@ -29,6 +29,10 @@
 
 `php artisan migrate:fresh`
 
+### clear config
+
+`php artisan config:clear`
+
 ### Untuk membuat component untuk view
 
 `php artisan make:component`
