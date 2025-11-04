@@ -283,8 +283,8 @@ class BarangController extends Controller
         Log::info('Otorisasi berhasil. Mencoba menghapus barang ID: ' . $barang->id_barang . ' - Nama: ' . $barang->nama_barang); 
 
         // Hapus file foto jika ada
-        if ($produk_saya->foto_barang) {
-            $fotoPath = public_path('img/fotobarang/' . $produk_saya->foto_barang);
+        if ($barang->foto_barang) {
+            $fotoPath = public_path('img/fotobarang/' . $barang->foto_barang);
             if (File::exists($fotoPath)) {
                 try {
                     File::delete($fotoPath);
