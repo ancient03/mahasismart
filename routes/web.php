@@ -181,6 +181,16 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/iklan', fn() => view('page.admin.iklan'))->name('admin.iklan');
 });
 
+// tambah iklan
+Route::prefix('admin')->middleware('auth')->group(function () {
+    Route::get('/tambah-iklan', fn() => view('page.admin.tambah-iklan'))->name('admin.tambah-iklan');
+});
+
+// edit iklan
+Route::prefix('admin')->middleware('auth')->group(function () {
+    Route::get('/edit-iklan', fn() => view('page.admin.edit-iklan'))->name('admin.edit-iklan');
+});
+
 // Rute CRUD Barang (Menggunakan Resource Controller)
 Route::resource('produk-saya', BarangController::class)->middleware('auth');
 
