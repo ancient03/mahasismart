@@ -10,6 +10,7 @@ use App\Models\Alamat;
 use App\Models\Transaksi;
 use App\Models\DetailTransaksi;
 use App\Models\Barang; 
+use App\Models\MetodePembayaran; // <-- 1. Import MetodePembayaran
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Log; 
@@ -19,6 +20,7 @@ class CheckoutController extends Controller
 {
     /**
      * Menampilkan halaman checkout.
+     * Kita akan mengambil SEMUA metode pembayaran yang aktif.
      */
     public function index(): View|RedirectResponse
     {
@@ -30,6 +32,11 @@ class CheckoutController extends Controller
         }
 
         $alamatList = $user->alamat()->orderByDesc('is_default')->get();
+        
+        // 2. Ambil SEMUA metode pembayaran yang aktif
+        $metodePembayaranList = MetodePembayaran::where('is_aktif', true)
+                                                 ->orderBy('nama_metode')
+                                                 ->get();
 
         $totalHarga = $items->sum(function($item) {
             return $item->harga * $item->pivot->kuantitas;
@@ -38,37 +45,35 @@ class CheckoutController extends Controller
         return view('page.products.checkout', [
             'items' => $items,
             'alamatList' => $alamatList,
-            'totalHarga' => $totalHarga
+            'totalHarga' => $totalHarga,
+            'metodePembayaranList' => $metodePembayaranList // <-- 3. Kirim LIST ke view
         ]);
     }
 
     /**
      * Memproses pesanan.
+     * Akan memvalidasi ID Metode Pembayaran yang dipilih.
      */
     public function store(Request $request): RedirectResponse
     {
         $user = Auth::user();
         $items = $user->keranjang()->with('toko')->get(); 
+        $alamatList = $user->alamat;
 
         // 1. Validasi
         if ($items->isEmpty()) {
             return redirect()->route('keranjang.index')->with('error', 'Keranjang Anda kosong.');
         }
         
+        // 👇 PERBARUI VALIDASI: Tambahkan 'id_metode_pembayaran' 👇
         $request->validate([
-            'id_alamat' => ['required', 'integer'], 
+            'id_alamat' => ['required', 'integer', Rule::in($alamatList->pluck('id_alamat'))],
+            'id_metode_pembayaran' => ['required', 'integer', 'exists:metode_pembayaran,id_metode_pembayaran'] // Validasi metode pembayaran
         ], [
-            'id_alamat.required' => 'Silakan pilih alamat pengiriman terlebih dahulu.'
+            'id_alamat.required' => 'Silakan pilih alamat pengiriman.',
+            'id_metode_pembayaran.required' => 'Silakan pilih metode pembayaran.',
+            'id_metode_pembayaran.exists' => 'Metode pembayaran tidak valid.'
         ]);
-
-        $idAlamatYangDipilih = $request->input('id_alamat');
-        $alamat = Alamat::find($idAlamatYangDipilih);
-
-        if (!$alamat || $alamat->id_user !== $user->id_user) {
-            return redirect()->back()
-                             ->withInput($request->input())
-                             ->withErrors(['id_alamat' => 'Alamat yang Anda pilih tidak valid.']);
-        }
         
         // 2. Hitung total harga
         $totalHarga = $items->sum(function($item) {
@@ -79,25 +84,22 @@ class CheckoutController extends Controller
         try {
             DB::beginTransaction();
 
-            // 3a. Buat 1 baris di tabel 'transaksi' (Induk)
             $transaksi = Transaksi::create([
                 'id_user' => $user->id_user,
-                'id_alamat' => $alamat->id_alamat, 
+                'id_alamat' => $request->id_alamat,
+                
+                // 👇 PERBARUI PENYIMPANAN: Simpan ID yang dipilih dari form 👇
+                'id_metode_pembayaran' => $request->input('id_metode_pembayaran'), 
+                
                 'nomor_invoice' => 'INV/' . now()->format('Ymd') . '/' . $user->id_user . '/' . time(), 
                 'total_harga_keseluruhan' => $totalHarga,
-                'status_pembayaran' => 'pending', // (Asumsi pembayaran belum selesai)
-                
-                // 👇 PERUBAHAN DI SINI 👇
-                // Status awal sekarang 'belum diproses', bukan 'diproses'
+                'status_pembayaran' => 'pending', 
                 'status_pengiriman' => 'belum diproses', 
             ]);
 
-            // 3b. Loop keranjang dan pindahkan ke 'detail_transaksi' (Anak)
+            // 3b. Loop keranjang
             foreach ($items as $item) {
-                if (!$item->toko) {
-                    throw new \Exception('Barang ' . $item->nama_barang . ' tidak memiliki info toko.'); 
-                }
-                
+                if (!$item->toko) { throw new \Exception('Barang ' . $item->nama_barang . ' tidak memiliki info toko.'); }
                 DetailTransaksi::create([
                     'id_transaksi' => $transaksi->id_transaksi,
                     'id_barang' => $item->id_barang,
@@ -107,7 +109,7 @@ class CheckoutController extends Controller
                 ]);
             }
 
-            // 3c. Kosongkan keranjang user
+            // 3c. Kosongkan keranjang
             $user->keranjang()->detach();
 
             // 3d. Commit
@@ -119,7 +121,7 @@ class CheckoutController extends Controller
             return redirect()->route('keranjang.index')->with('error', 'Terjadi kesalahan saat memproses pesanan. Silakan coba lagi.');
         }
 
-        // 4. Redirect ke halaman "Pesanan Saya"
+        // 4. Redirect ke "Pesanan Saya"
         return redirect()->route('pesanan')->with('status', 'Pesanan Anda berhasil dibuat!');
     }
 }
