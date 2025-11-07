@@ -17,6 +17,7 @@ class Transaksi extends Model
     protected $fillable = [
         'id_user',
         'id_alamat',
+        'id_metode_pembayaran',
         'nomor_invoice',
         'total_harga_keseluruhan',
         'status_pembayaran',
@@ -55,5 +56,13 @@ class Transaksi extends Model
     public function detail(): HasMany
     {
         return $this->hasMany(DetailTransaksi::class, 'id_transaksi', 'id_transaksi');
+    }
+
+        /**
+     * Relasi BelongsTo: Transaksi ini menggunakan SATU MetodePembayaran.
+     */
+    public function metodePembayaran(): BelongsTo
+    {
+        return $this->belongsTo(MetodePembayaran::class, 'id_metode_pembayaran', 'id_metode_pembayaran');
     }
 }
