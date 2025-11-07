@@ -39,3 +39,5 @@
 
 `Jika Membuat di dalam folder custom`
 ` php artisan make:component folder/namafile`
+
+# TESTING BACKUP
