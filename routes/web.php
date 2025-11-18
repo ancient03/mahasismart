@@ -1,227 +1,143 @@
 <?php
 
-use App\Http\Controllers\Admin\IklanController;
 use Illuminate\Support\Facades\Route;
+
+// ============================================================================
+// IMPORT SEMUA CONTROLLER (WAJIB ADA)
+// ============================================================================
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\profile\ProfileController;
 use App\Http\Controllers\profile\AlamatController;
-use App\Http\Controllers\Toko\TokoController;
+use App\Http\Controllers\profile\PesananController; // Controller Pesanan Saya (Pembeli)
 use App\Http\Controllers\toko\RegisterTokoController;
+use App\Http\Controllers\toko\TokoController;
 use App\Http\Controllers\toko\BarangController;
+use App\Http\Controllers\toko\PesananMasukController; // Controller Pesanan Masuk (Penjual)
+use App\Http\Controllers\transaksi\KeranjangController;
+use App\Http\Controllers\transaksi\CheckoutController;
+use App\Http\Controllers\admin\AdminTokoController; // Controller Admin Toko
+use App\Http\Controllers\admin\KategoriController; // Controller Admin Kategori
+use App\Http\Controllers\Admin\IklanController; // Controller Admin Iklan
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\ProductDetailController;
-use App\Http\Controllers\admin\KategoriController;
-use App\Http\Controllers\transaksi\KeranjangController;
-use App\Http\Controllers\transaksi\CheckoutController;
-use App\Http\Controllers\profile\PesananController;
-use App\Http\Controllers\toko\PesananMasukController;
 
+/*
+|--------------------------------------------------------------------------
+| Rute Publik (Bisa diakses siapa saja)
+|--------------------------------------------------------------------------
+*/
 Route::get('/', [HomeController::class, 'index'])->name('home');
-
-route::get('/search', function () {
-    return view('page/search');
-});
-
-
-route::get('/keranjang', function () {
-    return view('page/products/chart');
-});
-
-// 👇 RUTE LAMA (DIKOMENTARI/HAPUS) 👇
-// route::get('/detailproduk', function () {
-//     return view('page/products/detailproduk');
-// });
-// 👇 RUTE BARU UNTUK DETAIL PRODUK 👇
+Route::get('/search', [SearchController::class, 'index'])->name('search');
 Route::get('/detailproduk/{barang}', [ProductDetailController::class, 'show'])->name('detailproduk.show');
-
-
-
-Route::get('/profil-toko', function () {
-    return view('page/profile/profil-toko');
-})->middleware('auth')->name('profil-toko');
-
-
-// --- RUTE CHECKOUT (BARU) ---
-// Menampilkan halaman pilih alamat & konfirmasi
-Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
-// Memproses pesanan (saat tombol "Buat Pesanan" diklik)
-Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 
 
 /*
 |--------------------------------------------------------------------------
-| Rute Autentikasi
+| Rute Autentikasi (Register, Login, Logout)
 |--------------------------------------------------------------------------
 */
+// Rute untuk Tamu (Guest)
+Route::middleware('guest')->group(function () {
+    Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
+    Route::post('register', [RegisteredUserController::class, 'store']);
+    Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
+    Route::post('login', [AuthenticatedSessionController::class, 'store']);
+});
 
-// BIARKAN BARIS INI (INI YANG BENAR)
-Route::get('register', [RegisteredUserController::class, 'create'])
-    ->middleware('guest')
-    ->name('register');
-
-// Rute untuk MEMPROSES form registrasi (POST)
-Route::post('register', [RegisteredUserController::class, 'store'])
-    ->middleware('guest');
-
-// --- Rute Login ---
-Route::get('login', [AuthenticatedSessionController::class, 'create'])
-    ->middleware('guest')
-    ->name('login'); // <-- Ini memperbaiki error "Route [login] not defined"
-
-Route::post('login', [AuthenticatedSessionController::class, 'store'])
-    ->middleware('guest');
-
-// --- Rute Logout ---
-// Kita butuh ini agar pengguna bisa keluar
+// Rute Logout (Hanya untuk yang sudah login)
 Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
-    ->middleware('auth') // Hanya bisa diakses jika SUDAH login
-    ->name('logout');
+            ->middleware('auth')->name('logout');
 
 
-// GET /profile : Menampilkan form (method 'edit' di controller)
-Route::get('/profile', [ProfileController::class, 'edit'])
-    ->middleware('auth')->name('profile');
-
-// PATCH /profile : Menyimpan data (method 'update' di controller)
-Route::patch('/profile', [ProfileController::class, 'update'])
-    ->middleware('auth')->name('profile.update');
-
-
-Route::resource('alamat', AlamatController::class)->except(['show']); // 'show' tidak kita perlukan
-
-Route::get('/pesanan', [PesananController::class, 'index'])->name('pesanan');
-
-// Profil Toko
-Route::get('/profil-toko', fn() => view('page/toko/profil-toko'))
-    ->middleware('auth')
-    ->name('profil-toko');
-
-// Produk Saya
-Route::get('/produk-saya', fn() => view('page/toko/produk-saya'))
-    ->middleware('auth')
-    ->name('produk-saya');
-
-// Pesanan Masuk
-// Pesanan Masuk (INI YANG BARU)
-Route::get('/pesanan-masuk', [PesananMasukController::class, 'index'])->name('pesanan-masuk');
-Route::post('/pesanan-masuk/{transaksi}/update-status', [PesananMasukController::class, 'updateStatus'])
-    ->name('pesanan-masuk.update-status'); // <-- NAMA DIPERBAIKI DI SINI
-
-// Statistik Penjualan
-Route::get('/statistik-penjualan', fn() => view('page/toko/statistik-penjualan'))
-    ->middleware('auth')
-    ->name('statistik-penjualan');
-
-
-// 👇 RUTE UNTUK REGISTER TOKO (MENGGUNAKAN CONTROLLER BARU) 👇
-
-
+/*
+|--------------------------------------------------------------------------
+| Rute yang Memerlukan Login (Dilindungi Middleware 'auth')
+|--------------------------------------------------------------------------
+*/
 Route::middleware('auth')->group(function () {
 
-    // ... Rute profile, alamat, dll. ...
+    // --- Rute Profil User ---
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
-    // Rute Register Toko
-    Route::get('/register-toko', [RegisterTokoController::class, 'create'])->name('register.toko.create');
-    Route::post('/register-toko', [RegisterTokoController::class, 'store'])->name('register.toko.store');
+    // --- Rute CRUD Alamat ---
+    Route::resource('alamat', AlamatController::class)->except(['show']);
 
-    // 👇 INI RUTE UNTUK METHOD showProfile() 👇
-    Route::get('/profil-toko', [TokoController::class, 'showProfile'])
-        ->name('profil-toko');
+    // --- Rute Pesanan User ("Pesanan Saya" - Histori Pembeli) ---
+    // Pastikan PesananController.php ada di app/Http/Controllers/profile/
+    Route::get('/pesanan', [PesananController::class, 'index'])->name('pesanan');
 
-    // 👇 RUTE UNTUK EDIT PROFIL TOKO 👇
-    // Menampilkan form edit (GET)
-    // {toko} adalah parameter route model binding, merujuk ke ID toko
-    Route::get('/toko/{toko}/edit', [TokoController::class, 'edit'])->name('toko.edit');
+    // --- Rute Keranjang ---
+    Route::get('/keranjang', [KeranjangController::class, 'index'])->name('keranjang.index');
+    Route::post('/keranjang/tambah/{barang}', [KeranjangController::class, 'store'])->name('keranjang.store');
+    Route::patch('/keranjang/update/{id_barang}', [KeranjangController::class, 'update'])->name('keranjang.update');
+    Route::delete('/keranjang/hapus/{id_barang}', [KeranjangController::class, 'destroy'])->name('keranjang.destroy');
 
-    // Menyimpan perubahan (PUT/PATCH)
-    // Method di form Anda adalah PUT (@method('PUT'))
-    Route::put('/toko/{toko}', [TokoController::class, 'update'])->name('toko.update');
+    // --- Rute Checkout ---
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 
-    // ... Rute toko lainnya ...
+    // --- Rute Toko (Dashboard Penjual) ---
+    Route::prefix('toko')->middleware(['auth', 'toko.banned'])->group(function () {
+        // Register Toko (Buka Toko)
+        Route::get('/register', [RegisterTokoController::class, 'create'])->name('register.toko.create');
+        Route::post('/register', [RegisterTokoController::class, 'store'])->name('register.toko.store');
 
-});
+        // Profil Toko & Edit Toko
+        Route::get('/profil', [TokoController::class, 'showProfile'])->name('profil-toko');
+        Route::get('/{toko}/edit', [TokoController::class, 'edit'])->name('toko.edit');
+        Route::put('/{toko}', [TokoController::class, 'update'])->name('toko.update');
 
-// admin
-Route::prefix('admin')->middleware('auth')->group(function () {
-    Route::get('/profile-admin', fn() => view('page.admin.profile-admin'))->name('admin.profile');
-});
+        // CRUD Barang (Produk Saya)
+        // Rute ini akan membuat: produk-saya.index, produk-saya.create, produk-saya.store, dll.
+        // Sesuai permintaan Anda untuk menggunakan 'produk-saya' sebagai nama resource
+        Route::resource('produk-saya', BarangController::class);
 
-// list-toko
-Route::prefix('admin')->middleware('auth')->group(function () {
-    Route::get('/list-toko', fn() => view('page.admin.list-toko'))->name('admin.list-toko');
-});
+        // Pesanan Masuk (Manajemen Pesanan untuk Penjual)
+        Route::get('/pesanan-masuk', [PesananMasukController::class, 'index'])->name('pesanan-masuk');
 
-// list-admin
-Route::prefix('admin')->middleware('auth')->group(function () {
-    Route::get('/list-user', fn() => view('page.admin.list-user'))->name('admin.list-user');
-});
+        // Update Status Pesanan Masuk
+        Route::post('/pesanan-masuk/{transaksi}/update-status', [PesananMasukController::class, 'updateStatus'])
+            ->name('pesanan-masuk.update-status');
 
-// laporan
-Route::prefix('admin')->middleware('auth')->group(function () {
-    Route::get('/laporan', fn() => view('page.admin.laporan'))->name('admin.laporan');
-});
+        // Statistik (Halaman lain di dashboard)
+        Route::get('/statistik-penjualan', fn() => view('page/toko/statistik-penjualan'))->name('statistik-penjualan');
+    });
 
-// Kategori
-Route::prefix('admin')->middleware('auth')->group(function () {
-    // Daftar kategori
-    Route::get('/kategori', [KategoriController::class, 'index'])->name('admin.kategori');
+    // --- Rute Admin ---
+    Route::prefix('admin')->group(function () {
+        Route::get('/profile-admin', fn() => view('page.admin.profile-admin'))->name('admin.profile');
 
-    // Tambah kategori
-    Route::get('/kategori/tambah-kategori', [KategoriController::class, 'create'])->name('admin.tambah-kategori');
-    Route::post('/kategori/store', [KategoriController::class, 'store'])->name('admin.kategori.store');
+        // List Toko (Admin)
+        Route::get('/list-toko', [AdminTokoController::class, 'index'])->name('admin.list-toko');
 
-    // Edit kategori
-    Route::get('/kategori/{id}/edit', [KategoriController::class, 'edit'])->name('admin.kategori.edit');
-    Route::put('/kategori/{id}', [KategoriController::class, 'update'])->name('admin.kategori.update');
-});
+        // Update Status Toko (Banned/Aktif)
+        Route::patch('/list-toko/{toko}/status', [AdminTokoController::class, 'updateStatus'])->name('admin.toko.update-status');
 
-// iklan admin
-Route::prefix('admin')->middleware('auth')->group(function () {
-    // Daftar iklan
-    Route::get('/iklan', [IklanController::class, 'index'])->name('admin.iklan');
+        Route::get('/list-user', fn() => view('page.admin.list-user'))->name('admin.list-user');
+        Route::get('/laporan', fn() => view('page.admin.laporan'))->name('admin.laporan');
 
-    // Tambah iklan (form)
-    Route::get('/iklan/tambah-iklan', [IklanController::class, 'create'])->name('admin.tambah-iklan');
+        // --- Manajemen Kategori (Admin) ---
+        Route::get('/kategori', [KategoriController::class, 'index'])->name('admin.kategori');
+        Route::get('/kategori/tambah-kategori', [KategoriController::class, 'create'])->name('admin.tambah-kategori');
+        Route::post('/kategori/store', [KategoriController::class, 'store'])->name('admin.kategori.store');
+        Route::get('/kategori/{id}/edit', [KategoriController::class, 'edit'])->name('admin.kategori.edit');
+        Route::put('/kategori/{id}', [KategoriController::class, 'update'])->name('admin.kategori.update');
 
-    // Simpan iklan (proses form)
-    Route::post('/iklan/tambah-iklan', [IklanController::class, 'store'])->name('admin.store-iklan');
+        // --- Manajemen Iklan (Admin) ---
+        Route::get('/iklan', [IklanController::class, 'index'])->name('admin.iklan');
+        Route::get('/iklan/tambah-iklan', [IklanController::class, 'create'])->name('admin.tambah-iklan');
+        Route::post('/iklan/tambah-iklan', [IklanController::class, 'store'])->name('admin.store-iklan');
+        Route::get('/iklan/{id}/edit-iklan', [IklanController::class, 'edit'])->name('admin.edit-iklan');
+        Route::put('/iklan/{id}', [IklanController::class, 'update'])->name('admin.iklan.update');
+        Route::delete('/iklan/{id}', [IklanController::class, 'destroy'])->name('admin.hapus-iklan');
+    });
 
-    // Edit iklan
-    Route::get('/iklan/{id}/edit-iklan', [IklanController::class, 'edit'])->name('admin.edit-iklan');
-    Route::put('/iklan/{id}', [IklanController::class, 'update'])->name('admin.iklan.update');
+    // --- Rute Chat ---
+    Route::prefix('page')->group(function () {
+        Route::get('/chat', fn() => view('page.chat'))->name('page.chat');
+    });
 
-
-    // Hapus iklan
-    Route::delete('/iklan/{id}', [IklanController::class, 'destroy'])->name('admin.hapus-iklan');
-});
-
-// detail iklan
-Route::get('/detail-iklan/{id}', [HomeController::class, 'show'])->name('detail-iklan');
-
-
-
-// Rute CRUD Barang (Menggunakan Resource Controller)
-Route::resource('produk-saya', BarangController::class)->middleware('auth');
-
-// chat
-Route::prefix('page')->middleware('auth')->group(function () {
-    Route::get('/chat', fn() => view('page.chat'))->name('page.chat');
-});
-
-// search
-Route::get('/search', [SearchController::class, 'index'])->name('search');
-
-// 1. Menampilkan halaman keranjang (dipanggil oleh <x-layout.app-layout>)
-Route::get('/keranjang', [KeranjangController::class, 'index'])->name('keranjang.index');
-
-// 2. Menambah barang ke keranjang (dipanggil dari hal. detail produk)
-Route::post('/keranjang/tambah/{barang}', [KeranjangController::class, 'store'])->name('keranjang.store');
-
-// 3. Mengupdate kuantitas (dipanggil oleh <x-cardproduk.card-chart>)
-// {id_barang} di sini BUKAN model binding, tapi ID dari tabel keranjang/barang
-Route::patch('/keranjang/update/{id_barang}', [KeranjangController::class, 'update'])->name('keranjang.update');
-
-// 4. Menghapus barang (dipanggil oleh <x-cardproduk.card-chart>)
-Route::delete('/keranjang/hapus/{id_barang}', [KeranjangController::class, 'destroy'])->name('keranjang.destroy');
+}); // Akhir middleware('auth') group
