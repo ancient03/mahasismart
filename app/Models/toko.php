@@ -21,6 +21,7 @@ class Toko extends Model
         'id_user',
         'nama_toko',
         'no_hp_toko',
+        'status_toko',
         'no_rek',     
         'logo_toko',
     ];
