@@ -83,7 +83,7 @@
             {{-- tombol beli sekarang & tambah ke keranjang --}}
             <div class=" flex gap-4 mt-10 flex-wrap ">
                 <button 
-                    type="button" {{-- Tipe 'button' agar tidak submit form --}}
+                    type="submit" {{-- Tipe 'button' agar tidak submit form --}}
                     class="bg-[#00795E] text-white px-6 py-3 rounded hover:bg-[#005a47] transition cursor-pointer font-semibold">
                     Beli Sekarang
                 </button>

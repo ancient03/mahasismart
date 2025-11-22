@@ -19,6 +19,7 @@ use App\Http\Controllers\transaksi\CheckoutController;
 use App\Http\Controllers\admin\AdminTokoController; // Controller Admin Toko
 use App\Http\Controllers\admin\KategoriController; // Controller Admin Kategori
 use App\Http\Controllers\Admin\IklanController; // Controller Admin Iklan
+use App\Http\Controllers\admin\AdminUserController; // Controller Admin User
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\ProductDetailController;
@@ -107,8 +108,8 @@ Route::middleware('auth')->group(function () {
     });
 
     // --- Rute Admin ---
-    Route::prefix('admin')->group(function () {
-        Route::get('/profile-admin', fn() => view('page.admin.profile-admin'))->name('admin.profile');
+    Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
+        Route::get('/', fn() => view('page.admin.dashboard-admin'))->name('admin.dashboard');
 
         // List Toko (Admin)
         Route::get('/list-toko', [AdminTokoController::class, 'index'])->name('admin.list-toko');
@@ -116,7 +117,10 @@ Route::middleware('auth')->group(function () {
         // Update Status Toko (Banned/Aktif)
         Route::patch('/list-toko/{toko}/status', [AdminTokoController::class, 'updateStatus'])->name('admin.toko.update-status');
 
-        Route::get('/list-user', fn() => view('page.admin.list-user'))->name('admin.list-user');
+        // Manajemen User (List & Banned)
+        Route::get('/list-user', [AdminUserController::class, 'index'])->name('admin.list-user'); // Gunakan controller, bukan view langsung
+        Route::patch('/list-user/{user}/status', [AdminUserController::class, 'updateStatus'])->name('admin.user.update-status');
+  
         Route::get('/laporan', fn() => view('page.admin.laporan'))->name('admin.laporan');
 
         // --- Manajemen Kategori (Admin) ---

@@ -109,6 +109,13 @@
             <a href="{{ route('profile') }}" class="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
               Profil Saya
             </a>
+
+            <a href="{{ route('admin.dashboard') }}">
+              @if(Auth::user()->role == 'admin')
+                <span class="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">Admin Panel</span>
+              @endif
+            </a>
+
             <form method="POST" action="{{ route('logout') }}">
               @csrf
               <a href="{{ route('logout') }}" 

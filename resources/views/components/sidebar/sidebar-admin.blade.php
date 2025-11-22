@@ -3,23 +3,20 @@
 
         {{-- Header Admin --}}
         <div class="flex items-center space-x-4 mb-6">
-            <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center">
-                <i class="bi bi-person-fill text-4xl text-gray-400"></i>
-            </div>
             <div>
-                <span class="font-bold text-lg">Admin</span>
+                <span class="font-bold text-lg">Panel Admin</span>
             </div>
         </div>
 
         {{-- Navigasi Admin --}}
         <nav class="space-y-2">
-            <a href="{{ route('admin.profile') }}" @class([
+            <a href="{{ route('admin.dashboard') }}" @class([
                 'flex items-center space-x-3 py-2 px-3 rounded-md',
-                'bg-green-100 text-green-700 font-semibold' => Route::is('admin.profile'),
+                'bg-green-100 text-green-700 font-semibold' => Route::is('admin.dashboard-admin'),
                 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' => !Route::is(
-                    'admin.profile'),
+                    'admin.dashboard-admin'),
             ])>
-                <span>Profil</span>
+                <span>Dashboard</span>
             </a>
 
             <a href="{{ route('admin.list-toko') }}" @class([
