@@ -11,10 +11,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        
         // 👇 DAFTARKAN MIDDLEWARE DI SINI 👇
         $middleware->alias([
             'toko.banned' => \App\Http\Middleware\CheckTokoBanned::class,
+            'admin' => \App\Http\Middleware\IsAdmin::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
