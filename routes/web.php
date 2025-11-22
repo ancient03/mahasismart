@@ -22,12 +22,14 @@ use App\Http\Controllers\Admin\IklanController; // Controller Admin Iklan
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\ProductDetailController;
+use App\Http\Controllers\FaqController;
 
 /*
 |--------------------------------------------------------------------------
 | Rute Publik (Bisa diakses siapa saja)
 |--------------------------------------------------------------------------
 */
+
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/search', [SearchController::class, 'index'])->name('search');
 Route::get('/detailproduk/{barang}', [ProductDetailController::class, 'show'])->name('detailproduk.show');
@@ -46,14 +48,16 @@ Route::middleware('guest')->group(function () {
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
 });
 
+Route::get('/faq', fn() => view('page.faq'))->name('faq');
+
 // Rute Logout (Hanya untuk yang sudah login)
 Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
-            ->middleware('auth')->name('logout');
+    ->middleware('auth')->name('logout');
 
 
 /*
 |--------------------------------------------------------------------------
-| Rute yang Memerlukan Login (Dilindungi Middleware 'auth')
+| Rute yang Memerlukan login (Dilindungi Middleware 'auth')
 |--------------------------------------------------------------------------
 */
 Route::middleware('auth')->group(function () {
@@ -139,5 +143,4 @@ Route::middleware('auth')->group(function () {
     Route::prefix('page')->group(function () {
         Route::get('/chat', fn() => view('page.chat'))->name('page.chat');
     });
-
 }); // Akhir middleware('auth') group
