@@ -38,10 +38,25 @@
         <!-- Grup Ikon (Keranjang, Notifikasi, Faq) -->
         <div class="flex items-center space-x-6">
 
-          {{-- Keranjang --}}
-          <a href="/keranjang" class="text-white hover:text-gray-200" aria-label="Lihat Keranjang">
+          {{-- =================================== --}}
+          {{-- 👇 KERANJANG DENGAN BADGE NOTIF 👇 --}}
+          {{-- =================================== --}}
+          <a href="{{ route('keranjang.index') }}" class="text-white hover:text-gray-200 relative" aria-label="Lihat Keranjang">
             <i class="bi bi-cart3 text-2xl"></i>
+            
+            {{-- Hitung jumlah barang di keranjang user yang login --}}
+            @php
+                $keranjangCount = Auth::user()->keranjang()->count();
+            @endphp
+
+            @if($keranjangCount > 0)
+                <span class="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white border-2 border-[#00795E]">
+                    {{ $keranjangCount > 99 ? '99+' : $keranjangCount }}
+                </span>
+            @endif
           </a>
+          {{-- =================================== --}}
+          {{-- 👆 AKHIR KERANJANG 👆              --}}
 
           {{-- Dropdown Notifikasi --}}
           <div class="relative">
