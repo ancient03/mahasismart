@@ -72,5 +72,36 @@ class PesananMasukController extends Controller
         // 4. Redirect kembali dengan pesan sukses
         return redirect()->route('pesanan-masuk')->with('status', 'Status pesanan berhasil diperbarui!');
     }
+    
+/**
+     * Menampilkan detail satu pesanan masuk.
+     */
+    public function show(Transaksi $transaksi): View
+    {
+        // 1. Otorisasi: Pastikan toko ini punya item di dalam transaksi ini
+        $userTokoId = Auth::user()->toko?->id_toko;
+        
+        // Ambil hanya item yang milik toko ini
+        $detailMilikToko = $transaksi->detailTransaksi()
+                                     ->where('id_toko', $userTokoId)
+                                     ->with('barang')
+                                     ->get();
+
+        if ($detailMilikToko->isEmpty()) {
+            abort(403, 'Anda tidak memiliki akses ke pesanan ini.');
+        }
+
+        // 2. Hitung subtotal khusus untuk toko ini (bukan total seluruh transaksi jika ada toko lain)
+        $subtotalToko = $detailMilikToko->sum(function($detail) {
+            return $detail->harga_saat_transaksi * $detail->kuantitas;
+        });
+
+        return view('page.toko.pesanan-masuk-detail', [
+            'transaksi' => $transaksi,
+            'detailMilikToko' => $detailMilikToko,
+            'subtotalToko' => $subtotalToko
+        ]);
+    }
+    
 }
 

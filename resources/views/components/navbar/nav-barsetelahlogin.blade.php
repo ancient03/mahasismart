@@ -110,6 +110,16 @@
               Profil Saya
             </a>
 
+            <a href="{{ route('pesanan') }}" class="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
+              Pesanan Saya
+            </a>
+
+            <a href="{{ route('toko.dashboard') }}">
+              @if(Auth::user()->toko)
+                <span class="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">Toko Saya</span>
+              @endif
+            </a>
+
             <a href="{{ route('admin.dashboard') }}">
               @if(Auth::user()->role == 'admin')
                 <span class="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">Admin Panel</span>

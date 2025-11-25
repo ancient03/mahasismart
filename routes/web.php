@@ -72,8 +72,12 @@ Route::middleware('auth')->group(function () {
     Route::resource('alamat', AlamatController::class)->except(['show']);
 
     // --- Rute Pesanan User ("Pesanan Saya" - Histori Pembeli) ---
-    // Pastikan PesananController.php ada di app/Http/Controllers/profile/
+    
+    // Halaman List Pesanan Saya
     Route::get('/pesanan', [PesananController::class, 'index'])->name('pesanan');
+
+    // 👇 INI ROUTE DETAIL PESANAN (PEMBELI) 👇
+    Route::get('/pesanan/{id}', [PesananController::class, 'show'])->name('pesanan.show');
 
     // --- Rute Keranjang ---
     Route::get('/keranjang', [KeranjangController::class, 'index'])->name('keranjang.index');
@@ -115,6 +119,11 @@ Route::middleware('auth')->group(function () {
         // Update Status Pesanan Masuk
         Route::post('/pesanan-masuk/{transaksi}/update-status', [PesananMasukController::class, 'updateStatus'])
             ->name('pesanan-masuk.update-status');
+        // ... di dalam grup 'toko'
+    
+    // Detail Pesanan Masuk (untuk Toko)
+    Route::get('/pesanan-masuk/{transaksi}', [PesananMasukController::class, 'show'])
+        ->name('pesanan-masuk.show');
 
         // Statistik (Halaman lain di dashboard)
         // Route::get('/statistik-penjualan', fn() => view('page/toko/statistik-penjualan'))->name('statistik-penjualan');

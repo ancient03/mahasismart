@@ -41,19 +41,26 @@ class PesananController extends Controller
         ]);
     }
 
-    /**
-     * (Opsional) Menampilkan detail satu pesanan spesifik.
-     * Anda bisa buat rute 'pesanan.show' untuk ini nanti.
+   /**
+     * Menampilkan detail satu pesanan (transaksi) milik user.
      */
-    // public function show($id_transaksi): View
-    // {
-    //     $transaksi = Auth::user()->transaksi()
-    //         ->with(['alamat', 'detailTransaksi.barang.toko'])
-    //         ->findOrFail($id_transaksi); // Cari atau error 404
-            
-    //     return view('page.profile.pesanan-detail', [
-    //         'transaksi' => $transaksi
-    //     ]);
-    // }
+    public function show($id): View
+    {
+        $user = Auth::user();
+
+        // 1. Ambil transaksi berdasarkan ID, pastikan milik user yang login
+        $transaksi = $user->transaksi()
+            ->with([
+                'alamat', 
+                'metodePembayaran', 
+                'detailTransaksi.barang.toko' // Ambil detail -> barang -> toko
+            ])
+            ->findOrFail($id); // Error 404 jika tidak ditemukan atau bukan milik user
+
+        // 2. Kirim data ke view
+        return view('page.profile.pesanan-detail', [
+            'transaksi' => $transaksi
+        ]);
+    }
 }
 
