@@ -100,6 +100,7 @@ class BarangController extends Controller
             'id_kategori' => ['required', 'integer', 'exists:kategori,id_kategori'], // Pastikan id_kategori ada di tabel kategori
             'harga' => ['required', 'integer', 'min:0'], // Harga tidak boleh negatif
             'foto_barang' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'], // Foto opsional, maks 2MB
+            'deskripsi' => ['nullable', 'string'], // <--- INI YANG KURANG TADI
         ], [
             // Pesan error custom (opsional, bisa diterjemahkan ke Bahasa Indonesia)
             'nama_barang.required' => 'Nama barang wajib diisi.',
@@ -113,7 +114,7 @@ class BarangController extends Controller
             'nama_barang' => $validated['nama_barang'],
             'id_kategori' => $validated['id_kategori'],
             'harga' => $validated['harga'],
-            'deskripsi' => $validated['deskripsi'] ?? null, 
+            'deskripsi' => $validated['deskripsi'] ?? null,
         ];
 
         if ($request->hasFile('foto_barang')) {
@@ -169,83 +170,67 @@ class BarangController extends Controller
      * Memperbarui produk.
      * Nama parameter diubah menjadi $produk_saya
      */
-    public function update(Request $request, Barang $barang): RedirectResponse
+    // 👇 PERBAIKAN UTAMA DI SINI: Ubah $barang menjadi $produk_saya 👇
+    public function update(Request $request, Barang $produk_saya): RedirectResponse
     {
-        // 1. Pastikan user adalah pemilik barang ini
-        //$this->authorizeBarangOwner($barang); 
+        $this->authorizeBarangOwner($produk_saya); 
 
-        // 2. Validasi data dari form edit
         $validated = $request->validate([
             'nama_barang' => ['required', 'string', 'max:255'],
             'id_kategori' => ['required', 'integer', 'exists:kategori,id_kategori'],
             'harga' => ['required', 'integer', 'min:0'],
-            'foto_barang' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'], // Foto baru (opsional)
-            'hapus_foto_barang' => ['nullable', 'boolean'], // Checkbox untuk hapus foto lama
+            'deskripsi' => ['nullable', 'string'], // Validasi deskripsi
+            'foto_barang' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'], 
+            'hapus_foto_barang' => ['nullable', 'boolean'], 
         ], [
-            // Pesan error custom (opsional)
             'nama_barang.required' => 'Nama barang wajib diisi.',
             'id_kategori.required' => 'Kategori wajib dipilih.',
-            'id_kategori.exists' => 'Kategori yang dipilih tidak valid.',
             'harga.required' => 'Harga wajib diisi.',
-            'harga.integer' => 'Harga harus berupa angka.',
-            'harga.min' => 'Harga tidak boleh negatif.',
-            'foto_barang.image' => 'File harus berupa gambar.',
-            'foto_barang.mimes' => 'Format gambar harus JPG, JPEG, PNG, atau WEBP.',
-            'foto_barang.max' => 'Ukuran gambar maksimal 2MB.',
+            'foto_barang.*' => 'Foto tidak valid (JPG/PNG/WEBP, maks 2MB).',
         ]);
 
-        // 3. Siapkan data untuk diupdate
         $updateData = [
             'nama_barang' => $validated['nama_barang'],
             'id_kategori' => $validated['id_kategori'],
             'harga' => $validated['harga'],
+            'deskripsi' => $validated['deskripsi'] ?? null, // Update deskripsi
         ];
 
-        $path = public_path('img/fotobarang'); // Folder foto
+        $path = public_path('img/fotobarang'); 
 
-        // 4. Proses Upload Foto Barang (jika ada file baru)
         if ($request->hasFile('foto_barang')) {
             $file = $request->file('foto_barang');
-            // Buat nama unik baru
-            $fileName = time() . '_' . str_replace(' ', '_', $validated['nama_barang']) . '_' . $barang->id_toko . '.' . $file->getClientOriginalExtension();
+            $fileName = time() . '_' . str_replace(' ', '_', $validated['nama_barang']) . '_' . $produk_saya->id_toko . '.' . $file->getClientOriginalExtension();
 
-            // Hapus foto lama jika ada sebelum menyimpan yang baru
-            if ($barang->foto_barang) {
-                $oldFilePath = $path . '/' . $barang->foto_barang;
+            if ($produk_saya->foto_barang) {
+                $oldFilePath = $path . '/' . $produk_saya->foto_barang;
                 if (File::exists($oldFilePath)) {
                     File::delete($oldFilePath);
                 }
             }
 
-            // Buat folder jika belum ada
             if (!File::isDirectory($path)) {
                 File::makeDirectory($path, 0775, true, true);
             }
             try {
-                // Pindahkan file baru
                 $file->move($path, $fileName);
-                $updateData['foto_barang'] = $fileName; // Simpan nama file baru
+                $updateData['foto_barang'] = $fileName; 
             } catch (\Exception $e) {
-                Log::error('Gagal update foto barang: ' . $e->getMessage()); 
-                return back()->withErrors(['foto_barang' => 'Gagal mengupload foto baru. Periksa permission folder.'])->withInput();
+                return back()->withErrors(['foto_barang' => 'Gagal mengupload foto baru.'])->withInput();
             }
         } elseif ($request->boolean('hapus_foto_barang')) { 
-            // 5. Atau, cek jika user ingin menghapus foto yang sudah ada
-             if ($barang->foto_barang) {
-                $oldFilePath = $path . '/' . $barang->foto_barang;
+            if ($produk_saya->foto_barang) {
+                $oldFilePath = $path . '/' . $produk_saya->foto_barang;
                 if (File::exists($oldFilePath)) {
-                    File::delete($oldFilePath); // Hapus file fisik
+                    File::delete($oldFilePath); 
                 }
-                $updateData['foto_barang'] = null; // Set null di database
+                $updateData['foto_barang'] = null; 
             }
         }
-        // Jika tidak ada file baru DAN tidak dicentang hapus, $updateData['foto_barang'] tidak di-set, 
-        // sehingga foto lama tidak berubah.
 
-        // 6. Update data barang di database
-        $barang->update($updateData);
+        // Sekarang update akan berhasil karena $produk_saya berisi data yang benar
+        $produk_saya->update($updateData);
 
-        // 7. Redirect ke halaman daftar barang
         return redirect()->route('produk-saya.index')->with('status', 'Data barang berhasil diperbarui!');
     }
 
