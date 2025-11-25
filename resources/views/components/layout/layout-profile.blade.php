@@ -27,5 +27,6 @@
         </div>
     </div>
     <x-nav-mobile/>
+    <x-modal-success /> {{-- Panggil komponen modal --}}
 </body>
 </html>

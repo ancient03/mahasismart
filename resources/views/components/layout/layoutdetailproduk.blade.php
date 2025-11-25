@@ -28,6 +28,7 @@
     <main class="py-8">
         {{ $slot }}
     </main>
+    <x-modal-success /> {{-- Panggil komponen modal --}}
 
 </body>
 </html>

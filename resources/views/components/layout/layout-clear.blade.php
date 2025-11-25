@@ -14,5 +14,6 @@
     <main>
         {{ $slot }}
     </main>
+    <x-modal-success /> {{-- Panggil komponen modal --}}
 </body>
 </html>

@@ -62,7 +62,7 @@
                 </a>
 
                 {{-- Pesanan Masuk --}}
-                <a href="pesanan-masuk" {{-- {{ route('pesanan-masuk') }} Ganti '#' jika route sudah ada --}} 
+                <a href="{{ route ('toko.pesanan-masuk')}}" {{-- {{ route('pesanan-masuk') }} Ganti '#' jika route sudah ada --}} 
                     @class([
                         'flex items-center space-x-3 py-2 px-3 rounded-md',
                         'bg-green-100 text-green-700 font-semibold' => Route::is('pesanan-masuk'),
@@ -73,7 +73,7 @@
                 </a>
 
                 {{-- Statistik Penjualan --}}
-                <a href="statistik-penjualan" {{-- {{ route('statistik-penjualan') }} Ganti '#' jika route sudah ada --}}
+                <a href="{{ route ('toko.statistik-penjualan')}}" {{-- {{ route('statistik-penjualan') }} Ganti '#' jika route sudah ada --}}
                     @class([
                         'flex items-center space-x-3 py-2 px-3 rounded-md',
                         'bg-green-100 text-green-700 font-semibold' => Route::is('statistik-penjualan'),

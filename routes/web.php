@@ -114,7 +114,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('produk-saya', BarangController::class);
 
         // Pesanan Masuk (Manajemen Pesanan untuk Penjual)
-        Route::get('/pesanan-masuk', [PesananMasukController::class, 'index'])->name('pesanan-masuk');
+        Route::get('/pesanan-masuk', [PesananMasukController::class, 'index'])->name('toko.pesanan-masuk');
 
         // Update Status Pesanan Masuk
         Route::post('/pesanan-masuk/{transaksi}/update-status', [PesananMasukController::class, 'updateStatus'])
@@ -127,7 +127,7 @@ Route::middleware('auth')->group(function () {
 
         // Statistik (Halaman lain di dashboard)
         // Route::get('/statistik-penjualan', fn() => view('page/toko/statistik-penjualan'))->name('statistik-penjualan');
-        Route::get('/statistik-penjualan', [TokoController::class, 'statistik'])->name('statistik-penjualan');
+        Route::get('/statistik-penjualan', [TokoController::class, 'statistik'])->name('toko.statistik-penjualan');
     });
 
     // --- Rute Admin ---
