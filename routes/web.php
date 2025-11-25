@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\profile\ProfileController;
 use App\Http\Controllers\profile\AlamatController;
 use App\Http\Controllers\profile\PesananController; // Controller Pesanan Saya (Pembeli)
+use App\Http\Controllers\profile\UlasanController; // Controller Ulasan
 use App\Http\Controllers\toko\RegisterTokoController;
 use App\Http\Controllers\toko\TokoController;
 use App\Http\Controllers\toko\BarangController;
@@ -84,8 +85,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 
+    // --- RUTE ULASAN (BARU) ---
+    // Rute untuk menampilkan form ulasan
+    Route::get('/ulasan/tulis/{id_transaksi}/{id_barang}', [UlasanController::class, 'create'])->name('ulasan.create');
+    // Rute untuk menyimpan ulasan
+    Route::post('/ulasan/simpan', [UlasanController::class, 'store'])->name('ulasan.store');
+
     // --- Rute Toko (Dashboard Penjual) ---
     Route::prefix('toko')->middleware(['auth', 'toko.banned'])->group(function () {
+        
+        Route::get('/', [TokoController::class, 'dashboard'])->name('toko.dashboard');
         // Register Toko (Buka Toko)
         Route::get('/register', [RegisterTokoController::class, 'create'])->name('register.toko.create');
         Route::post('/register', [RegisterTokoController::class, 'store'])->name('register.toko.store');
@@ -108,7 +117,8 @@ Route::middleware('auth')->group(function () {
             ->name('pesanan-masuk.update-status');
 
         // Statistik (Halaman lain di dashboard)
-        Route::get('/statistik-penjualan', fn() => view('page/toko/statistik-penjualan'))->name('statistik-penjualan');
+        // Route::get('/statistik-penjualan', fn() => view('page/toko/statistik-penjualan'))->name('statistik-penjualan');
+        Route::get('/statistik-penjualan', [TokoController::class, 'statistik'])->name('statistik-penjualan');
     });
 
     // --- Rute Admin ---

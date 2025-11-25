@@ -29,6 +29,16 @@
             </div>
 
             <nav class="space-y-2">
+                <a href="{{ route('toko.dashboard') }}" 
+                    @class([
+                        'flex items-center space-x-3 py-2 px-3 rounded-md',
+                        'bg-green-100 text-green-700 font-semibold' => Route::is('toko.dashboard'),
+                        'text-gray-600 hover:bg-gray-100 hover:text-gray-900' => !Route::is('toko.dashboard'),
+                    ])>
+                    <i class="bi bi-speedometer2 w-5 text-center"></i> {{-- Contoh ikon --}}
+                    <span>Dashboard</span>
+                </a>
+
                 {{-- Profil Toko --}}
                 <a href="{{ route('profil-toko') }}" 
                     @class([

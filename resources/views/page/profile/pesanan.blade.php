@@ -96,9 +96,10 @@
                                     
                                 {{-- Jika status selesai, tampilkan tombol Ulasan --}}
                                 @if ($transaksi->status_pengiriman == 'selesai')
-                                     <a href="#" class="bg-zinc-200 py-2 px-6 rounded-md text-zinc-700 font-medium cursor-pointer hover:bg-zinc-300 transition duration-500 text-sm">
-                                         Beri Ulasan
-                                     </a>
+                                    <a href="{{ route('ulasan.create', ['id_transaksi' => $transaksi->id_transaksi, 'id_barang' => $detail->id_barang]) }}" 
+                                        class="bg-zinc-200 py-2 px-6 rounded-md text-zinc-700 font-medium cursor-pointer hover:bg-zinc-300 transition duration-500 text-sm">
+                                            Beri Ulasan
+                                    </a>
                                 {{-- Jika masih diproses --}}
                                 @elseif ($transaksi->status_pengiriman == 'diproses')
                                     <a href="#" class="bg-white py-2 px-6 rounded-md font-medium cursor-pointer border-2 border-[#00795E] text-[#00795E] hover:bg-[#00795E] hover:text-white transition duration-500 text-sm">
