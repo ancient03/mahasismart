@@ -12,10 +12,52 @@ use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse; // <-- Tambahkan ini
 use Illuminate\Validation\Rule;      // <-- Tambahkan ini
 use Illuminate\Support\Facades\File; // <-- Tambahkan ini
+use Illuminate\Support\Facades\DB;
 
 // 3. Nama class dan extends Controller
 class TokoController extends Controller 
 {
+    public function dashboard(): View
+    {
+        $user = Auth::user();
+        $toko = $user->toko;
+
+        if (!$toko) {
+            return redirect()->route('profile')->with('error', 'Anda belum memiliki toko.');
+        }
+
+        // 1. Ringkasan Data (Counter Sederhana)
+        $totalProduk = $toko->barang()->count();
+        
+        // Hitung pesanan yang perlu diproses (status 'diproses')
+        $pesananPerluDikirim = $toko->detailTransaksi()
+            ->whereHas('transaksi', function($q) {
+                $q->where('status_pengiriman', 'diproses');
+            })->count();
+
+        // Hitung total pendapatan (hanya yang selesai)
+        $totalPendapatan = $toko->detailTransaksi()
+            ->whereHas('transaksi', function($q) {
+                $q->where('status_pengiriman', 'selesai');
+            })
+            ->sum(DB::raw('kuantitas * harga_saat_transaksi'));
+
+        // 2. Ambil 5 Pesanan Terbaru (untuk tabel 'Pesanan Terbaru')
+        $pesananTerbaru = $toko->detailTransaksi()
+            ->with(['barang', 'transaksi.user'])
+            ->latest('id_detail_transaksi')
+            ->take(5)
+            ->get();
+
+        return view('page.toko.dashboard', compact(
+            'toko', 
+            'totalProduk', 
+            'pesananPerluDikirim', 
+            'totalPendapatan', 
+            'pesananTerbaru'
+        ));
+    }
+
     /**
      * Menampilkan halaman profil toko milik pengguna yang login.
      */
@@ -120,4 +162,42 @@ class TokoController extends Controller
         return redirect()->route('profil-toko')->with('status', 'Profil toko berhasil diperbarui!');
     }
 
+    public function statistik(): View
+    {
+        $user = Auth::user();
+        $toko = $user->toko;
+
+        if (!$toko) {
+            return redirect()->route('profile')->with('error', 'Anda belum memiliki toko.');
+        }
+
+        // Hitung Statistik Sederhana
+        // 1. Total Pendapatan (dari pesanan selesai)
+        $totalPendapatan = $toko->detailTransaksi()
+            ->whereHas('transaksi', function($q) {
+                $q->where('status_pengiriman', 'selesai');
+            })
+            ->sum(DB::raw('kuantitas * harga_saat_transaksi'));
+
+        // 2. Total Pesanan Masuk
+        // (Menghitung jumlah detail transaksi unik atau transaksi unik)
+        $totalPesanan = $toko->detailTransaksi()->count();
+
+        // 3. Pesanan Per Status
+        $pesananDiproses = $toko->detailTransaksi()
+            ->whereHas('transaksi', function($q) { $q->where('status_pengiriman', 'diproses'); })
+            ->count();
+            
+        $pesananDikirim = $toko->detailTransaksi()
+            ->whereHas('transaksi', function($q) { $q->where('status_pengiriman', 'dikirim'); })
+            ->count();
+
+        $pesananSelesai = $toko->detailTransaksi()
+            ->whereHas('transaksi', function($q) { $q->where('status_pengiriman', 'selesai'); })
+            ->count();
+
+        return view('page.toko.statistik-penjualan', compact(
+            'toko', 'totalPendapatan', 'totalPesanan', 'pesananDiproses', 'pesananDikirim', 'pesananSelesai'
+        ));
+    }
 }
