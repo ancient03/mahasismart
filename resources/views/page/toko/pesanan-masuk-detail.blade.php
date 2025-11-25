@@ -3,7 +3,7 @@
         
         <div class="py-3 px-5 lg:rounded-md shadow-md bg-white mb-6 flex justify-between items-center">
             <h1 class="lg:text-2xl text-1xl font-semibold">Detail Pesanan</h1>
-            <a href="{{ route('pesanan-masuk') }}" class="text-blue-600 hover:underline text-sm">&laquo; Kembali</a>
+            <a href="{{ route('toko.pesanan-masuk') }}" class="text-blue-600 hover:underline text-sm">&laquo; Kembali</a>
         </div>
 
         {{-- Card Info Utama --}}

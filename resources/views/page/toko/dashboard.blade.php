@@ -25,7 +25,7 @@
                         <i class="bi bi-cash-stack text-xl"></i>
                     </div>
                 </div>
-                <a href="{{ route('statistik-penjualan') }}" class="text-xs text-green-600 hover:underline mt-4 block">Lihat detail keuangan &rarr;</a>
+                <a href="{{ route('toko.statistik-penjualan') }}" class="text-xs text-green-600 hover:underline mt-4 block">Lihat detail keuangan &rarr;</a>
             </div>
 
             <!-- Card 2: Pesanan Perlu Dikirim -->
@@ -39,7 +39,7 @@
                         <i class="bi bi-box-seam text-xl"></i>
                     </div>
                 </div>
-                <a href="{{ route('pesanan-masuk') }}" class="text-xs text-red-600 hover:underline mt-4 block">Proses pesanan sekarang &rarr;</a>
+                <a href="{{ route('toko.pesanan-masuk') }}" class="text-xs text-red-600 hover:underline mt-4 block">Proses pesanan sekarang &rarr;</a>
             </div>
 
             <!-- Card 3: Total Produk -->
@@ -61,7 +61,7 @@
         <div class="bg-white rounded-lg shadow-md overflow-hidden">
             <div class="px-6 py-4 border-b flex justify-between items-center bg-gray-50">
                 <h3 class="font-bold text-gray-800">Pesanan Terbaru</h3>
-                <a href="{{ route('pesanan-masuk') }}" class="text-sm text-blue-600 hover:underline">Lihat Semua</a>
+                <a href="{{ route('toko.pesanan-masuk') }}" class="text-sm text-blue-600 hover:underline">Lihat Semua</a>
             </div>
             
             <div class="overflow-x-auto">
@@ -101,7 +101,7 @@
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 text-right">
-                                    <a href="{{ route('pesanan-masuk') }}" class="font-medium text-blue-600 hover:underline">Detail</a>
+                                    <a href="{{ route('toko.pesanan-masuk') }}" class="font-medium text-blue-600 hover:underline">Detail</a>
                                 </td>
                             </tr>
                         @empty
