@@ -92,7 +92,8 @@
                             </div>
 
                             {{-- Tombol Aksi di Kanan Bawah (sesuai template Anda) --}}
-                            <div class="flex items-center justify-end mt-4">
+                            <div class="flex items-center justify-end mt-4 gap-3">
+                                {{-- Logika tombol berdasarkan status pengiriman --}}
                                     
                                 {{-- Jika status selesai, tampilkan tombol Ulasan --}}
                                 @if ($transaksi->status_pengiriman == 'selesai')
@@ -106,6 +107,13 @@
                                         Hubungi Penjual
                                     </a>
                                 @endif
+                                {{-- 👇 TOMBOL DETAIL PESANAN (DI SINI) 👇 --}}
+                                <a href="{{ route('pesanan.show', $transaksi->id_transaksi) }}" 
+                                    class="bg-blue-600 text-white py-2 px-6 rounded-md font-medium hover:bg-blue-700 transition duration-300 text-sm flex items-center gap-2">
+                                    <i class="bi bi-eye"></i> Detail Pesanan
+                                </a>
+                                {{-- 👆 ----------------------------- 👆 --}}
+                        
                             </div>
                         </div>
                     </div>

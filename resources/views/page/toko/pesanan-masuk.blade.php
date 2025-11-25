@@ -31,7 +31,10 @@
                     <div>
                         <span class="font-semibold">Invoice:</span>
                         {{-- Klik invoice untuk melihat detail (jika ada halamannya) --}}
-                        <a href="#" class="text-blue-600 hover:underline">{{ $detail->transaksi->nomor_invoice }}</a>
+                        {{-- 👇👇👇 NAH INI DIA LINK YANG ANDA MAKSUD 👇👇👇 --}}
+                        <a href="{{ route('pesanan-masuk.show', $detail->transaksi->id_transaksi) }}" class="text-blue-600 hover:underline font-medium">
+                            {{ $detail->transaksi->nomor_invoice }}
+                        </a>
                     </div>
                     <div class="flex items-center gap-2">
                          <i class="bi bi-person-circle"></i>
@@ -132,9 +135,16 @@
                                             Tandai Selesai
                                         </button>
                                     @endif
-                                    {{-- Status "selesai" tidak akan menampilkan tombol apapun --}}
                                 </form>
+
+                                
                             @endif
+
+                            {{-- 👇👇👇 TOMBOL DETAIL PESANAN TERPISAH 👇👇👇 --}}
+                                <a href="{{ route('pesanan-masuk.show', $detail->transaksi->id_transaksi) }}" 
+                                   class="text-blue-600 hover:text-blue-800 font-medium text-sm border border-blue-600 px-4 py-2 rounded-md hover:bg-blue-50 transition duration-300 flex items-center gap-1">
+                                    <i class="bi bi-eye"></i> Detail Pesanan
+                                </a>
                         </div>
                         {{-- ========================================================== --}}
                         {{-- 👆 AKHIR LOGIKA STATUS DAN TOMBOL BARU 👆 --}}
