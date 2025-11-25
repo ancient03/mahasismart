@@ -9,7 +9,7 @@
                     <!-- Wrapper semua slide -->
                     <div class="flex transition-transform duration-700 ease-in-out" id="carouselSlides">
                         @foreach ($iklanAktif as $iklan)
-                            <a href="{{ route('detail-iklan', $iklan->id) }}" class="min-w-full relative block">
+                            <a href="" class="min-w-full relative block">
                                 <!-- Gambar -->
                                 <img src="{{ asset($iklan->gambar) }}" alt="{{ $iklan->nama_iklan }}"
                                     class="w-full h-64 md:h-96 object-cover rounded-lg">
