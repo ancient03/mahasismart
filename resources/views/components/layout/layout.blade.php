@@ -27,6 +27,7 @@
     <x-navbar.chat />
     <x-nav-mobile />
     <x-modal-success /> {{-- Panggil komponen modal --}}
+    <x-modal-error />
 </body>
 
 </html>
