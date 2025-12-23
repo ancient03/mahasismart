@@ -29,5 +29,6 @@
     <x-nav-mobile/>
     <x-modal-success /> {{-- Panggil komponen modal --}}
     <x-modal-error />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>
