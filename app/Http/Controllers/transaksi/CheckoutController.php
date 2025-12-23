@@ -11,6 +11,7 @@ use App\Models\Transaksi;
 use App\Models\DetailTransaksi;
 use App\Models\Barang; 
 use App\Models\MetodePembayaran; // <-- 1. Import MetodePembayaran
+use App\Models\Notification;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Log; 
@@ -114,6 +115,14 @@ class CheckoutController extends Controller
 
             // 3d. Commit
             DB::commit();
+
+            // Kirim notifikasi ke user
+            Notification::create([
+                'id_user' => $user->id_user,
+                'title' => 'Pesanan Berhasil Dibuat',
+                'message' => 'Pesanan Anda dengan invoice ' . $transaksi->nomor_invoice . ' sedang menunggu pembayaran.',
+                'url' => route('pesanan.show', $transaksi->id_transaksi),
+            ]);
 
         } catch (\Exception $e) {
             DB::rollBack();
