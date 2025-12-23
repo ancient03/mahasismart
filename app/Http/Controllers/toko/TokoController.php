@@ -196,8 +196,46 @@ class TokoController extends Controller
             ->whereHas('transaksi', function($q) { $q->where('status_pengiriman', 'selesai'); })
             ->count();
 
+        // --- DATA BARU UNTUK GRAFIK ---
+        $salesData = $toko->detailTransaksi()
+            ->whereHas('transaksi', function ($query) {
+                $query->where('status_pengiriman', 'selesai');
+            })
+            ->join('transaksi', 'detail_transaksi.id_transaksi', '=', 'transaksi.id_transaksi')
+            ->select(
+                DB::raw('YEAR(transaksi.created_at) as year'),
+                DB::raw('MONTH(transaksi.created_at) as month'),
+                DB::raw('SUM(detail_transaksi.kuantitas) as total_kuantitas')
+            )
+            ->groupBy('year', 'month')
+            ->orderBy('year', 'asc')
+            ->orderBy('month', 'asc')
+            ->get();
+
+        $chartLabels = $salesData->map(function ($item) {
+            return date('F Y', mktime(0, 0, 0, $item->month, 1, $item->year));
+        });
+
+        $chartData = $salesData->pluck('total_kuantitas');
+
+
         return view('page.toko.statistik-penjualan', compact(
-            'toko', 'totalPendapatan', 'totalPesanan', 'pesananDiproses', 'pesananDikirim', 'pesananSelesai'
+            'toko', 'totalPendapatan', 'totalPesanan', 'pesananDiproses', 'pesananDikirim', 'pesananSelesai',
+            'chartLabels', 'chartData'
         ));
     }
+
+    /**
+     * Menampilkan halaman publik sebuah toko beserta produknya.
+             */
+    public function showPublicProfile(Toko $toko): View
+    {
+        // Eager load produk-produk yang dimiliki toko
+        $toko->load('barang');
+
+        return view('page.products.detailtoko', [
+            'toko' => $toko
+        ]);
+    }
+
 }
