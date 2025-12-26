@@ -12,32 +12,29 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('alamat', function (Blueprint $table) {
-            // 1. Primary Key untuk tabel ini
             $table->increments('id_alamat');
-
-            // 2. Foreign Key untuk relasi ke users
-            // Kita gunakan unsignedInteger agar tipenya SAMA PERSIS
-            // dengan 'id_user' di tabel 'users' (yang dibuat oleh increments())
             $table->unsignedInteger('id_user');
 
-            // 3. Kolom-kolom untuk alamat
             $table->string('label'); // Misal: "Rumah", "Kantor", "Apartemen"
             $table->string('nama_penerima');
             $table->string('no_hp_penerima');
             $table->string('provinsi');
+            $table->string('province_id')->nullable();
             $table->string('kota');
+            $table->string('city_id')->nullable();
             $table->string('kecamatan');
+            $table->string('district_id')->nullable();
+            $table->string('desa'); // TAMBAHAN KOLOM BARU
             $table->string('kode_pos', 10);
             $table->text('detail_alamat'); // Untuk nama jalan, nomor rumah, RT/RW, dll.
-            $table->boolean('is_default')->default(false); // Untuk menandai alamat utama
+            $table->boolean('is_default')->default(false);
 
-            $table->timestamps(); // created_at dan updated_at
+            $table->timestamps();
 
-            // 4. Mendefinisikan constraint (relasinya)
-            $table->foreign('id_user')             // Kolom 'id_user' di tabel 'alamat' ini
-                  ->references('id_user')          // Merujuk ke kolom 'id_user'
-                  ->on('users')                  // Di dalam tabel 'users'
-                  ->onDelete('cascade');         // Jika user dihapus, alamatnya ikut terhapus
+            $table->foreign('id_user')
+                ->references('id_user')
+                ->on('users')
+                ->onDelete('cascade');
         });
     }
 
