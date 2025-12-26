@@ -71,6 +71,14 @@ Route::middleware('auth')->group(function () {
     // --- Rute CRUD Alamat ---
     Route::resource('alamat', AlamatController::class)->except(['show']);
 
+    // API Routes untuk RajaOngkir (CRUD Alamat)
+Route::prefix('api/rajaongkir')->group(function () {
+    Route::get('/provinsi', [AlamatController::class, 'getProvinsi'])->name('api.rajaongkir.provinsi');
+    Route::get('/kota/{province_id}', [AlamatController::class, 'getKota'])->name('api.rajaongkir.kota');
+    Route::get('/kecamatan/{city_id}', [AlamatController::class, 'getKecamatan'])->name('api.rajaongkir.kecamatan');
+    Route::get('/desa/{district_id}', [AlamatController::class, 'getDesa'])->name('api.rajaongkir.desa');
+});
+
     // --- Rute Pesanan User ("Pesanan Saya" - Histori Pembeli) ---
     
     // Halaman List Pesanan Saya
