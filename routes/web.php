@@ -21,10 +21,13 @@ use App\Http\Controllers\admin\AdminTokoController; // Controller Admin Toko
 use App\Http\Controllers\admin\KategoriController; // Controller Admin Kategori
 use App\Http\Controllers\Admin\IklanController; // Controller Admin Iklan
 use App\Http\Controllers\admin\AdminUserController; // Controller Admin User
+use App\Http\Controllers\admin\AdminLaporanController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\ProductDetailController;
 use App\Http\Controllers\FaqController;
+use App\Http\Controllers\profile\LaporanController; // <-- Import controller baru
+use App\Http\Controllers\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -93,6 +96,12 @@ Route::prefix('api/rajaongkir')->group(function () {
     Route::patch('/keranjang/update/{id_barang}', [KeranjangController::class, 'update'])->name('keranjang.update');
     Route::delete('/keranjang/hapus/{id_barang}', [KeranjangController::class, 'destroy'])->name('keranjang.destroy');
 
+        // --- FITUR LAPORAN (PEMBELI) ---
+    // 👇 INI RUTE YANG ANDA MINTA 👇
+    Route::get('/laporan-saya', [LaporanController::class, 'index'])->name('laporan.index'); // Lihat riwayat
+    Route::get('/pesanan/{id}/lapor', [LaporanController::class, 'create'])->name('laporan.create'); // Form lapor
+    Route::post('/laporan/store', [LaporanController::class, 'store'])->name('laporan.store'); // Simpan lapor
+    
     // --- Rute Checkout ---
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
@@ -116,6 +125,21 @@ Route::prefix('api/rajaongkir')->group(function () {
         Route::get('/{toko}/edit', [TokoController::class, 'edit'])->name('toko.edit');
         Route::put('/{toko}', [TokoController::class, 'update'])->name('toko.update');
 
+            // 1. Rute Pembeli (Kirim Laporan)
+    Route::post('/laporan/store', [LaporanController::class, 'store'])->name('laporan.store');
+
+    // 2. Rute Toko (Lihat Laporan Masuk)
+    Route::prefix('toko')->middleware(['toko.banned'])->group(function () {
+        // ... rute toko lain ...
+        Route::get('/laporan', [LaporanTokoController::class, 'index'])->name('toko.laporan');
+    });
+
+    // 3. Rute Admin (Kelola Laporan)
+    Route::prefix('admin')->middleware(['admin'])->group(function () {
+        // ... rute admin lain ...
+        Route::get('/laporan', [AdminLaporanController::class, 'index'])->name('admin.laporan');
+        Route::patch('/laporan/{laporan}/update', [AdminLaporanController::class, 'updateStatus'])->name('admin.laporan.update');
+    });
         // CRUD Barang (Produk Saya)
         // Rute ini akan membuat: produk-saya.index, produk-saya.create, produk-saya.store, dll.
         // Sesuai permintaan Anda untuk menggunakan 'produk-saya' sebagai nama resource
@@ -152,7 +176,10 @@ Route::prefix('api/rajaongkir')->group(function () {
         Route::get('/list-user', [AdminUserController::class, 'index'])->name('admin.list-user'); // Gunakan controller, bukan view langsung
         Route::patch('/list-user/{user}/status', [AdminUserController::class, 'updateStatus'])->name('admin.user.update-status');
   
-        Route::get('/laporan', fn() => view('page.admin.laporan'))->name('admin.laporan');
+        // 👇 RUTE LAPORAN ADMIN (INI YANG ANDA CARI) 👇
+        Route::get('/laporan', [AdminLaporanController::class, 'index'])->name('admin.laporan');
+        Route::patch('/laporan/{laporan}', [AdminLaporanController::class, 'updateStatus'])->name('admin.laporan.update');
+
 
         // --- Manajemen Kategori (Admin) ---
         Route::get('/kategori', [KategoriController::class, 'index'])->name('admin.kategori');
@@ -169,6 +196,11 @@ Route::prefix('api/rajaongkir')->group(function () {
         Route::put('/iklan/{id}', [IklanController::class, 'update'])->name('admin.iklan.update');
         Route::delete('/iklan/{id}', [IklanController::class, 'destroy'])->name('admin.hapus-iklan');
     });
+
+    // --- Rute Notifikasi ---
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.readall');
 
     // --- Rute Chat ---
     Route::prefix('page')->group(function () {

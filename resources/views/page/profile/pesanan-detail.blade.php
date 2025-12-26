@@ -91,5 +91,18 @@
             </div>
         </div>
 
+                {{-- 
+             TOMBOL LAPORKAN PESANAN (BARU DITAMBAHKAN)
+             Akan muncul jika pesanan sudah dikirim atau selesai.
+        --}}
+        @if(in_array($transaksi->status_pengiriman, ['dikirim', 'selesai']))
+            <div class="flex justify-end mt-4 mb-10">
+                <a href="{{ route('laporan.create', $transaksi->id_transaksi) }}" 
+                   class="flex items-center gap-2 text-red-600 hover:text-red-700 font-medium text-sm px-4 py-2 border border-red-200 rounded-lg hover:bg-red-50 transition">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    Laporkan Masalah Pesanan Ini
+                </a>
+            </div>
+        @endif
     </section>
 </x-layout.layout-profile>

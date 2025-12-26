@@ -1,7 +1,7 @@
 {{-- Navbar Fixed di Atas --}}
 <nav 
   class="fixed top-0 left-0 right-0 z-50 rounded-b-xl bg-[#00795E] shadow-md" 
-  x-data="{ open: false, notifOpen: false }"
+  x-data="{ open: false }"
 >
   <!-- NAVBAR DESKTOP -->
   <div class="hidden md:flex bg-[#00795E] items-center justify-between container mx-auto px-6 py-5">
@@ -58,39 +58,7 @@
           {{-- =================================== --}}
           {{-- 👆 AKHIR KERANJANG 👆              --}}
 
-          {{-- Dropdown Notifikasi --}}
-          <div class="relative">
-            <button @click="notifOpen = !notifOpen" class="relative text-white hover:text-gray-200 focus:outline-none">
-              <i class="bi bi-bell text-2xl"></i>
-              <span class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">4</span>
-            </button>
-
-            <div 
-              x-show="notifOpen" 
-              @click.away="notifOpen = false" 
-              x-transition
-              class="absolute right-0 z-50 mt-2 w-72 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5"
-              style="display: none;"
-            >
-              <div class="py-1">
-                <div class="px-4 py-2 text-sm font-semibold text-gray-700 border-b">Notifikasi</div>
-                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                  Pesanan #12345 telah dikirim.
-                </a>
-                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                  Ada pesan baru dari Toko ABC.
-                </a>
-                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                  Promo spesial untuk Anda!
-                </a>
-                <div class="border-t mt-1">
-                  <a href="#" class="block px-4 py-2 text-center text-sm text-blue-600 hover:bg-gray-100">
-                    Lihat semua notifikasi
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
+          <x-notification-dropdown />
 
           {{-- FAQ --}}
           <a href="/faq" class="text-white hover:text-gray-200" aria-label="Lihat FAQ">

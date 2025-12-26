@@ -75,4 +75,20 @@ class User extends Authenticatable
         // Relasi satu user memiliki banyak transaksi
         return $this->hasMany(Transaksi::class, 'id_user', 'id_user');
     }
+
+    /**
+     * Relasi ke notifikasi kustom.
+     */
+    public function notifications(): HasMany
+    {
+        return $this->hasMany(Notification::class, 'id_user', 'id_user');
+    }
+
+    /**
+     * Relasi untuk mendapatkan notifikasi yang belum dibaca.
+     */
+    public function unreadNotifications(): HasMany
+    {
+        return $this->notifications()->where('is_read', false);
+    }
 }
