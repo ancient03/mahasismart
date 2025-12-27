@@ -28,6 +28,7 @@ use App\Http\Controllers\ProductDetailController;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\profile\LaporanController; // <-- Import controller baru
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ChatController;
 
 /*
 |--------------------------------------------------------------------------
@@ -198,7 +199,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.readall');
 
     // --- Rute Chat ---
-    Route::prefix('page')->group(function () {
-        Route::get('/chat', fn() => view('page.chat'))->name('page.chat');
-    });
+    Route::get('/chat/{toko_id}', [ChatController::class, 'showUserChat'])->name('chat.user');
+    Route::post('/chat/send', [ChatController::class, 'sendMessage'])->name('chat.send');
+    Route::get('/toko/chat', [ChatController::class, 'showTokoChat'])->name('chat.toko');
+    Route::get('/toko/chat/{user_id}', [ChatController::class, 'showTokoConversation'])->name('chat.toko.conversation');
+
 }); // Akhir middleware('auth') group
