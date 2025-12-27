@@ -61,5 +61,10 @@ class Toko extends Model
     {
         return $this->hasMany(DetailTransaksi::class, 'id_toko', 'id_toko');
     }
+
+    public function messages(): HasMany
+    {
+        return $this->hasMany(Message::class, 'toko_id');
+    }
 }
 

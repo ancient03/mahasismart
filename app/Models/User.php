@@ -91,4 +91,9 @@ class User extends Authenticatable
     {
         return $this->notifications()->where('is_read', false);
     }
+
+    public function messages(): HasMany
+    {
+        return $this->hasMany(Message::class, 'sender_id');
+    }
 }

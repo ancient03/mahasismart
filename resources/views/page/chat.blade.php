@@ -1,13 +1,36 @@
-<x-layout>
-    <div class="flex container mx-auto px-4 sm:px-6 lg:px-8 gap-4">
-        <!-- Sidebar -->
-        {{-- <div class="w-1/4 overflow-y-auto h-[calc(100vh-100px)] pr-2"> --}}
-            <x-sidebar.sidebar-chat />
-        {{-- </div> --}}
+@extends('layouts.app')
 
-        <!-- Chat (Tetap diam / fixed) -->
-        <div class="flex-1 sticky top-[100px] h-[calc(100vh-120px)]">
-            <x-chat.content-chat />
+@section('content')
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">Chat with {{ $toko->nama_toko }}</div>
+
+                <div class="panel-body">
+                    <div class="chat-messages">
+                        @foreach ($messages as $message)
+                            <div class="message">
+                                <strong>{{ $message->sender->name }}:</strong> {{ $message->message }}
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <form action="{{ route('chat.send') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="toko_id" value="{{ $toko->id_toko }}">
+                        <input type="hidden" name="receiver_id" value="{{ $toko->user->id }}">
+                        <div class="input-group">
+                            <input type="text" name="message" class="form-control" placeholder="Type your message...">
+                            <span class="input-group-btn">
+                                <button type="submit" class="btn btn-primary">Send</button>
+                            </span>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
-</x-layout>
+</div>
+@endsection
