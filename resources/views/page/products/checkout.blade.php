@@ -1,6 +1,13 @@
+<<<<<<< HEAD
 <x-layout>
     {{-- Form ini mengirimkan 'id_alamat' dan 'id_metode_pembayaran' yang DIPILIH --}}
     <form method="POST" action="{{ route('checkout.store') }}" id="checkout-form">
+=======
+
+<x-layout>
+    {{-- Form ini mengirimkan 'id_alamat' dan 'id_metode_pembayaran' yang DIPILIH --}}
+    <form method="POST" action="{{ route('checkout.store') }}">
+>>>>>>> 441768e18805edb3d840ea4992a0dc7e75bba5f4
         @csrf
         <main class="py-8 bg-gray-100 min-h-screen">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -106,7 +113,11 @@
                                         <!-- Info -->
                                         <div class="flex-grow">
                                             <h3 class="font-semibold text-gray-900">{{ $item->nama_barang }}</h3>
+<<<<<<< HEAD
                                             <p class="text-sm text-gray-600">dari {{ $item->toko?->nama_tobo ?? 'Toko Dihapus' }}</p>
+=======
+                                            <p class="text-sm text-gray-600">dari {{ $item->toko?->nama_toko ?? 'Toko Dihapus' }}</p>
+>>>>>>> 441768e18805edb3d840ea4992a0dc7e75bba5f4
                                             <p class="text-sm text-gray-500">{{ $item->pivot->kuantitas }} x Rp {{ number_format($item->harga, 0, ',', '.') }}</p>
                                         </div>
                                         <!-- Subtotal -->
@@ -183,7 +194,10 @@
 
                                 {{-- Tombol "Bayar" (Submit Form) --}}
                                 <button type="submit"
+<<<<<<< HEAD
                                         id="pay-button"
+=======
+>>>>>>> 441768e18805edb3d840ea4992a0dc7e75bba5f4
                                         class="bg-green-600 hover:bg-green-700 text-white w-full py-3 rounded-lg font-bold text-lg transition-colors">
                                     Buat Pesanan
                                 </button>
@@ -206,10 +220,15 @@
                             @endif 
                         </div>
                     </section>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 441768e18805edb3d840ea4992a0dc7e75bba5f4
                 </div>
             </div>
         </main>
     </form> {{-- Akhir Form --}}
+<<<<<<< HEAD
 
     <script src="{{ config('midtrans.snap_url') }}" data-client-key="{{ config('midtrans.client_key') }}"></script>
     <script type="text/javascript">
@@ -265,3 +284,6 @@
     </script>
 </x-layout>
 
+=======
+      </x-layout>
+>>>>>>> 441768e18805edb3d840ea4992a0dc7e75bba5f4

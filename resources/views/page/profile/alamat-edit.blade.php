@@ -1,5 +1,9 @@
 <x-layout.layout-profile>
 
+<<<<<<< HEAD
+=======
+    <!-- Konten Form Edit Alamat -->
+>>>>>>> 441768e18805edb3d840ea4992a0dc7e75bba5f4
     <section class="md:col-span-3">
         <div class="bg-white text-gray-800 rounded-lg shadow p-6 md:p-8">
 
@@ -10,6 +14,10 @@
                 </a>
             </div>
 
+<<<<<<< HEAD
+=======
+            {{-- Pesan Error --}}
+>>>>>>> 441768e18805edb3d840ea4992a0dc7e75bba5f4
             @if ($errors->any())
                 <div class="mb-4 rounded-md bg-red-100 p-4 text-sm font-medium text-red-700">
                     <strong>Ups! Ada yang salah.</strong>
@@ -21,8 +29,13 @@
                 </div>
             @endif
 
+<<<<<<< HEAD
             <form method="POST" action="{{ route('alamat.update', $alamat->id_alamat) }}" class="space-y-4"
                 id="formAlamat">
+=======
+            {{-- Form Update --}}
+            <form method="POST" action="{{ route('alamat.update', $alamat->id_alamat) }}" class="space-y-4">
+>>>>>>> 441768e18805edb3d840ea4992a0dc7e75bba5f4
                 @csrf
                 @method('PUT')
 
@@ -31,8 +44,14 @@
                     <label for="label" class="block text-sm font-medium text-gray-700">
                         Label Alamat <span class="text-red-500">*</span>
                     </label>
+<<<<<<< HEAD
                     <input type="text" id="label" name="label" value="{{ old('label', $alamat->label) }}"
                         required placeholder="Contoh: Rumah, Kantor"
+=======
+                    <input type="text" id="label" name="label"
+                        value="{{ old('label', $alamat->label) }}" required
+                        placeholder="Contoh: Rumah, Kantor"
+>>>>>>> 441768e18805edb3d840ea4992a0dc7e75bba5f4
                         class="px-4 py-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                 </div>
 
@@ -61,11 +80,17 @@
                     <label for="provinsi" class="block text-sm font-medium text-gray-700">
                         Provinsi <span class="text-red-500">*</span>
                     </label>
+<<<<<<< HEAD
                     <select id="provinsi" name="provinsi" required
                         class="px-4 py-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                         <option value="">Pilih Provinsi</option>
                     </select>
                     <input type="hidden" id="provinsi_id" name="province_id">
+=======
+                    <input type="text" id="provinsi" name="provinsi"
+                        value="{{ old('provinsi', $alamat->provinsi) }}" required
+                        class="px-4 py-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+>>>>>>> 441768e18805edb3d840ea4992a0dc7e75bba5f4
                 </div>
 
                 {{-- Kota --}}
@@ -73,11 +98,17 @@
                     <label for="kota" class="block text-sm font-medium text-gray-700">
                         Kota/Kabupaten <span class="text-red-500">*</span>
                     </label>
+<<<<<<< HEAD
                     <select id="kota" name="kota" required disabled
                         class="px-4 py-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 disabled:bg-gray-100">
                         <option value="">Pilih Kota/Kabupaten</option>
                     </select>
                     <input type="hidden" id="kota_id" name="city_id">
+=======
+                    <input type="text" id="kota" name="kota"
+                        value="{{ old('kota', $alamat->kota) }}" required
+                        class="px-4 py-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+>>>>>>> 441768e18805edb3d840ea4992a0dc7e75bba5f4
                 </div>
 
                 {{-- Kecamatan --}}
@@ -85,6 +116,7 @@
                     <label for="kecamatan" class="block text-sm font-medium text-gray-700">
                         Kecamatan <span class="text-red-500">*</span>
                     </label>
+<<<<<<< HEAD
                     <select id="kecamatan" name="kecamatan" required disabled
                         class="px-4 py-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 disabled:bg-gray-100">
                         <option value="">Pilih Kecamatan</option>
@@ -101,6 +133,11 @@
                         class="px-4 py-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 disabled:bg-gray-100">
                         <option value="">Pilih Desa/Kelurahan</option>
                     </select>
+=======
+                    <input type="text" id="kecamatan" name="kecamatan"
+                        value="{{ old('kecamatan', $alamat->kecamatan) }}" required
+                        class="px-4 py-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+>>>>>>> 441768e18805edb3d840ea4992a0dc7e75bba5f4
                 </div>
 
                 {{-- Kode Pos --}}
@@ -109,8 +146,13 @@
                         Kode Pos <span class="text-red-500">*</span>
                     </label>
                     <input type="text" id="kode_pos" name="kode_pos"
+<<<<<<< HEAD
                         value="{{ old('kode_pos', $alamat->kode_pos) }}" required readonly
                         class="px-4 py-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm bg-gray-100">
+=======
+                        value="{{ old('kode_pos', $alamat->kode_pos) }}" required
+                        class="px-4 py-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+>>>>>>> 441768e18805edb3d840ea4992a0dc7e75bba5f4
                 </div>
 
                 {{-- Detail Alamat --}}
@@ -144,6 +186,7 @@
         </div>
     </section>
 
+<<<<<<< HEAD
     {{-- JavaScript untuk Edit (sama seperti create, tapi dengan pre-fill data) --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -473,4 +516,6 @@
         });
     </script>
 
+=======
+>>>>>>> 441768e18805edb3d840ea4992a0dc7e75bba5f4
 </x-layout.layout-profile>

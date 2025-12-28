@@ -29,7 +29,10 @@ use App\Http\Controllers\FaqController;
 use App\Http\Controllers\profile\LaporanController; // <-- Import controller baru
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ChatController;
+<<<<<<< HEAD
 use App\Http\Controllers\MidtransController;
+=======
+>>>>>>> 441768e18805edb3d840ea4992a0dc7e75bba5f4
 
 /*
 |--------------------------------------------------------------------------
@@ -37,8 +40,11 @@ use App\Http\Controllers\MidtransController;
 |--------------------------------------------------------------------------
 */
 
+<<<<<<< HEAD
 Route::post('/midtrans/notification', [MidtransController::class, 'notificationHandler']);
 
+=======
+>>>>>>> 441768e18805edb3d840ea4992a0dc7e75bba5f4
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/search', [SearchController::class, 'index'])->name('search');
 Route::get('/detailproduk/{barang}', [ProductDetailController::class, 'show'])->name('detailproduk.show');
@@ -80,6 +86,7 @@ Route::middleware('auth')->group(function () {
     // --- Rute CRUD Alamat ---
     Route::resource('alamat', AlamatController::class)->except(['show']);
 
+<<<<<<< HEAD
     // API Routes untuk RajaOngkir (CRUD Alamat)
 Route::prefix('api/rajaongkir')->group(function () {
     Route::get('/provinsi', [AlamatController::class, 'getProvinsi'])->name('api.rajaongkir.provinsi');
@@ -88,6 +95,8 @@ Route::prefix('api/rajaongkir')->group(function () {
     Route::get('/desa/{district_id}', [AlamatController::class, 'getDesa'])->name('api.rajaongkir.desa');
 });
 
+=======
+>>>>>>> 441768e18805edb3d840ea4992a0dc7e75bba5f4
     // --- Rute Pesanan User ("Pesanan Saya" - Histori Pembeli) ---
     
     // Halaman List Pesanan Saya

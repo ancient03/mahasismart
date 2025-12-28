@@ -1,5 +1,8 @@
 *
 !.gitignore
+<<<<<<< HEAD
 # Environment files
 .env
 .env.backup
+=======
+>>>>>>> 441768e18805edb3d840ea4992a0dc7e75bba5f4
