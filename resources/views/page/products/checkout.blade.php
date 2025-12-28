@@ -1,7 +1,6 @@
-
 <x-layout>
     {{-- Form ini mengirimkan 'id_alamat' dan 'id_metode_pembayaran' yang DIPILIH --}}
-    <form method="POST" action="{{ route('checkout.store') }}">
+    <form method="POST" action="{{ route('checkout.store') }}" id="checkout-form">
         @csrf
         <main class="py-8 bg-gray-100 min-h-screen">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -107,7 +106,7 @@
                                         <!-- Info -->
                                         <div class="flex-grow">
                                             <h3 class="font-semibold text-gray-900">{{ $item->nama_barang }}</h3>
-                                            <p class="text-sm text-gray-600">dari {{ $item->toko?->nama_toko ?? 'Toko Dihapus' }}</p>
+                                            <p class="text-sm text-gray-600">dari {{ $item->toko?->nama_tobo ?? 'Toko Dihapus' }}</p>
                                             <p class="text-sm text-gray-500">{{ $item->pivot->kuantitas }} x Rp {{ number_format($item->harga, 0, ',', '.') }}</p>
                                         </div>
                                         <!-- Subtotal -->
@@ -184,6 +183,7 @@
 
                                 {{-- Tombol "Bayar" (Submit Form) --}}
                                 <button type="submit"
+                                        id="pay-button"
                                         class="bg-green-600 hover:bg-green-700 text-white w-full py-3 rounded-lg font-bold text-lg transition-colors">
                                     Buat Pesanan
                                 </button>
@@ -206,9 +206,62 @@
                             @endif 
                         </div>
                     </section>
-
                 </div>
             </div>
         </main>
     </form> {{-- Akhir Form --}}
-      </x-layout>
+
+    <script src="{{ config('midtrans.snap_url') }}" data-client-key="{{ config('midtrans.client_key') }}"></script>
+    <script type="text/javascript">
+        document.getElementById('pay-button').onclick = function(event) {
+            event.preventDefault(); // Mencegah form submit default
+
+            // Kirim form untuk membuat transaksi di backend
+            fetch("{{ route('checkout.store') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    id_alamat: document.querySelector('input[name="id_alamat"]:checked').value,
+                    id_metode_pembayaran: document.querySelector('input[name="id_metode_pembayaran"]:checked').value
+                })
+            }).then(response => response.json())
+              .then(data => {
+                if (data.snap_token) {
+                    window.snap.pay(data.snap_token, {
+                        onSuccess: function(result) {
+                            /* You may add your own implementation here */
+                            alert("payment success!");
+                            console.log(result);
+                            window.location.href = "{{ route('pesanan') }}";
+                        },
+                        onPending: function(result) {
+                            /* You may add your own implementation here */
+                            alert("wating your payment!");
+                            console.log(result);
+                            window.location.href = "{{ route('pesanan') }}";
+                        },
+                        onError: function(result) {
+                            /* You may add your own implementation here */
+                            alert("payment failed!");
+                            console.log(result);
+                        },
+                        onClose: function() {
+                            /* You may add your own implementation here */
+                            alert('you closed the popup without finishing the payment');
+                        }
+                    });
+                } else {
+                    // Tangani jika tidak ada snap_token
+                    alert(data.error || 'Gagal mendapatkan token pembayaran.');
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan. Silakan coba lagi.');
+            });
+        };
+    </script>
+</x-layout>
+

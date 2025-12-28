@@ -29,12 +29,15 @@ use App\Http\Controllers\FaqController;
 use App\Http\Controllers\profile\LaporanController; // <-- Import controller baru
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\MidtransController;
 
 /*
 |--------------------------------------------------------------------------
 | Rute Publik (Bisa diakses siapa saja)
 |--------------------------------------------------------------------------
 */
+
+Route::post('/midtrans/notification', [MidtransController::class, 'notificationHandler']);
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/search', [SearchController::class, 'index'])->name('search');
