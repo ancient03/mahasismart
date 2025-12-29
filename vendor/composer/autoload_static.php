@@ -91,10 +91,6 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
             'Symfony\\Component\\CssSelector\\' => 30,
             'Symfony\\Component\\Console\\' => 26,
             'Symfony\\Component\\Clock\\' => 24,
-<<<<<<< HEAD
-=======
-            'SnapBi\\' => 7,
->>>>>>> 6a1b16350758c633bc8c49039f49731dfe82a1c7
         ),
         'R' => 
         array (
@@ -123,10 +119,6 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
         array (
             'Monolog\\' => 8,
             'Mockery\\' => 8,
-<<<<<<< HEAD
-=======
-            'Midtrans\\' => 9,
->>>>>>> 6a1b16350758c633bc8c49039f49731dfe82a1c7
         ),
         'L' => 
         array (
@@ -335,13 +327,6 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
         array (
             0 => __DIR__ . '/..' . '/symfony/clock',
         ),
-<<<<<<< HEAD
-=======
-        'SnapBi\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/midtrans/midtrans-php/SnapBi',
-        ),
->>>>>>> 6a1b16350758c633bc8c49039f49731dfe82a1c7
         'Ramsey\\Uuid\\' => 
         array (
             0 => __DIR__ . '/..' . '/ramsey/uuid/src',
@@ -407,13 +392,6 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
         array (
             0 => __DIR__ . '/..' . '/mockery/mockery/library/Mockery',
         ),
-<<<<<<< HEAD
-=======
-        'Midtrans\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/midtrans/midtrans-php/Midtrans',
-        ),
->>>>>>> 6a1b16350758c633bc8c49039f49731dfe82a1c7
         'League\\Uri\\' => 
         array (
             0 => __DIR__ . '/..' . '/league/uri',
@@ -556,7 +534,6 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
 
     public static $classMap = array (
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
-<<<<<<< HEAD
         'App\\Http\\Controllers\\profile\\AlamatController' => __DIR__ . '/../..' . '/app/Http/Controllers/profile/AlamatController.php',
         'App\\Http\\Controllers\\profile\\ProfileController' => __DIR__ . '/../..' . '/app/Http/Controllers/profile/ProfileController.php',
         'App\\Http\\Controllers\\toko\\BarangController' => __DIR__ . '/../..' . '/app/Http/Controllers/toko/BarangController.php',
@@ -565,45 +542,6 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
         'App\\Models\\Alamat' => __DIR__ . '/../..' . '/app/Models/Alamat.php',
         'App\\Models\\Barang' => __DIR__ . '/../..' . '/app/Models/Barang.php',
         'App\\Models\\Kategori' => __DIR__ . '/../..' . '/app/Models/Kategori.php',
-=======
-        'App\\Http\\Controllers\\FaqController' => __DIR__ . '/../..' . '/app/Http/Controllers/FaqController.php',
-        'App\\Http\\Controllers\\HomeController' => __DIR__ . '/../..' . '/app/Http/Controllers/HomeController.php',
-        'App\\Http\\Controllers\\NotificationController' => __DIR__ . '/../..' . '/app/Http/Controllers/NotificationController.php',
-        'App\\Http\\Controllers\\ProductDetailController' => __DIR__ . '/../..' . '/app/Http/Controllers/ProductDetailController.php',
-        'App\\Http\\Controllers\\SearchController' => __DIR__ . '/../..' . '/app/Http/Controllers/SearchController.php',
-        'App\\Http\\Controllers\\TokoController' => __DIR__ . '/../..' . '/app/Http/Controllers/TokoController.php',
-        'App\\Http\\Controllers\\admin\\AdminLaporanController' => __DIR__ . '/../..' . '/app/Http/Controllers/admin/AdminLaporanController.php',
-        'App\\Http\\Controllers\\admin\\AdminTokoController' => __DIR__ . '/../..' . '/app/Http/Controllers/admin/AdminTokoController.php',
-        'App\\Http\\Controllers\\admin\\AdminUserController' => __DIR__ . '/../..' . '/app/Http/Controllers/admin/AdminUserController.php',
-        'App\\Http\\Controllers\\admin\\KategoriController' => __DIR__ . '/../..' . '/app/Http/Controllers/admin/KategoriController.php',
-        'App\\Http\\Controllers\\profile\\AlamatController' => __DIR__ . '/../..' . '/app/Http/Controllers/profile/AlamatController.php',
-        'App\\Http\\Controllers\\profile\\LaporanController' => __DIR__ . '/../..' . '/app/Http/Controllers/profile/LaporanController.php',
-        'App\\Http\\Controllers\\profile\\PesananController' => __DIR__ . '/../..' . '/app/Http/Controllers/profile/PesananController.php',
-        'App\\Http\\Controllers\\profile\\ProfileController' => __DIR__ . '/../..' . '/app/Http/Controllers/profile/ProfileController.php',
-        'App\\Http\\Controllers\\profile\\UlasanController' => __DIR__ . '/../..' . '/app/Http/Controllers/profile/UlasanController.php',
-        'App\\Http\\Controllers\\toko\\BarangController' => __DIR__ . '/../..' . '/app/Http/Controllers/toko/BarangController.php',
-        'App\\Http\\Controllers\\toko\\LaporanTokoController' => __DIR__ . '/../..' . '/app/Http/Controllers/toko/LaporanTokoController.php',
-        'App\\Http\\Controllers\\toko\\PesananMasukController' => __DIR__ . '/../..' . '/app/Http/Controllers/toko/PesananMasukController.php',
-        'App\\Http\\Controllers\\toko\\RegisterTokoController' => __DIR__ . '/../..' . '/app/Http/Controllers/toko/RegisterTokoController.php',
-        'App\\Http\\Controllers\\toko\\TokoController' => __DIR__ . '/../..' . '/app/Http/Controllers/toko/TokoController.php',
-        'App\\Http\\Controllers\\transaksi\\CheckoutController' => __DIR__ . '/../..' . '/app/Http/Controllers/transaksi/CheckoutController.php',
-        'App\\Http\\Controllers\\transaksi\\KeranjangController' => __DIR__ . '/../..' . '/app/Http/Controllers/transaksi/KeranjangController.php',
-        'App\\Http\\Middleware\\CheckTokoBanned' => __DIR__ . '/../..' . '/app/Http/Middleware/CheckTokoBanned.php',
-        'App\\Http\\Middleware\\CheckUserBanned' => __DIR__ . '/../..' . '/app/Http/Middleware/CheckUserBanned.php',
-        'App\\Http\\Middleware\\IsAdmin' => __DIR__ . '/../..' . '/app/Http/Middleware/IsAdmin.php',
-        'App\\Models\\Alamat' => __DIR__ . '/../..' . '/app/Models/Alamat.php',
-        'App\\Models\\Barang' => __DIR__ . '/../..' . '/app/Models/Barang.php',
-        'App\\Models\\DetailTransaksi' => __DIR__ . '/../..' . '/app/Models/DetailTransaksi.php',
-        'App\\Models\\FotoUlasan' => __DIR__ . '/../..' . '/app/Models/FotoUlasan.php',
-        'App\\Models\\Iklan' => __DIR__ . '/../..' . '/app/Models/Iklan.php',
-        'App\\Models\\Kategori' => __DIR__ . '/../..' . '/app/Models/Kategori.php',
-        'App\\Models\\Keranjang' => __DIR__ . '/../..' . '/app/Models/Keranjang.php',
-        'App\\Models\\Laporan' => __DIR__ . '/../..' . '/app/Models/Laporan.php',
-        'App\\Models\\MetodePembayaran' => __DIR__ . '/../..' . '/app/Models/MetodePembayaran.php',
-        'App\\Models\\Notification' => __DIR__ . '/../..' . '/app/Models/Notification.php',
-        'App\\Models\\Transaksi' => __DIR__ . '/../..' . '/app/Models/Transaksi.php',
-        'App\\Models\\Ulasan' => __DIR__ . '/../..' . '/app/Models/Ulasan.php',
->>>>>>> 6a1b16350758c633bc8c49039f49731dfe82a1c7
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
         'App\\View\\Components\\Card' => __DIR__ . '/../..' . '/app/View/Components/Card.php',
@@ -611,10 +549,6 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
         'App\\View\\Components\\NavBarsetelahlogin' => __DIR__ . '/../..' . '/app/View/Components/NavBarsetelahlogin.php',
         'App\\View\\Components\\cardproduk\\card-chart' => __DIR__ . '/../..' . '/app/View/Components/cardproduk/card-chart.php',
         'App\\View\\Components\\cardproduk\\card-chat' => __DIR__ . '/../..' . '/app/View/Components/cardproduk/card-chat.php',
-<<<<<<< HEAD
-=======
-        'App\\View\\Components\\cardproduk\\card-search' => __DIR__ . '/../..' . '/app/View/Components/cardproduk/card-search.php',
->>>>>>> 6a1b16350758c633bc8c49039f49731dfe82a1c7
         'App\\View\\Components\\chat\\card' => __DIR__ . '/../..' . '/app/View/Components/chat/card.php',
         'App\\View\\Components\\chat\\content-chat' => __DIR__ . '/../..' . '/app/View/Components/chat/content-chat.php',
         'App\\View\\Components\\detailproduk\\produk' => __DIR__ . '/../..' . '/app/View/Components/detailproduk/produk.php',
@@ -626,10 +560,6 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
         'App\\View\\Components\\layout\\layout-admin' => __DIR__ . '/../..' . '/app/View/Components/layout/layout-admin.php',
         'App\\View\\Components\\layout\\layout-profile' => __DIR__ . '/../..' . '/app/View/Components/layout/layout-profile.php',
         'App\\View\\Components\\layout\\layoutdetailproduk' => __DIR__ . '/../..' . '/app/View/Components/layout/layoutdetailproduk.php',
-<<<<<<< HEAD
-=======
-        'App\\View\\Components\\modal-success' => __DIR__ . '/../..' . '/app/View/Components/modal-success.php',
->>>>>>> 6a1b16350758c633bc8c49039f49731dfe82a1c7
         'App\\View\\Components\\navMobile' => __DIR__ . '/../..' . '/app/View/Components/navMobile.php',
         'App\\View\\Components\\navbar\\chat' => __DIR__ . '/../..' . '/app/View/Components/navbar/chat.php',
         'App\\View\\Components\\navbar\\mobiledetailproduk' => __DIR__ . '/../..' . '/app/View/Components/navbar/mobiledetailproduk.php',
@@ -760,11 +690,6 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
         'Cron\\MonthField' => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron/MonthField.php',
         'Database\\Factories\\UserFactory' => __DIR__ . '/../..' . '/database/factories/UserFactory.php',
         'Database\\Seeders\\DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeders/DatabaseSeeder.php',
-<<<<<<< HEAD
-=======
-        'Database\\Seeders\\KategoriSeeder' => __DIR__ . '/../..' . '/database/seeders/KategoriSeeder.php',
-        'Database\\Seeders\\MetodePembayaranSeeder' => __DIR__ . '/../..' . '/database/seeders/MetodePembayaranSeeder.php',
->>>>>>> 6a1b16350758c633bc8c49039f49731dfe82a1c7
         'DateError' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateError.php',
         'DateException' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateException.php',
         'DateInvalidOperationException' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateInvalidOperationException.php',
@@ -3565,17 +3490,6 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
         'League\\Uri\\UriTemplate\\TemplateCanNotBeExpanded' => __DIR__ . '/..' . '/league/uri/UriTemplate/TemplateCanNotBeExpanded.php',
         'League\\Uri\\UriTemplate\\VarSpecifier' => __DIR__ . '/..' . '/league/uri/UriTemplate/VarSpecifier.php',
         'League\\Uri\\UriTemplate\\VariableBag' => __DIR__ . '/..' . '/league/uri/UriTemplate/VariableBag.php',
-<<<<<<< HEAD
-=======
-        'Midtrans\\ApiRequestor' => __DIR__ . '/..' . '/midtrans/midtrans-php/Midtrans/ApiRequestor.php',
-        'Midtrans\\Config' => __DIR__ . '/..' . '/midtrans/midtrans-php/Midtrans/Config.php',
-        'Midtrans\\CoreApi' => __DIR__ . '/..' . '/midtrans/midtrans-php/Midtrans/CoreApi.php',
-        'Midtrans\\Notification' => __DIR__ . '/..' . '/midtrans/midtrans-php/Midtrans/Notification.php',
-        'Midtrans\\Sanitizer' => __DIR__ . '/..' . '/midtrans/midtrans-php/Midtrans/Sanitizer.php',
-        'Midtrans\\Snap' => __DIR__ . '/..' . '/midtrans/midtrans-php/Midtrans/Snap.php',
-        'Midtrans\\SnapApiRequestor' => __DIR__ . '/..' . '/midtrans/midtrans-php/Midtrans/SnapApiRequestor.php',
-        'Midtrans\\Transaction' => __DIR__ . '/..' . '/midtrans/midtrans-php/Midtrans/Transaction.php',
->>>>>>> 6a1b16350758c633bc8c49039f49731dfe82a1c7
         'Mockery\\Adapter\\Phpunit\\MockeryPHPUnitIntegration' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/Adapter/Phpunit/MockeryPHPUnitIntegration.php',
         'Mockery\\Adapter\\Phpunit\\MockeryPHPUnitIntegrationAssertPostConditions' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/Adapter/Phpunit/MockeryPHPUnitIntegrationAssertPostConditions.php',
         'Mockery\\Adapter\\Phpunit\\MockeryTestCase' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/Adapter/Phpunit/MockeryTestCase.php',
@@ -5756,12 +5670,6 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
         'SebastianBergmann\\Type\\UnknownType' => __DIR__ . '/..' . '/sebastian/type/src/type/UnknownType.php',
         'SebastianBergmann\\Type\\VoidType' => __DIR__ . '/..' . '/sebastian/type/src/type/VoidType.php',
         'SebastianBergmann\\Version' => __DIR__ . '/..' . '/sebastian/version/src/Version.php',
-<<<<<<< HEAD
-=======
-        'SnapBi\\SnapBi' => __DIR__ . '/..' . '/midtrans/midtrans-php/SnapBi/SnapBi.php',
-        'SnapBi\\SnapBiApiRequestor' => __DIR__ . '/..' . '/midtrans/midtrans-php/SnapBi/SnapBiApiRequestor.php',
-        'SnapBi\\SnapBiConfig' => __DIR__ . '/..' . '/midtrans/midtrans-php/SnapBi/SnapBiConfig.php',
->>>>>>> 6a1b16350758c633bc8c49039f49731dfe82a1c7
         'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
         'Symfony\\Component\\Clock\\Clock' => __DIR__ . '/..' . '/symfony/clock/Clock.php',
         'Symfony\\Component\\Clock\\ClockAwareTrait' => __DIR__ . '/..' . '/symfony/clock/ClockAwareTrait.php',

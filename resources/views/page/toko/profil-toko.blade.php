@@ -117,34 +117,11 @@
                         @error('logo_toko') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
                     </div>
                     <!-- Akhir Bagian Kanan -->
-<<<<<<< HEAD
-=======
-
-                    <!-- Banner Toko -->
-                    <div class="col-span-full space-y-2">
-                        <label class="block text-sm font-medium text-gray-700">Banner Toko (Opsional)</label>
-                        
-                        <!-- Preview Banner -->
-                        <div id="bannerPreview" class="w-full h-48 bg-gray-200 rounded-lg flex items-center justify-center border border-gray-300 overflow-hidden">
-                            @if ($toko->banner_toko)
-                                <img src="{{ asset('img/bannertoko/' . $toko->banner_toko) }}" alt="Banner Toko" class="w-full h-full object-cover">
-                            @else
-                                <span class="text-gray-500">Preview Banner</span>
-                            @endif
-                        </div>
-
-                        <input type="file" name="banner_toko" id="banner_toko" accept="image/*"
-                               class="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100 cursor-pointer @error('banner_toko') border border-red-500 rounded-lg p-1 @enderror" />
-                        <p class="text-xs text-gray-500">Pilih gambar baru (JPG, PNG, maks 2MB). Rekomendasi rasio 3:1.</p>
-                        @error('banner_toko') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
-                    </div>
->>>>>>> 6a1b16350758c633bc8c49039f49731dfe82a1c7
                 </div>
             </div>
         </form>
     </section>
 
-<<<<<<< HEAD
     {{-- JavaScript untuk Preview Logo --}}
     @push('scripts') 
     <script>
@@ -181,60 +158,6 @@
                     }
                 });
             }
-=======
-    {{-- JavaScript untuk Preview Logo & Banner --}}
-    @push('scripts') 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Logo Preview Logic
-            const logoInput = document.getElementById('logo_toko');
-            const logoPreview = document.getElementById('logoPreview');
-            const defaultLogoPreview = logoPreview.innerHTML; 
-
-            if (logoInput && logoPreview) { 
-                logoInput.addEventListener('change', function() {
-                    handlePreview(this, logoPreview, defaultLogoPreview, true);
-                });
-            }
-
-            // Banner Preview Logic
-            const bannerInput = document.getElementById('banner_toko');
-            const bannerPreview = document.getElementById('bannerPreview');
-            const defaultBannerPreview = bannerPreview.innerHTML;
-
-            if (bannerInput && bannerPreview) {
-                bannerInput.addEventListener('change', function() {
-                    handlePreview(this, bannerPreview, defaultBannerPreview, false);
-                });
-            }
-
-            function handlePreview(input, previewElement, defaultPreviewHTML, isCircle) {
-                const file = input.files[0];
-                if (file) {
-                    const validImageTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
-                    if (!validImageTypes.includes(file.type)) {
-                        alert('Format file tidak valid. Harap pilih JPG, PNG, atau WEBP.');
-                        input.value = ''; 
-                        previewElement.innerHTML = defaultPreviewHTML;
-                        return;
-                    }
-                    if (file.size > 2 * 1024 * 1024) { // 2MB
-                        alert('Ukuran file terlalu besar. Maksimal 2MB.');
-                        input.value = ''; 
-                        previewElement.innerHTML = defaultPreviewHTML;
-                        return;
-                    }
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        const circleClass = isCircle ? 'rounded-full' : '';
-                        previewElement.innerHTML = `<img src="${e.target.result}" alt="Preview Baru" class="w-full h-full ${circleClass} object-cover">`;
-                    }
-                    reader.readAsDataURL(file);
-                } else {
-                    previewElement.innerHTML = defaultPreviewHTML;
-                }
-            }
->>>>>>> 6a1b16350758c633bc8c49039f49731dfe82a1c7
         });
     </script>
     @endpush 

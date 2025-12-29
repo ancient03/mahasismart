@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('toko', function (Blueprint $table) {
-            $table->string('logo_toko')->nullable()->after('no_rek'); // Tambah kolom logo (boleh null)
+            // $table->string('logo_toko')->nullable()->after('no_rek'); // Tambah kolom logo (boleh null)
         });
     }
 

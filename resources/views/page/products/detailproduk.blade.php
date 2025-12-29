@@ -23,7 +23,6 @@
         <div class="bg-white rounded-lg shadow-md p-6">
             <h2 class="text-xl font-bold mb-4 text-gray-800">Ulasan Pembeli</h2>
             
-<<<<<<< HEAD
             {{-- Loop ulasan dari database --}}
             @forelse ($ulasanList as $ulasan)
                 <x-detailproduk.ulasan :ulasan="$ulasan" />
@@ -33,18 +32,6 @@
                     <p>Belum ada ulasan untuk produk ini.</p>
                 </div>
             @endforelse
-=======
-<div id="review-list">
-    @forelse ($ulasanList as $review)
-        {{-- 3. Loop dan tampilkan setiap ulasan menggunakan komponen ulasan --}}
-        <x-detailproduk.ulasan :ulasan="$review" />
-    @empty
-        <div class="text-center py-10">
-            <p class="text-gray-500">Belum ada ulasan untuk produk ini.</p>
-        </div>
-    @endforelse
-</div>
->>>>>>> 6a1b16350758c633bc8c49039f49731dfe82a1c7
 
             {{-- Pagination Ulasan --}}
             <div class="mt-4">

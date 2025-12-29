@@ -39,16 +39,10 @@ use App\Http\Controllers\MidtransController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/search', [SearchController::class, 'index'])->name('search');
 Route::get('/detailproduk/{barang}', [ProductDetailController::class, 'show'])->name('detailproduk.show');
-<<<<<<< HEAD
-=======
 Route::get('/detailtoko/{toko}', [TokoController::class, 'showPublicProfile'])->name('detailtoko.show');
 
-<<<<<<< HEAD
->>>>>>> 6a1b16350758c633bc8c49039f49731dfe82a1c7
-=======
 Route::post('/midtrans/notification', [MidtransController::class, 'notificationHandler'])->name('midtrans.notification');
 
->>>>>>> 457daba4550bcdacbcbe3eb7b02fc415e221efdd
 
 
 /*
@@ -130,16 +124,15 @@ Route::prefix('api/rajaongkir')->group(function () {
         // Register Toko (Buka Toko)
         Route::get('/register', [RegisterTokoController::class, 'create'])->name('register.toko.create');
         Route::post('/register', [RegisterTokoController::class, 'store'])->name('register.toko.store');
+        Route::post('/register/validate-document', [RegisterTokoController::class, 'validateDocument'])
+    ->name('register.toko.validate');
+
 
         // Profil Toko & Edit Toko
         Route::get('/profil', [TokoController::class, 'showProfile'])->name('profil-toko');
         Route::get('/{toko}/edit', [TokoController::class, 'edit'])->name('toko.edit');
         Route::put('/{toko}', [TokoController::class, 'update'])->name('toko.update');
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 6a1b16350758c633bc8c49039f49731dfe82a1c7
             // 1. Rute Pembeli (Kirim Laporan)
     Route::post('/laporan/store', [LaporanController::class, 'store'])->name('laporan.store');
 
