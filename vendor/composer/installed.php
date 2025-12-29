@@ -1,9 +1,15 @@
 <?php return array(
     'root' => array(
         'name' => 'laravel/laravel',
+<<<<<<< HEAD
         'pretty_version' => 'v12.5.0',
         'version' => '12.5.0.0',
         'reference' => null,
+=======
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'reference' => 'c5588001f0b504bffaeda9ed0aaf4a43450a7c14',
+>>>>>>> 6a1b16350758c633bc8c49039f49731dfe82a1c7
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -392,9 +398,15 @@
             'dev_requirement' => false,
         ),
         'laravel/laravel' => array(
+<<<<<<< HEAD
             'pretty_version' => 'v12.5.0',
             'version' => '12.5.0.0',
             'reference' => null,
+=======
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => 'c5588001f0b504bffaeda9ed0aaf4a43450a7c14',
+>>>>>>> 6a1b16350758c633bc8c49039f49731dfe82a1c7
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -517,6 +529,18 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+<<<<<<< HEAD
+=======
+        'midtrans/midtrans-php' => array(
+            'pretty_version' => '2.6.2',
+            'version' => '2.6.2.0',
+            'reference' => '8ed7fc58ff1ababe675da17acf8233f4028eb3be',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../midtrans/midtrans-php',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+>>>>>>> 6a1b16350758c633bc8c49039f49731dfe82a1c7
         'mockery/mockery' => array(
             'pretty_version' => '1.6.12',
             'version' => '1.6.12.0',

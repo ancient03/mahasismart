@@ -38,6 +38,11 @@ use App\Http\Controllers\NotificationController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/search', [SearchController::class, 'index'])->name('search');
 Route::get('/detailproduk/{barang}', [ProductDetailController::class, 'show'])->name('detailproduk.show');
+<<<<<<< HEAD
+=======
+Route::get('/detailtoko/{toko}', [TokoController::class, 'showPublicProfile'])->name('detailtoko.show');
+
+>>>>>>> 6a1b16350758c633bc8c49039f49731dfe82a1c7
 
 
 /*
@@ -125,6 +130,10 @@ Route::prefix('api/rajaongkir')->group(function () {
         Route::get('/{toko}/edit', [TokoController::class, 'edit'])->name('toko.edit');
         Route::put('/{toko}', [TokoController::class, 'update'])->name('toko.update');
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6a1b16350758c633bc8c49039f49731dfe82a1c7
             // 1. Rute Pembeli (Kirim Laporan)
     Route::post('/laporan/store', [LaporanController::class, 'store'])->name('laporan.store');
 

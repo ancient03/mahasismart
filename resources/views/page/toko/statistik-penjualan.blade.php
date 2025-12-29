@@ -76,5 +76,77 @@
             </div>
         </div>
 
+<<<<<<< HEAD
     </section>
+=======
+        {{-- Grafik Penjualan Bulanan --}}
+        <div class="bg-white rounded-lg shadow-md p-6 mt-8">
+            <h3 class="text-lg font-semibold mb-4 border-b pb-2">Volume Penjualan Bulanan</h3>
+            <div>
+                <canvas id="salesChart"></canvas>
+            </div>
+        </div>
+
+    </section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const ctx = document.getElementById('salesChart');
+        const chartLabels = @json($chartLabels ?? []);
+        const chartData = @json($chartData ?? []);
+
+        if (ctx && chartLabels.length > 0) {
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: chartLabels,
+                    datasets: [{
+                        label: 'Jumlah Item Terjual',
+                        data: chartData,
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 2,
+                        tension: 0.1,
+                        fill: true,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                // Pastikan hanya integer yang ditampilkan di sumbu Y
+                                callback: function(value) {
+                                    if (Number.isInteger(value)) {
+                                        return value;
+                                    }
+                                },
+                                stepSize: 1
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                        }
+                    }
+                }
+            });
+        } else if (ctx) {
+            // Tampilkan pesan jika tidak ada data
+            const c = ctx.getContext('2d');
+            c.font = '16px Poppins';
+            c.fillStyle = '#9ca3af';
+            c.textAlign = 'center';
+            c.fillText('Belum ada data penjualan yang cukup untuk ditampilkan.', ctx.width / 2, ctx.height / 2);
+        }
+    });
+</script>
+>>>>>>> 6a1b16350758c633bc8c49039f49731dfe82a1c7
 </x-layout.layout-profile>

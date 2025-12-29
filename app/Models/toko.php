@@ -24,6 +24,10 @@ class Toko extends Model
         'status_toko',
         'no_rek',     
         'logo_toko',
+<<<<<<< HEAD
+=======
+        'banner_toko',
+>>>>>>> 6a1b16350758c633bc8c49039f49731dfe82a1c7
     ];
 
     /**

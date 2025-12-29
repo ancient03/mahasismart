@@ -27,23 +27,29 @@ use Composer\Semver\VersionParser;
 class InstalledVersions
 {
     /**
+<<<<<<< HEAD
      * @var string|null if set (by reflection by Composer), this should be set to the path where this class is being copied to
      * @internal
      */
     private static $selfDir = null;
 
     /**
+=======
+>>>>>>> 6a1b16350758c633bc8c49039f49731dfe82a1c7
      * @var mixed[]|null
      * @psalm-var array{root: array{name: string, pretty_version: string, version: string, reference: string|null, type: string, install_path: string, aliases: string[], dev: bool}, versions: array<string, array{pretty_version?: string, version?: string, reference?: string|null, type?: string, install_path?: string, aliases?: string[], dev_requirement: bool, replaced?: string[], provided?: string[]}>}|array{}|null
      */
     private static $installed;
 
     /**
+<<<<<<< HEAD
      * @var bool
      */
     private static $installedIsLocalDir;
 
     /**
+=======
+>>>>>>> 6a1b16350758c633bc8c49039f49731dfe82a1c7
      * @var bool|null
      */
     private static $canGetVendors;
@@ -320,6 +326,7 @@ class InstalledVersions
     {
         self::$installed = $data;
         self::$installedByVendor = array();
+<<<<<<< HEAD
 
         // when using reload, we disable the duplicate protection to ensure that self::$installed data is
         // always returned, but we cannot know whether it comes from the installed.php in __DIR__ or not,
@@ -338,6 +345,8 @@ class InstalledVersions
         }
 
         return self::$selfDir;
+=======
+>>>>>>> 6a1b16350758c633bc8c49039f49731dfe82a1c7
     }
 
     /**
@@ -354,9 +363,13 @@ class InstalledVersions
         $copiedLocalDir = false;
 
         if (self::$canGetVendors) {
+<<<<<<< HEAD
             $selfDir = self::getSelfDir();
             foreach (ClassLoader::getRegisteredLoaders() as $vendorDir => $loader) {
                 $vendorDir = strtr($vendorDir, '\\', '/');
+=======
+            foreach (ClassLoader::getRegisteredLoaders() as $vendorDir => $loader) {
+>>>>>>> 6a1b16350758c633bc8c49039f49731dfe82a1c7
                 if (isset(self::$installedByVendor[$vendorDir])) {
                     $installed[] = self::$installedByVendor[$vendorDir];
                 } elseif (is_file($vendorDir.'/composer/installed.php')) {
@@ -364,6 +377,7 @@ class InstalledVersions
                     $required = require $vendorDir.'/composer/installed.php';
                     self::$installedByVendor[$vendorDir] = $required;
                     $installed[] = $required;
+<<<<<<< HEAD
                     if (self::$installed === null && $vendorDir.'/composer' === $selfDir) {
                         self::$installed = $required;
                         self::$installedIsLocalDir = true;
@@ -372,6 +386,13 @@ class InstalledVersions
                 if (self::$installedIsLocalDir && $vendorDir.'/composer' === $selfDir) {
                     $copiedLocalDir = true;
                 }
+=======
+                    if (strtr($vendorDir.'/composer', '\\', '/') === strtr(__DIR__, '\\', '/')) {
+                        self::$installed = $required;
+                        $copiedLocalDir = true;
+                    }
+                }
+>>>>>>> 6a1b16350758c633bc8c49039f49731dfe82a1c7
             }
         }
 
