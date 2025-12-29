@@ -79,8 +79,18 @@
                         {{-- ========================================================== --}}
                         <div class="flex items-center justify-between mt-4">
                             {{-- Tampilkan Status Saat Ini --}}
-                            <div>
-                                <span class="font-medium">Status: </span>
+                            <div class="flex items-center gap-2">
+                                <span class="font-medium">Status Bayar: </span>
+                                @if ($detail->transaksi->status_pembayaran == 'paid')
+                                    <span class="bg-green-200 py-1 px-3 rounded-full text-green-700 font-medium text-xs uppercase">
+                                        Dibayar
+                                    </span>
+                                @else
+                                    <span class="bg-yellow-200 py-1 px-3 rounded-full text-yellow-700 font-medium text-xs uppercase">
+                                        Belum Dibayar
+                                    </span>
+                                @endif
+                                <span class="font-medium">Status Kirim: </span>
                                 @if ($detail->transaksi->status_pengiriman == 'belum diproses')
                                     <span class="bg-red-200 py-1 px-3 rounded-full text-red-700 font-medium text-xs uppercase">
                                         Belum Diproses
@@ -105,7 +115,7 @@
                             </div>
 
                             {{-- Form Tombol Aksi (jika belum selesai/batal) --}}
-                            @if (!in_array($detail->transaksi->status_pengiriman, ['selesai', 'dibatalkan']))
+                            @if ($detail->transaksi->status_pembayaran == 'paid' && !in_array($detail->transaksi->status_pengiriman, ['selesai', 'dibatalkan']))
                                 <form method="POST" action="{{ route('pesanan-masuk.update-status', $detail->transaksi->id_transaksi) }}" class="flex items-center gap-2">
                                     @csrf
                                     
@@ -136,8 +146,10 @@
                                         </button>
                                     @endif
                                 </form>
-
-                                
+                            @else
+                                @if ($detail->transaksi->status_pembayaran != 'paid')
+                                <div class="text-sm text-red-600">Menunggu pembayaran dari pelanggan.</div>
+                                @endif
                             @endif
 
                             {{-- 👇👇👇 TOMBOL DETAIL PESANAN TERPISAH 👇👇👇 --}}

@@ -1,11 +1,11 @@
 
 <x-layout>
     {{-- Form ini mengirimkan 'id_alamat' dan 'id_metode_pembayaran' yang DIPILIH --}}
-    <form method="POST" action="{{ route('checkout.store') }}">
+    <form id="checkout-form" method="POST" action="{{ route('checkout.store') }}">
         @csrf
         <main class="py-8 bg-gray-100 min-h-screen">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                
+
                 {{-- Padding Top untuk Navbar Fixed --}}
                 <div class="pt-[90px] md:pt-[100px]"></div>
 
@@ -25,7 +25,7 @@
                         </ul>
                     </div>
                 @endif
-                
+
                 {{-- Grid Utama (2 kolom di desktop) --}}
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
@@ -33,11 +33,11 @@
                     {{-- KOLOM KIRI (Alamat & Daftar Barang) --}}
                     {{-- =================================== --}}
                     <section class="lg:col-span-2 space-y-6">
-                        
+
                         <!-- 1. Pilihan Alamat Pengiriman -->
                         <div class="bg-white rounded-lg shadow-md p-6">
                             <h2 class="text-xl font-bold text-gray-900 mb-4">Pilih Alamat Pengiriman <span class="text-red-500">*</span></h2>
-                            
+
                             @if ($alamatList->isEmpty())
                                 {{-- Tampilan jika user tidak punya alamat --}}
                                 <div class="text-center text-gray-500 py-6 border border-dashed rounded-lg">
@@ -52,18 +52,18 @@
                                 {{-- Loop untuk menampilkan semua alamat user --}}
                                 <div class="space-y-4">
                                     @foreach ($alamatList as $alamat)
-                                        <label for="alamat-{{ $alamat->id_alamat }}" 
+                                        <label for="alamat-{{ $alamat->id_alamat }}"
                                                class="flex items-start space-x-4 border rounded-lg p-4 cursor-pointer hover:bg-gray-50 has-[:checked]:bg-green-50 has-[:checked]:border-green-500 {{ $alamat->is_default ? 'border-green-500 bg-green-50' : 'border-gray-200' }}">
                                             {{-- Radio Button --}}
-                                            <input type="radio" 
-                                                   name="id_alamat" 
-                                                   id="alamat-{{ $alamat->id_alamat }}" 
-                                                   value="{{ $alamat->id_alamat }}" 
-                                                   class="mt-1 text-green-600 focus:ring-green-500" 
+                                            <input type="radio"
+                                                   name="id_alamat"
+                                                   id="alamat-{{ $alamat->id_alamat }}"
+                                                   value="{{ $alamat->id_alamat }}"
+                                                   class="mt-1 text-green-600 focus:ring-green-500"
                                                    {{-- Cek jika ini adalah alamat default ATAU alamat yang dipilih sebelumnya --}}
                                                    {{ (old('id_alamat') == $alamat->id_alamat) || (!$errors->any() && $alamat->is_default) ? 'checked' : '' }}
                                                    required>
-                                            
+
                                             {{-- Info Alamat --}}
                                             <div class="flex-grow">
                                                 <div class="flex justify-between items-center mb-1">
@@ -83,7 +83,7 @@
                                         </label>
                                     @endforeach
                                 </div>
-                                 <a href="{{ route('alamat.create', ['redirect' => 'checkout.index']) }}" 
+                                 <a href="{{ route('alamat.create', ['redirect' => 'checkout.index']) }}"
                                     class="mt-4 inline-block text-sm text-blue-600 hover:underline">
                                     + Tambah alamat baru lainnya
                                   </a>
@@ -129,14 +129,14 @@
                     <section class="lg:col-span-1">
                         <div class="bg-white rounded-lg shadow-md p-6 sticky top-28">
                             <h2 class="text-xl font-bold text-gray-900 mb-4">Ringkasan Belanja</h2>
-                            
+
                             {{-- Pilihan Metode Pembayaran --}}
                             <div class="mb-4">
                                 <h3 class="text-md font-semibold text-gray-700 mb-2">Metode Pembayaran <span class="text-red-500">*</span></h3>
                                 @if(isset($metodePembayaranList) && $metodePembayaranList->isNotEmpty())
                                     <div class="space-y-3">
                                         @foreach($metodePembayaranList as $metode)
-                                            <label for="metode-{{ $metode->id_metode_pembayaran }}" 
+                                            <label for="metode-{{ $metode->id_metode_pembayaran }}"
                                                    class="flex justify-between items-center border rounded-lg p-3 cursor-pointer hover:bg-gray-50 has-[:checked]:bg-green-50 has-[:checked]:border-green-500">
                                                 <div class="flex items-center gap-3">
                                                     @if($metode->gambar_logo)
@@ -151,9 +151,9 @@
                                                         <p class="text-xs text-gray-500 mt-1">{{ $metode->deskripsi }}</p>
                                                     </div>
                                                 </div>
-                                                <input type="radio" 
-                                                       name="id_metode_pembayaran" 
-                                                       id="metode-{{ $metode->id_metode_pembayaran }}" 
+                                                <input type="radio"
+                                                       name="id_metode_pembayaran"
+                                                       id="metode-{{ $metode->id_metode_pembayaran }}"
                                                        value="{{ $metode->id_metode_pembayaran }}"
                                                        class="text-green-600 focus:ring-green-500"
                                                        {{ (old('id_metode_pembayaran') == $metode->id_metode_pembayaran) || (!$errors->any() && $metode->kode_metode == 'COD') || (!$errors->any() && $loop->first) ? 'checked' : '' }}
@@ -167,14 +167,14 @@
                                     </div>
                                 @endif
                             </div>
-                            
+
                             {{-- Cek jika semua data siap untuk checkout --}}
                             @if ($items->isNotEmpty() && $alamatList->isNotEmpty() && $metodePembayaranList->isNotEmpty())
                                 <div class="flex justify-between items-center mb-2">
                                     <span class="text-gray-600">Total Harga ({{ $items->sum('pivot.kuantitas') }} barang)</span>
                                     <span class="text-gray-900 font-medium">Rp. {{ number_format($totalHarga, 0, ',', '.') }}</span>
                                 </div>
-                                
+
                                 <div class="border-t border-gray-200 my-4"></div>
 
                                 <div class="flex justify-between items-center mb-4">
@@ -183,7 +183,7 @@
                                 </div>
 
                                 {{-- Tombol "Bayar" (Submit Form) --}}
-                                <button type="submit"
+                                <button type="submit" id="pay-button"
                                         class="bg-green-600 hover:bg-green-700 text-white w-full py-3 rounded-lg font-bold text-lg transition-colors">
                                     Buat Pesanan
                                 </button>
@@ -203,7 +203,7 @@
                                         disabled>
                                     Buat Pesanan
                                 </button>
-                            @endif 
+                            @endif
                         </div>
                     </section>
 
@@ -211,4 +211,56 @@
             </div>
         </main>
     </form> {{-- Akhir Form --}}
-      </x-layout>
+
+    @push('scripts')
+    <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ $clientKey }}"></script>
+    <script type="text/javascript">
+        document.getElementById('pay-button').onclick = function(event) {
+            event.preventDefault();
+            var form = document.getElementById('checkout-form');
+            var formData = new FormData(form);
+
+            fetch("{{ route('checkout.store') }}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json',
+                },
+                body: formData
+            }).then(res => res.json())
+            .then(data => {
+                if (data.snap_token) {
+                    snap.pay(data.snap_token, {
+                        onSuccess: function(result) {
+                            /* You may add your own implementation here */
+                            // alert("payment success!");
+                            window.location.href = '/pesanan';
+                        },
+                        onPending: function(result) {
+                            /* You may add your own implementation here */
+                            // alert("wating your payment!");
+                             window.location.href = '/pesanan';
+                        },
+                        onError: function(result) {
+                            /* You may add your own implementation here */
+                            // alert("payment failed!");
+                             window.location.href = '/pesanan';
+                        },
+                        onClose: function() {
+                            /* You may add your own implementation here */
+                            // alert('you closed the popup without finishing the payment');
+                        }
+                    });
+                } else {
+                    // Handle error
+                    alert(data.error);
+                }
+            }).catch(err => {
+                // Handle error
+                console.log(err);
+            });
+        };
+    </script>
+    @endpush
+</x-layout>
+
