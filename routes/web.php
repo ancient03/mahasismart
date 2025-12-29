@@ -125,12 +125,14 @@ Route::prefix('api/rajaongkir')->group(function () {
         // Register Toko (Buka Toko)
         Route::get('/register', [RegisterTokoController::class, 'create'])->name('register.toko.create');
         Route::post('/register', [RegisterTokoController::class, 'store'])->name('register.toko.store');
+        Route::post('/register/validate-document', [RegisterTokoController::class, 'validateDocument'])
+    ->name('register.toko.validate');
+
 
         // Profil Toko & Edit Toko
         Route::get('/profil', [TokoController::class, 'showProfile'])->name('profil-toko');
         Route::get('/{toko}/edit', [TokoController::class, 'edit'])->name('toko.edit');
         Route::put('/{toko}', [TokoController::class, 'update'])->name('toko.update');
-
 
             // 1. Rute Pembeli (Kirim Laporan)
     Route::post('/laporan/store', [LaporanController::class, 'store'])->name('laporan.store');

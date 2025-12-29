@@ -1,5 +1,2 @@
 *
 !.gitignore
-# Environment files
-.env
-.env.backup

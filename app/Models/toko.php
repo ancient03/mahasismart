@@ -5,8 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-// 👇 TAMBAHKAN IMPORT INI 👇
-use Illuminate\Database\Eloquent\Relations\HasMany; 
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Crypt;
 
 class Toko extends Model
 {
@@ -24,8 +24,36 @@ class Toko extends Model
         'status_toko',
         'no_rek',     
         'logo_toko',
-        'banner_toko',
+        'nama_lengkap',
+        'nik_nim',
+        'foto_verifikasi',
+        'jenis_verifikasi',
+        'is_verified',
     ];
+
+    protected $casts = [
+        'is_verified' => 'boolean',
+    ];
+
+    /**
+     * Enkripsi NIK/NIM sebelum disimpan
+     */
+    public function setNikNimAttribute($value)
+    {
+        $this->attributes['nik_nim'] = Crypt::encryptString($value);
+    }
+
+    /**
+     * Dekripsi NIK/NIM saat diambil
+     */
+    public function getNikNimAttribute($value)
+    {
+        try {
+            return Crypt::decryptString($value);
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
 
     /**
      * Relasi ke User (pemilik toko).
@@ -35,31 +63,19 @@ class Toko extends Model
         return $this->belongsTo(User::class, 'id_user', 'id_user');
     }
 
-    // =============================================
-    // 👇 TAMBAHKAN METHOD RELASI BARANG INI 👇
-    // =============================================
     /**
-     * Mendapatkan semua barang yang dimiliki oleh toko ini.
-     * Relasi HasMany (Satu Toko memiliki Banyak Barang).
+     * Relasi ke Barang
      */
     public function barang(): HasMany 
     {
-        // Parameter: Model terkait, Foreign key di tabel barang, Local key (PK di tabel toko)
         return $this->hasMany(Barang::class, 'id_toko', 'id_toko');
     }
-    // =============================================
-    // 👆 AKHIR METHOD RELASI BARANG 👆
-    // =============================================
 
-        // ==========================================================
-    // 👇 TAMBAHKAN RELASI INI 👇
-    // ==========================================================
     /**
-     * Mendapatkan semua item pesanan (detail transaksi) untuk toko ini.
+     * Relasi ke Detail Transaksi
      */
     public function detailTransaksi(): HasMany
     {
         return $this->hasMany(DetailTransaksi::class, 'id_toko', 'id_toko');
     }
 }
-

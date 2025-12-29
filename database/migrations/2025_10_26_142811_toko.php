@@ -13,22 +13,30 @@ return new class extends Migration
     {
         Schema::create('toko', function (Blueprint $table) {
             // Kolom Primary Key
-            $table->increments('id_toko'); // int unsigned AUTO_INCREMENT PRIMARY KEY
+            $table->increments('id_toko');
 
             // Kolom Foreign Key ke tabel users
-            $table->unsignedInteger('id_user'); // Harus unsignedInteger agar cocok dengan increments('id_user')
+            $table->unsignedInteger('id_user');
 
-            // Kolom Lainnya
+            // Kolom Data Toko
             $table->string('nama_toko');
-            $table->string('no_hp_toko')->nullable(); // varchar, boleh kosong
-            $table->string('no_rek')->nullable();     // varchar, boleh kosong
+            $table->string('no_hp_toko')->nullable();
+            $table->string('no_rek')->nullable();
+            $table->string('logo_toko')->nullable();
             
-            $table->timestamps(); // created_at dan updated_at
+            // Kolom Verifikasi KTP/KTM (BARU)
+            $table->string('nama_lengkap');
+            $table->string('nik_nim'); // Menyimpan NIK atau NIM (terenkripsi)
+            $table->string('foto_verifikasi'); // Path foto KTP/KTM (terenkripsi)
+            $table->enum('jenis_verifikasi', ['ktp', 'ktm'])->default('ktp'); // Jenis dokumen
+            $table->boolean('is_verified')->default(false); // Status verifikasi
+            
+            $table->timestamps();
 
-            // Definisi Foreign Key Constraint
+            // Foreign Key Constraint
             $table->foreign('id_user')
-                  ->references('id_user')->on('users') // Merujuk ke id_user di tabel users
-                  ->onDelete('cascade'); // Jika user dihapus, tokonya ikut terhapus
+                  ->references('id_user')->on('users')
+                  ->onDelete('cascade');
         });
     }
 

@@ -40,12 +40,12 @@
                             <span class="font-medium">{{ number_format($totalTerjualToko, 0, ',', '.') }} Terjual</span>
                         </div>
 
-                        <a href="{{ route('detailtoko.show', $toko) }}"
-                            class="mt-4 inline-block bg-white text-[#00795E] border-2 border-[#00795E] 
+                        <button 
+                            class="mt-4 bg-white text-[#00795E] border-2 border-[#00795E] 
                                    lg:px-4 lg:py-2 px-3 py-1 rounded-lg hover:bg-[#00795E] hover:text-white 
                                    transition cursor-pointer lg:font-medium text-sm">
                             Kunjungi Toko
-                        </a>
+                        </button>
                     </div>
                 </div>
 

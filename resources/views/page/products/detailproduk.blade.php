@@ -23,16 +23,15 @@
         <div class="bg-white rounded-lg shadow-md p-6">
             <h2 class="text-xl font-bold mb-4 text-gray-800">Ulasan Pembeli</h2>
             
-<div id="review-list">
-    @forelse ($ulasanList as $review)
-        {{-- 3. Loop dan tampilkan setiap ulasan menggunakan komponen ulasan --}}
-        <x-detailproduk.ulasan :ulasan="$review" />
-    @empty
-        <div class="text-center py-10">
-            <p class="text-gray-500">Belum ada ulasan untuk produk ini.</p>
-        </div>
-    @endforelse
-</div>
+            {{-- Loop ulasan dari database --}}
+            @forelse ($ulasanList as $ulasan)
+                <x-detailproduk.ulasan :ulasan="$ulasan" />
+            @empty
+                <div class="text-center text-gray-500 py-10 border border-dashed rounded-lg">
+                    <i class="bi bi-chat-square-text text-4xl mb-2 text-gray-300"></i>
+                    <p>Belum ada ulasan untuk produk ini.</p>
+                </div>
+            @endforelse
 
             {{-- Pagination Ulasan --}}
             <div class="mt-4">

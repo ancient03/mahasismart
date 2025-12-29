@@ -1,12 +1,10 @@
+{{-- 
+  Menerima variabel $ulasan dari loop di view utama.
+  Props 'ulasan' adalah opsional, jika tidak ada, tampilkan statis.
+--}}
 @props(['ulasan' => null])
 
-<div class="review-item flex gap-3 py-6 border-b lg:border-b-4 border-zinc-100"
-    @if($ulasan)
-        data-rating="{{ $ulasan->rating }}"
-        data-has-image="{{ $ulasan->fotoUlasan->isNotEmpty() ? 'true' : 'false' }}"
-        data-has-comment="{{ !empty($ulasan->komentar) ? 'true' : 'false' }}"
-    @endif
->
+<div class="flex gap-3 py-6 border-b lg:border-b-4 border-zinc-100">
     {{-- profil --}}
     <div class="shrink-0">
         <div class="h-12 w-12 aspect-square overflow-hidden rounded-full border border-gray-200">
