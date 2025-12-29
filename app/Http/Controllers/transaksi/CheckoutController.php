@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\transaksi;
 
+// Manually load the Midtrans library to fix class loading issues.
+require_once(base_path('vendor/midtrans/midtrans-php/Midtrans.php'));
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -10,7 +13,6 @@ use App\Models\Alamat;
 use App\Models\Transaksi;
 use App\Models\DetailTransaksi;
 use App\Models\Barang; 
-use App\Models\MetodePembayaran; // <-- 1. Import MetodePembayaran
 use App\Models\Notification;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -36,11 +38,6 @@ class CheckoutController extends Controller
 
         $alamatList = $user->alamat()->orderByDesc('is_default')->get();
 
-        // 2. Ambil SEMUA metode pembayaran yang aktif
-        $metodePembayaranList = MetodePembayaran::where('is_aktif', true)
-                                                 ->orderBy('nama_metode')
-                                                 ->get();
-
         $totalHarga = $items->sum(function($item) {
             return $item->harga * $item->pivot->kuantitas;
         });
@@ -49,7 +46,6 @@ class CheckoutController extends Controller
             'items' => $items,
             'alamatList' => $alamatList,
             'totalHarga' => $totalHarga,
-            'metodePembayaranList' => $metodePembayaranList, // <-- 3. Kirim LIST ke view
             'clientKey' => config('midtrans.client_key')
         ]);
     }
@@ -69,14 +65,10 @@ class CheckoutController extends Controller
             return response()->json(['error' => 'Keranjang Anda kosong.'], 400);
         }
 
-        // 👇 PERBARUI VALIDASI: Tambahkan 'id_metode_pembayaran' 👇
         $validated = $request->validate([
             'id_alamat' => ['required', 'integer', Rule::in($alamatList->pluck('id_alamat'))],
-            'id_metode_pembayaran' => ['required', 'integer', 'exists:metode_pembayaran,id_metode_pembayaran'] // Validasi metode pembayaran
         ], [
             'id_alamat.required' => 'Silakan pilih alamat pengiriman.',
-            'id_metode_pembayaran.required' => 'Silakan pilih metode pembayaran.',
-            'id_metode_pembayaran.exists' => 'Metode pembayaran tidak valid.'
         ]);
 
         // 2. Hitung total harga
@@ -92,9 +84,6 @@ class CheckoutController extends Controller
             $transaksi = Transaksi::create([
                 'id_user' => $user->id_user,
                 'id_alamat' => $request->id_alamat,
-
-                // 👇 PERBARUI PENYIMPANAN: Simpan ID yang dipilih dari form 👇
-                'id_metode_pembayaran' => $request->input('id_metode_pembayaran'),
 
                 'nomor_invoice' => 'INV/' . now()->format('Ymd') . '/' . $user->id_user . '/' . time(),
                 'total_harga_keseluruhan' => $totalHarga,
@@ -152,12 +141,85 @@ class CheckoutController extends Controller
                 'url' => route('pesanan.show', $transaksi->id_transaksi),
             ]);
 
-            return response()->json(['snap_token' => $snapToken]);
+            return response()->json([
+                'snap_token' => $snapToken,
+                'id_transaksi' => $transaksi->id_transaksi
+            ]);
 
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Gagal checkout: ' . $e->getMessage());
             return response()->json(['error' => 'Terjadi kesalahan saat memproses pesanan. Silakan coba lagi.'], 500);
+        }
+    }
+
+    public function retryPayment(Request $request, Transaksi $transaksi)
+    {
+        // 1. Otorisasi: Pastikan user yang login adalah pemilik transaksi
+        if (Auth::id() !== $transaksi->id_user) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        // 2. Pastikan status pembayaran masih 'pending'
+        if ($transaksi->status_pembayaran !== 'pending') {
+            return response()->json(['error' => 'Pembayaran untuk transaksi ini tidak bisa diulang.'], 400);
+        }
+
+        // --- LOGIKA BARU UNTUK WAKTU KEDALUWARSA ---
+        $creationTime = $transaksi->created_at;
+        $expiryTime = $creationTime->copy()->addDay(); // Waktu kedaluwarsa = 1 hari setelah dibuat
+
+        // Cek apakah waktu pembayaran sudah lewat
+        if (now()->greaterThan($expiryTime)) {
+            // Ubah status transaksi menjadi 'dibatalkan'
+            $transaksi->status_pembayaran = 'dibatalkan';
+            $transaksi->status_pengiriman = 'dibatalkan'; // Sesuaikan jika perlu
+            $transaksi->save();
+            return response()->json(['error' => 'Waktu pembayaran untuk transaksi ini telah habis.'], 400);
+        }
+
+        // Hitung sisa waktu dalam menit
+        $remainingMinutes = now()->diffInMinutes($expiryTime);
+        // --- AKHIR LOGIKA BARU ---
+
+        try {
+            // 3. Konfigurasi Midtrans
+            Config::$serverKey = config('midtrans.server_key');
+            Config::$isProduction = config('midtrans.is_production');
+            Config::$is3ds = config('midtrans.is_3ds');
+
+            $user = $transaksi->user;
+
+            // 4. Siapkan parameter untuk Midtrans, TERMASUK 'expiry'
+            $params = array(
+                'transaction_details' => array(
+                    'order_id' => $transaksi->nomor_invoice,
+                    'gross_amount' => $transaksi->total_harga_keseluruhan,
+                ),
+                'expiry' => array(
+                    'duration' => (int) $remainingMinutes,
+                    'unit' => 'minute'
+                ),
+                'customer_details' => array(
+                    'first_name' => $user->nama,
+                    'email' => $user->email,
+                    'phone' => $user->telepon,
+                ),
+            );
+
+            // 5. Dapatkan Snap Token baru
+            $snapToken = Snap::getSnapToken($params);
+
+            // 6. Update token di database
+            $transaksi->snap_token = $snapToken;
+            $transaksi->save();
+            
+            // 7. Kembalikan token baru
+            return response()->json(['snap_token' => $snapToken]);
+
+        } catch (\Exception $e) {
+            Log::error('Gagal retry pembayaran: ' . $e->getMessage());
+            return response()->json(['error' => 'Terjadi kesalahan saat mencoba ulang pembayaran. Silakan coba lagi.'], 500);
         }
     }
 }

@@ -130,46 +130,8 @@
                         <div class="bg-white rounded-lg shadow-md p-6 sticky top-28">
                             <h2 class="text-xl font-bold text-gray-900 mb-4">Ringkasan Belanja</h2>
 
-                            {{-- Pilihan Metode Pembayaran --}}
-                            <div class="mb-4">
-                                <h3 class="text-md font-semibold text-gray-700 mb-2">Metode Pembayaran <span class="text-red-500">*</span></h3>
-                                @if(isset($metodePembayaranList) && $metodePembayaranList->isNotEmpty())
-                                    <div class="space-y-3">
-                                        @foreach($metodePembayaranList as $metode)
-                                            <label for="metode-{{ $metode->id_metode_pembayaran }}"
-                                                   class="flex justify-between items-center border rounded-lg p-3 cursor-pointer hover:bg-gray-50 has-[:checked]:bg-green-50 has-[:checked]:border-green-500">
-                                                <div class="flex items-center gap-3">
-                                                    @if($metode->gambar_logo)
-                                                        <img src="{{ asset($metode->gambar_logo) }}" alt="{{ $metode->nama_metode }}" class="w-10 h-6 object-contain">
-                                                    @elseif($metode->kode_metode == 'COD')
-                                                        <i class="bi bi-cash-coin text-green-600 text-xl w-10 text-center"></i>
-                                                    @else
-                                                        <i class="bi bi-credit-card text-gray-600 text-xl w-10 text-center"></i>
-                                                    @endif
-                                                    <div>
-                                                        <span class="font-medium text-gray-900">{{ $metode->nama_metode }}</span>
-                                                        <p class="text-xs text-gray-500 mt-1">{{ $metode->deskripsi }}</p>
-                                                    </div>
-                                                </div>
-                                                <input type="radio"
-                                                       name="id_metode_pembayaran"
-                                                       id="metode-{{ $metode->id_metode_pembayaran }}"
-                                                       value="{{ $metode->id_metode_pembayaran }}"
-                                                       class="text-green-600 focus:ring-green-500"
-                                                       {{ (old('id_metode_pembayaran') == $metode->id_metode_pembayaran) || (!$errors->any() && $metode->kode_metode == 'COD') || (!$errors->any() && $loop->first) ? 'checked' : '' }}
-                                                       required>
-                                            </label>
-                                        @endforeach
-                                    </div>
-                                @else
-                                    <div class="border rounded-lg p-3 bg-red-50 text-red-700 text-sm">
-                                        Tidak ada metode pembayaran yang aktif saat ini.
-                                    </div>
-                                @endif
-                            </div>
-
                             {{-- Cek jika semua data siap untuk checkout --}}
-                            @if ($items->isNotEmpty() && $alamatList->isNotEmpty() && $metodePembayaranList->isNotEmpty())
+                            @if ($items->isNotEmpty() && $alamatList->isNotEmpty())
                                 <div class="flex justify-between items-center mb-2">
                                     <span class="text-gray-600">Total Harga ({{ $items->sum('pivot.kuantitas') }} barang)</span>
                                     <span class="text-gray-900 font-medium">Rp. {{ number_format($totalHarga, 0, ',', '.') }}</span>
@@ -194,8 +156,6 @@
                                         Keranjang Anda kosong.
                                     @elseif($alamatList->isEmpty())
                                         Anda belum memiliki alamat.
-                                    @elseif($metodePembayaranList->isEmpty())
-                                        Metode pembayaran tidak tersedia.
                                     @endif
                                 </p>
                                 <button type="button"
@@ -247,17 +207,26 @@
                              window.location.href = '/pesanan';
                         },
                         onClose: function() {
-                            /* You may add your own implementation here */
-                            // alert('you closed the popup without finishing the payment');
+                            /* Redirect to orders page on close */
+                             window.location.href = '/pesanan';
                         }
                     });
                 } else {
-                    // Handle error
-                    alert(data.error);
+                    // Handle error, including Laravel validation errors
+                    let errorMessage = data.error; // Standard error from controller's catch block
+                    if (!errorMessage && data.message) { // Error from Laravel's validation
+                        errorMessage = data.message;
+                        if (data.errors) {
+                            const errorDetails = Object.values(data.errors).map(e => e[0]).join('\n');
+                            errorMessage += '\n\n- ' + errorDetails;
+                        }
+                    }
+                    alert(errorMessage || 'Terjadi kesalahan yang tidak diketahui. Silakan coba lagi.');
                 }
             }).catch(err => {
-                // Handle error
-                console.log(err);
+                // Handle network errors
+                console.error(err);
+                alert('Tidak dapat terhubung ke server. Periksa koneksi internet Anda.');
             });
         };
     </script>

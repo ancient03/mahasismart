@@ -10,9 +10,11 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\profile\ProfileController;
 use App\Http\Controllers\profile\AlamatController;
 use App\Http\Controllers\profile\PesananController; // Controller Pesanan Saya (Pembeli)
+use App\Http\Controllers\profile\ReturController; // Controller Retur
 use App\Http\Controllers\profile\UlasanController; // Controller Ulasan
 use App\Http\Controllers\toko\RegisterTokoController;
-use App\Http\Controllers\toko\TokoController;
+use App\Http\Controllers\toko\TokoController as TokoDashboardController;
+use App\Http\Controllers\TokoController; // Public Toko Controller
 use App\Http\Controllers\toko\BarangController;
 use App\Http\Controllers\toko\PesananMasukController; // Controller Pesanan Masuk (Penjual)
 use App\Http\Controllers\transaksi\KeranjangController;
@@ -29,7 +31,7 @@ use App\Http\Controllers\FaqController;
 use App\Http\Controllers\profile\LaporanController; // <-- Import controller baru
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\MidtransController;
-
+use App\Http\Controllers\toko\ReturTokoController;
 /*
 |--------------------------------------------------------------------------
 | Rute Publik (Bisa diakses siapa saja)
@@ -96,6 +98,12 @@ Route::prefix('api/rajaongkir')->group(function () {
     // 👇 INI ROUTE DETAIL PESANAN (PEMBELI) 👇
     Route::get('/pesanan/{id}', [PesananController::class, 'show'])->name('pesanan.show');
 
+    // --- Rute Retur Barang ---
+    Route::get('/pesanan/retur/{detail_transaksi}', [PesananController::class, 'createRetur'])->name('retur.create');
+    Route::post('/pesanan/retur', [PesananController::class, 'storeRetur'])->name('retur.store');
+    Route::get('/retur', [ReturController::class, 'index'])->name('retur.index');
+    Route::get('/retur/{retur}', [ReturController::class, 'show'])->name('retur.show');
+
     // --- Rute Keranjang ---
     Route::get('/keranjang', [KeranjangController::class, 'index'])->name('keranjang.index');
     Route::post('/keranjang/tambah/{barang}', [KeranjangController::class, 'store'])->name('keranjang.store');
@@ -111,6 +119,7 @@ Route::prefix('api/rajaongkir')->group(function () {
     // --- Rute Checkout ---
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+    Route::post('/checkout/retry/{transaksi}', [CheckoutController::class, 'retryPayment'])->name('checkout.retry');
 
     // --- RUTE ULASAN (BARU) ---
     // Rute untuk menampilkan form ulasan
@@ -121,7 +130,7 @@ Route::prefix('api/rajaongkir')->group(function () {
     // --- Rute Toko (Dashboard Penjual) ---
     Route::prefix('toko')->middleware(['auth', 'toko.banned'])->group(function () {
         
-        Route::get('/', [TokoController::class, 'dashboard'])->name('toko.dashboard');
+        Route::get('/', [TokoDashboardController::class, 'dashboard'])->name('toko.dashboard');
         // Register Toko (Buka Toko)
         Route::get('/register', [RegisterTokoController::class, 'create'])->name('register.toko.create');
         Route::post('/register', [RegisterTokoController::class, 'store'])->name('register.toko.store');
@@ -130,9 +139,20 @@ Route::prefix('api/rajaongkir')->group(function () {
 
 
         // Profil Toko & Edit Toko
-        Route::get('/profil', [TokoController::class, 'showProfile'])->name('profil-toko');
-        Route::get('/{toko}/edit', [TokoController::class, 'edit'])->name('toko.edit');
-        Route::put('/{toko}', [TokoController::class, 'update'])->name('toko.update');
+        Route::get('/profil', [TokoDashboardController::class, 'showProfile'])->name('profil-toko');
+        Route::get('/{toko}/edit', [TokoDashboardController::class, 'edit'])->name('toko.edit');
+        Route::put('/{toko}', [TokoDashboardController::class, 'update'])->name('toko.update');
+
+Route::middleware(['auth'])->prefix('toko')->name('toko.')->group(function () {
+    
+    // ... route toko lainnya ...
+
+    // Route Manajemen Retur
+    Route::get('/retur', [ReturTokoController::class, 'index'])->name('retur.index');
+    Route::get('/retur/{id}', [ReturTokoController::class, 'show'])->name('retur.show');
+    Route::put('/retur/{id}', [ReturTokoController::class, 'update'])->name('retur.update');
+
+});
 
             // 1. Rute Pembeli (Kirim Laporan)
     Route::post('/laporan/store', [LaporanController::class, 'store'])->name('laporan.store');
@@ -168,7 +188,7 @@ Route::prefix('api/rajaongkir')->group(function () {
 
         // Statistik (Halaman lain di dashboard)
         // Route::get('/statistik-penjualan', fn() => view('page/toko/statistik-penjualan'))->name('statistik-penjualan');
-        Route::get('/statistik-penjualan', [TokoController::class, 'statistik'])->name('toko.statistik-penjualan');
+        Route::get('/statistik-penjualan', [TokoDashboardController::class, 'statistik'])->name('toko.statistik-penjualan');
     });
 
     // --- Rute Admin ---

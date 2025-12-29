@@ -20,12 +20,18 @@
         <x-detailproduk.rating :avgRating="$avgRating" :totalRating="$totalRating" />
 
         {{-- 4. DAFTAR ULASAN --}}
-        <div class="bg-white rounded-lg shadow-md p-6">
+        <div id="review-list" class="bg-white rounded-lg shadow-md p-6">
             <h2 class="text-xl font-bold mb-4 text-gray-800">Ulasan Pembeli</h2>
             
             {{-- Loop ulasan dari database --}}
             @forelse ($ulasanList as $ulasan)
-                <x-detailproduk.ulasan :ulasan="$ulasan" />
+                <x-detailproduk.ulasan 
+                    :ulasan="$ulasan" 
+                    class="review-item"
+                    :data-rating="$ulasan->rating"
+                    :data-has-image="$ulasan->fotoUlasan->isNotEmpty() ? 'true' : 'false'"
+                    :data-has-comment="!empty($ulasan->komentar) ? 'true' : 'false'"
+                />
             @empty
                 <div class="text-center text-gray-500 py-10 border border-dashed rounded-lg">
                     <i class="bi bi-chat-square-text text-4xl mb-2 text-gray-300"></i>

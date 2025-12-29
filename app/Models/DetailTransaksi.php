@@ -71,5 +71,11 @@ class DetailTransaksi extends Model
     {
         return $this->belongsTo(Toko::class, 'id_toko', 'id_toko');
     }
+
+    public function retur()
+{
+    // parameter: (Model Tujuan, Foreign Key di tabel tujuan, Local Key di tabel ini)
+    return $this->hasOne(Retur::class, 'detail_transaksi_id', 'id_detail_transaksi');
+}
 }
 

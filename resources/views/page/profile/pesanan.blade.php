@@ -106,7 +106,7 @@
                             <div class="flex items-center justify-end mt-4 gap-3">
                                 {{-- Logika tombol berdasarkan status pengiriman --}}
                                 @if ($transaksi->status_pembayaran == 'pending')
-                                <button data-snap-token="{{ $transaksi->snap_token }}"
+                                <button data-transaksi-id="{{ $transaksi->id_transaksi }}"
                                     class="pay-now bg-green-600 text-white py-2 px-6 rounded-md font-medium hover:bg-green-700 transition duration-300 text-sm flex items-center gap-2">
                                     Bayar Sekarang
                                 </button>
@@ -171,21 +171,63 @@
     <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}"></script>
     <script>
         document.querySelectorAll('.pay-now').forEach(button => {
-            button.addEventListener('click', function() {
-                var snapToken = this.dataset.snapToken;
-                if (snapToken) {
-                    snap.pay(snapToken, {
-                        onSuccess: function(result) {
-                            window.location.reload();
-                        },
-                        onPending: function(result) {
-                            window.location.reload();
-                        },
-                        onError: function(result) {
-                            window.location.reload();
-                        }
-                    });
-                }
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                const currentButton = this;
+                const originalText = currentButton.innerHTML;
+                const transaksiId = this.dataset.transaksiId;
+
+                // Disable button and show loading state
+                currentButton.disabled = true;
+                currentButton.innerHTML = 'Memuat...';
+
+                fetch(`/checkout/retry/${transaksiId}`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json',
+                    },
+                })
+                .then(res => {
+                    if (!res.ok) {
+                        // If response is not OK, parse the error message from the server
+                        return res.json().then(err => { throw new Error(err.error || 'Terjadi kesalahan server.'); });
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    // Re-enable button before showing Midtrans popup
+                    currentButton.disabled = false;
+                    currentButton.innerHTML = originalText;
+
+                    if (data.snap_token) {
+                        snap.pay(data.snap_token, {
+                            onSuccess: function(result) {
+                                window.location.reload();
+                            },
+                            onPending: function(result) {
+                                window.location.reload();
+                            },
+                            onError: function(result) {
+                                alert('Pembayaran gagal.');
+                                window.location.reload();
+                            },
+                            onClose: function() {
+                               // Optional: feedback that payment was not completed
+                               // alert('Anda menutup popup tanpa menyelesaikan pembayaran.');
+                            }
+                        });
+                    } else {
+                        alert(data.error || 'Gagal mendapatkan token pembayaran. Silakan muat ulang halaman dan coba lagi.');
+                    }
+                })
+                .catch(err => {
+                    // Re-enable button on error
+                    currentButton.disabled = false;
+                    currentButton.innerHTML = originalText;
+                    console.error('Fetch Error:', err);
+                    alert('Terjadi kesalahan: ' + err.message);
+                });
             });
         });
     </script>

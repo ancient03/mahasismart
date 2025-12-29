@@ -4,6 +4,8 @@
 namespace App\Http\Controllers\profile;
 
 use App\Http\Controllers\Controller; // Import Controller utama
+use App\Models\DetailTransaksi;
+use App\Models\Retur;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth; // Untuk mendapatkan user
 use Illuminate\View\View;
@@ -51,8 +53,7 @@ class PesananController extends Controller
         // 1. Ambil transaksi berdasarkan ID, pastikan milik user yang login
         $transaksi = $user->transaksi()
             ->with([
-                'alamat', 
-                'metodePembayaran', 
+                'alamat',
                 'detailTransaksi.barang.toko' // Ambil detail -> barang -> toko
             ])
             ->findOrFail($id); // Error 404 jika tidak ditemukan atau bukan milik user
@@ -61,6 +62,41 @@ class PesananController extends Controller
         return view('page.profile.pesanan-detail', [
             'transaksi' => $transaksi
         ]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function createRetur(DetailTransaksi $detail_transaksi)
+    {
+        // TODO: Authorize that the user can return this item.
+        // For example, check if the order is completed and within the return window.
+        // $this->authorize('create', [Retur::class, $detail_transaksi]);
+
+        return view('page.profile.retur.create', compact('detail_transaksi'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function storeRetur(Request $request)
+    {
+        $request->validate([
+            'detail_transaksi_id' => 'required|exists:detail_transaksi,id_detail_transaksi',
+            'alasan' => 'required|string|max:255',
+            'catatan' => 'nullable|string',
+        ]);
+        
+        // TODO: Authorize that the user can return this item.
+
+        $retur = Retur::create([
+            'detail_transaksi_id' => $request->detail_transaksi_id,
+            'alasan' => $request->alasan,
+            'catatan' => $request->catatan,
+        ]);
+
+        return redirect()->route('retur.show', $retur->id)
+            ->with('success', 'Permintaan retur berhasil diajukan.');
     }
 }
 

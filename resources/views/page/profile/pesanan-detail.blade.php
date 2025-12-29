@@ -71,14 +71,37 @@
                         <span class="font-bold text-gray-800">
                             Rp {{ number_format($detail->kuantitas * $detail->harga_saat_transaksi, 0, ',', '.') }}
                         </span>
+{{-- Cek apakah status transaksi sudah selesai --}}
+@if ($transaksi->status_pengiriman == 'selesai')
+    
+    {{-- Tombol Ulasan (Biarkan kode lama kamu disini) --}}
+    <a href="{{ route('ulasan.create', ['id_transaksi' => $transaksi->id_transaksi, 'id_barang' => $detail->id_barang]) }}"
+       class="text-xs bg-zinc-200 px-3 py-1.5 rounded hover:bg-zinc-300 transition text-zinc-700 font-medium">
+        Beri Ulasan
+    </a>
 
-                        {{-- Tombol Beri Ulasan (Jika Selesai) --}}
-                        @if ($transaksi->status_pengiriman == 'selesai')
-                             <a href="{{ route('ulasan.create', ['id_transaksi' => $transaksi->id_transaksi, 'id_barang' => $detail->id_barang]) }}" 
-                                class="text-xs bg-zinc-200 px-3 py-1.5 rounded hover:bg-zinc-300 transition text-zinc-700 font-medium">
-                                 Beri Ulasan
-                             </a>
-                        @endif
+    {{-- LOGIKA TOMBOL RETUR --}}
+    @if ($detail->retur)
+        {{-- KONDISI 1: SUDAH ADA RETUR (Tampilkan tombol Lihat Status) --}}
+        <a href="{{ route('retur.show', $detail->retur->id) }}"
+           class="text-xs border border-blue-500 text-blue-600 px-3 py-1.5 rounded hover:bg-blue-50 transition font-medium">
+            
+            {{-- Opsional: Tampilkan status singkat di tombol --}}
+            @if($detail->retur->status == 'pending')
+                Menunggu Konfirmasi
+            @else
+                Status Retur
+            @endif
+        </a>
+    @else
+        {{-- KONDISI 2: BELUM ADA RETUR (Tampilkan tombol Ajukan) --}}
+        <a href="{{ route('retur.create', $detail->id_detail_transaksi) }}"
+           class="text-xs bg-red-100 text-red-600 px-3 py-1.5 rounded hover:bg-red-200 transition font-medium">
+            Ajukan Retur
+        </a>
+    @endif
+
+@endif
                     </div>
                 </div>
                 @endforeach

@@ -72,6 +72,31 @@
                     <span>Pesanan Masuk</span>
                 </a>
 
+                {{-- Retur Barang (Sisi Toko) --}}
+                <a href="{{ route('toko.retur.index') }}" 
+                    @class([
+                        'flex items-center space-x-3 py-2 px-3 rounded-md',
+                        // Highlight jika sedang di halaman retur
+                        'bg-green-100 text-green-700 font-semibold' => Route::is('toko.retur.*'),
+                        'text-gray-600 hover:bg-gray-100 hover:text-gray-900' => !Route::is('toko.retur.*'),
+                    ])>
+                    <i class="bi bi-arrow-return-left w-5 text-center"></i> {{-- Ikon Retur --}}
+                    <span>Retur Barang</span>
+                    
+                    {{-- Opsional: Badge Notifikasi Retur Pending --}}
+                    @php
+                        // Hitung retur yang statusnya pending untuk toko ini
+                        $returPending = \App\Models\Retur::whereHas('detailTransaksi', function($q) {
+                             $q->where('id_toko', Auth::user()->toko->id_toko);
+                        })->where('status', 'pending')->count();
+                    @endphp
+
+                    @if($returPending > 0)
+                        <span class="ml-auto bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                            {{ $returPending }}
+                        </span>
+                    @endif
+                </a>
                 {{-- Statistik Penjualan --}}
                 <a href="{{ route ('toko.statistik-penjualan')}}" {{-- {{ route('statistik-penjualan') }} Ganti '#' jika route sudah ada --}}
                     @class([

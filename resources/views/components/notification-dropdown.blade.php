@@ -19,10 +19,7 @@
         {{-- Header Dropdown --}}
         <div class="flex items-center justify-between px-4 py-2 text-sm text-gray-700">
             <span class="font-semibold">Notifikasi (<span x-text="unreadCount"></span>)</span>
-            <form id="mark-all-read-form" action="{{ route('notifications.readall') }}" method="POST" style="display: none;">
-                @csrf
-            </form>
-            <a href="#" onclick="event.preventDefault(); document.getElementById('mark-all-read-form').submit();" class="text-blue-500 hover:underline">
+            <a href="#" @click.prevent="markAllAsRead()" class="text-blue-500 hover:underline">
                 Tandai semua dibaca
             </a>
         </div>
@@ -85,6 +82,28 @@
                     this.unreadCount = data.unread_count;
                 })
                 .catch(error => console.error('Error fetching notifications:', error));
+            },
+
+            markAllAsRead() {
+                fetch('{{ route('notifications.readall') }}', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json',
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Refresh notifications after marking all as read
+                    this.fetchNotifications();
+                })
+                .catch(error => console.error('Error marking all notifications as read:', error));
             },
 
             markAndRedirect(notification) {

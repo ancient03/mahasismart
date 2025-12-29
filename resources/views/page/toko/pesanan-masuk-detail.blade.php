@@ -11,6 +11,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <h2 class="font-bold text-lg text-gray-800 mb-3">Informasi Pesanan</h2>
+                    <p class="text-sm text-gray-600 mb-1">Nama Pembeli: <span class="font-semibold text-gray-900">{{ $transaksi->user->username }}</span></p>
                     <p class="text-sm text-gray-600 mb-1">No. Invoice: <span class="font-semibold text-gray-900">{{ $transaksi->nomor_invoice }}</span></p>
                     <p class="text-sm text-gray-600 mb-1">Tanggal: <span class="font-semibold text-gray-900">{{ $transaksi->created_at->format('d M Y H:i') }}</span></p>
                     <p class="text-sm text-gray-600 mb-1">Metode Bayar: <span class="font-semibold text-gray-900">{{ $transaksi->metodePembayaran->nama_metode ?? 'N/A' }}</span></p>

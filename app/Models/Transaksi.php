@@ -59,11 +59,7 @@ class Transaksi extends Model
         return $this->hasMany(DetailTransaksi::class, 'id_transaksi', 'id_transaksi');
     }
 
-        /**
-     * Relasi BelongsTo: Transaksi ini menggunakan SATU MetodePembayaran.
+    /**
+     * Relasi BelongsTo: Transaksi ini dimiliki oleh SATU User.
      */
-    public function metodePembayaran(): BelongsTo
-    {
-        return $this->belongsTo(MetodePembayaran::class, 'id_metode_pembayaran', 'id_metode_pembayaran');
-    }
 }
