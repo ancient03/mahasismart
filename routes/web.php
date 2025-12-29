@@ -28,6 +28,7 @@ use App\Http\Controllers\ProductDetailController;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\profile\LaporanController; // <-- Import controller baru
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\MidtransController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +40,8 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/search', [SearchController::class, 'index'])->name('search');
 Route::get('/detailproduk/{barang}', [ProductDetailController::class, 'show'])->name('detailproduk.show');
 Route::get('/detailtoko/{toko}', [TokoController::class, 'showPublicProfile'])->name('detailtoko.show');
+
+Route::post('/midtrans/notification', [MidtransController::class, 'notificationHandler'])->name('midtrans.notification');
 
 
 

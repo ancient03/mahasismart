@@ -39,6 +39,11 @@ class PesananMasukController extends Controller
      */
     public function updateStatus(Request $request, Transaksi $transaksi): RedirectResponse
     {
+        // Cek apakah pesanan sudah dibayar
+        if ($transaksi->status_pembayaran !== 'paid') {
+            abort(403, 'Anda tidak dapat memproses pesanan yang belum dibayar.');
+        }
+
         $validated = $request->validate([
             'status_pengiriman' => ['required', 'string', Rule::in(['diproses', 'dikirim', 'selesai', 'dibatalkan'])],
         ]);
