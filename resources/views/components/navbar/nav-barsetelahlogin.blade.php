@@ -61,7 +61,7 @@
           <x-notification-dropdown />
 
           {{-- FAQ --}}
-          <a href="/faq" class="text-white hover:text-gray-200" aria-label="Lihat FAQ">
+          <a href="{{ route('faq.index') }}" class="text-white hover:text-gray-200" aria-label="Lihat FAQ">
             <i class="bi bi-question-circle text-2xl"></i>
           </a>
         </div>

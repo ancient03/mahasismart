@@ -26,35 +26,34 @@ class MidtransController extends Controller
 
         $transaksi = Transaksi::where('nomor_invoice', $orderId)->first();
 
-        if ($transaction == 'capture') {
-            // For credit card transaction, we need to check whether transaction is challenge by FDS or not
-            if ($type == 'credit_card') {
-                if ($fraud == 'challenge') {
-                    // TODO set payment status in merchant's database to 'challenge'
-                    $transaksi->status_pembayaran = 'challenge';
-                } else {
-                    // TODO set payment status in merchant's database to 'success'
-                    $transaksi->status_pembayaran = 'paid';
+        if ($transaksi) {
+            if ($transaction == 'capture') {
+                if ($type == 'credit_card') {
+                    if ($fraud == 'challenge') {
+                        $transaksi->status_pembayaran = 'challenge';
+                    } else {
+                        $transaksi->status_pembayaran = 'paid';
+                        $transaksi->status_pengiriman = 'diproses';
+                    }
                 }
+            } elseif ($transaction == 'settlement') {
+                $transaksi->status_pembayaran = 'paid';
+                $transaksi->status_pengiriman = 'diproses';
+            } elseif ($transaction == 'pending') {
+                $transaksi->status_pembayaran = 'pending';
+            } elseif ($transaction == 'deny') {
+                $transaksi->status_pembayaran = 'denied';
+                $transaksi->status_pengiriman = 'dibatalkan';
+            } elseif ($transaction == 'expire') {
+                $transaksi->status_pembayaran = 'expired';
+                $transaksi->status_pengiriman = 'dibatalkan';
+            } elseif ($transaction == 'cancel') {
+                $transaksi->status_pembayaran = 'failed';
+                $transaksi->status_pengiriman = 'dibatalkan';
             }
-        } elseif ($transaction == 'settlement') {
-            // TODO set payment status in merchant's database to 'success'
-            $transaksi->status_pembayaran = 'paid';
-        } elseif ($transaction == 'pending') {
-            // TODO set payment status in merchant's database to 'pending'
-            $transaksi->status_pembayaran = 'pending';
-        } elseif ($transaction == 'deny') {
-            // TODO set payment status in merchant's database to 'denied'
-            $transaksi->status_pembayaran = 'denied';
-        } elseif ($transaction == 'expire') {
-            // TODO set payment status in merchant's database to 'expire'
-            $transaksi->status_pembayaran = 'expired';
-        } elseif ($transaction == 'cancel') {
-            // TODO set payment status in merchant's database to 'failure'
-            $transaksi->status_pembayaran = 'failed';
-        }
 
-        $transaksi->save();
+            $transaksi->save();
+        }
 
         return response()->json(['status' => 'ok']);
     }

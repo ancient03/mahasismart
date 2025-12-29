@@ -19,6 +19,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'toko.banned' => \App\Http\Middleware\CheckTokoBanned::class,
             'admin'       => \App\Http\Middleware\IsAdmin::class,
         ]);
+
+        // Kecualikan rute notifikasi Midtrans dari verifikasi CSRF
+        $middleware->validateCsrfTokens(except: [
+            'midtrans/notification',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         

@@ -40,6 +40,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/search', [SearchController::class, 'index'])->name('search');
 Route::get('/detailproduk/{barang}', [ProductDetailController::class, 'show'])->name('detailproduk.show');
 Route::get('/detailtoko/{toko}', [TokoController::class, 'showPublicProfile'])->name('detailtoko.show');
+Route::get('/faq', [FaqController::class, 'index'])->name('faq.index');
 
 Route::post('/midtrans/notification', [MidtransController::class, 'notificationHandler'])->name('midtrans.notification');
 
@@ -58,7 +59,7 @@ Route::middleware('guest')->group(function () {
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
 });
 
-Route::get('/faq', fn() => view('page.faq'))->name('faq');
+
 
 // Rute Logout (Hanya untuk yang sudah login)
 Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
@@ -201,7 +202,12 @@ Route::prefix('api/rajaongkir')->group(function () {
         Route::get('/iklan/{id}/edit-iklan', [IklanController::class, 'edit'])->name('admin.edit-iklan');
         Route::put('/iklan/{id}', [IklanController::class, 'update'])->name('admin.iklan.update');
         Route::delete('/iklan/{id}', [IklanController::class, 'destroy'])->name('admin.hapus-iklan');
-    });
+        
+                // --- Manajemen FAQ (Admin) ---
+                Route::post('/faq', [FaqController::class, 'store'])->name('admin.faq.store');
+                Route::put('/faq/{id}', [FaqController::class, 'update'])->name('admin.faq.update');
+                Route::delete('/faq/{id}', [FaqController::class, 'destroy'])->name('admin.faq.destroy');
+            });
 
     // --- Rute Notifikasi ---
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');

@@ -23,6 +23,7 @@ class Transaksi extends Model
         'status_pembayaran',
         'status_pengiriman',
         'tanggal_transaksi',
+        'snap_token',
     ];
 
     /**
