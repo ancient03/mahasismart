@@ -66,8 +66,9 @@
                         <div>
                             <label for="nik_nim" class="block text-sm font-medium text-gray-700">NIK/NIM <span class="text-red-500">*</span></label>
                             <input type="text" id="nik_nim" name="nik_nim" required
-                                   placeholder="16 digit NIK atau NIM"
+                                   placeholder="16 digit NIK atau NIM (contoh: A11.2023.15194)"
                                    class="mt-1 px-4 py-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                            <p id="nikNimHelper" class="mt-1 text-xs text-gray-500">Format NIM: A11.2023.15194 | Format NIK: 16 digit</p>
                         </div>
 
                         <div class="pt-4">
@@ -82,41 +83,39 @@
                 <div id="step2" style="display: none;">
                     <div class="space-y-6">
                         
-                        <!-- Pilih Jenis Dokumen -->
+                        <!-- Pilih Jenis Dokumen (Auto-detected, Read-only) -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Dokumen <span class="text-red-500">*</span></label>
-                            <div class="flex gap-4">
-                                <label class="flex items-center">
-                                    <input type="radio" name="jenis_verifikasi" value="ktp" checked class="mr-2">
-                                    <span>KTP</span>
-                                </label>
-                                <label class="flex items-center">
-                                    <input type="radio" name="jenis_verifikasi" value="ktm" class="mr-2">
-                                    <span>KTM</span>
-                                </label>
+                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                                <input type="radio" name="jenis_verifikasi" value="ktp" id="radioKTP" class="hidden">
+                                <input type="radio" name="jenis_verifikasi" value="ktm" id="radioKTM" class="hidden">
+                                <div id="detectedDocType" class="flex items-center text-sm">
+                                    <svg class="w-5 h-5 mr-2 text-blue-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                    </svg>
+                                    <span id="docTypeText" class="text-gray-700">Terdeteksi otomatis berdasarkan NIK/NIM yang Anda masukkan</span>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Contoh Dokumen -->
+                        <!-- Contoh Gambar KTP/KTM -->
                         <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                            <h3 class="font-semibold text-sm text-blue-800 mb-2">📸 Contoh Dokumen Yang Benar:</h3>
-                            <div id="ktpExample" class="text-sm text-blue-700">
-                                <ul class="list-disc list-inside space-y-1">
-                                    <li>Foto KTP harus jelas dan tidak blur</li>
-                                    <li>Pastikan tulisan "KARTU TANDA PENDUDUK" terlihat</li>
-                                    <li>NIK dan nama lengkap harus terbaca dengan jelas</li>
-                                    <li>Pencahayaan yang baik, tidak gelap</li>
-                                    <li>Format: JPG, PNG, atau WEBP (Maks 5MB)</li>
-                                </ul>
+                            <h3 class="font-semibold text-sm text-blue-800 mb-3">📸 Contoh Dokumen</h3>
+                            
+                            <!-- Contoh KTP -->
+                            <div id="ktpExample">
+                                <div class="bg-white rounded-lg p-3 border border-blue-100">
+                                    <img src="{{ asset('img/register-toko/ktp contoh.jpg') }}" alt="Contoh KTP" class="w-full max-w-md mx-auto rounded shadow">
+                                    <p class="text-center text-xs text-gray-600 mt-2">Contoh KTP - Pastikan foto jelas dan semua teks terbaca</p>
+                                </div>
                             </div>
-                            <div id="ktmExample" style="display: none;" class="text-sm text-blue-700">
-                                <ul class="list-disc list-inside space-y-1">
-                                    <li>Foto KTM harus jelas dan tidak blur</li>
-                                    <li>Pastikan tulisan "KARTU TANDA MAHASISWA" terlihat</li>
-                                    <li>NIM dan nama lengkap harus terbaca jelas</li>
-                                    <li>Pencahayaan yang baik, tidak gelap</li>
-                                    <li>Format: JPG, PNG, atau WEBP (Maks 5MB)</li>
-                                </ul>
+
+                            <!-- Contoh KTM -->
+                            <div id="ktmExample" style="display: none;">
+                                <div class="bg-white rounded-lg p-3 border border-blue-100">
+                                    <img src="{{ asset('img/register-toko/ktm udinus orang_11zon.jpg') }}" alt="Contoh KTM" class="w-full max-w-md mx-auto rounded shadow">
+                                    <p class="text-center text-xs text-gray-600 mt-2">Contoh KTM - Pastikan foto jelas dan semua teks terbaca</p>
+                                </div>
                             </div>
                         </div>
 
@@ -141,20 +140,52 @@
                         </div>
 
                         <!-- Status Verifikasi -->
-                        <div id="verificationStatus" style="display: none;" class="rounded-lg p-4">
-                            <div id="loadingStatus" style="display: none;" class="text-center">
-                                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-blue-500 border-t-transparent"></div>
-                                <p class="mt-2 text-sm text-gray-600">Memverifikasi dokumen dengan OCR...</p>
-                                <p class="text-xs text-gray-500 mt-1">Ini mungkin memakan waktu beberapa detik</p>
+                        <div id="verificationStatus" style="display: none;" class="rounded-lg">
+                            
+                            <!-- Loading Status -->
+                            <div id="loadingStatus" style="display: none;" class="bg-blue-50 border border-blue-200 rounded-lg p-6">
+                                <div class="flex flex-col items-center">
+                                    <div class="relative">
+                                        <div class="w-16 h-16 border-4 border-blue-200 rounded-full"></div>
+                                        <div class="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin absolute top-0"></div>
+                                    </div>
+                                    <div class="mt-4 text-center">
+                                        <p class="text-base font-semibold text-blue-900">Memverifikasi Dokumen</p>
+                                        <p class="text-sm text-blue-700 mt-2">Sedang memvalidasi data Anda...</p>
+                                        <p class="text-xs text-gray-500 mt-3">Proses ini memakan waktu 5-15 detik</p>
+                                    </div>
+                                </div>
                             </div>
-                            <div id="successStatus" style="display: none;" class="bg-green-100 text-green-800 p-3 rounded">
-                                <!-- Will be populated by JavaScript -->
+
+                            <!-- Success Status -->
+                            <div id="successStatus" style="display: none;" class="bg-green-50 border-2 border-green-300 rounded-lg p-5">
+                                <div class="flex items-center">
+                                    <svg class="h-6 w-6 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    <div class="flex-1">
+                                        <h3 class="text-base font-bold text-green-800">Verifikasi Berhasil!</h3>
+                                        <p class="text-sm text-green-700 mt-1">Dokumen Anda telah terverifikasi</p>
+                                    </div>
+                                </div>
                             </div>
-                            <div id="errorStatus" style="display: none;" class="bg-red-100 text-red-800 p-3 rounded">
-                                <p class="font-semibold">✗ Verifikasi Gagal!</p>
-                                <p id="errorMessage" class="text-sm mt-1"></p>
-                                <p class="text-xs mt-2 text-gray-600">Pastikan foto jelas, terang, dan tidak blur</p>
+
+                            <!-- Error Status -->
+                            <div id="errorStatus" style="display: none;" class="bg-red-50 border-2 border-red-300 rounded-lg p-5">
+                                <div class="flex items-start">
+                                    <svg class="h-6 w-6 text-red-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    <div class="flex-1">
+                                        <h3 class="text-base font-bold text-red-800">Verifikasi Gagal</h3>
+                                        <div id="errorMessage" class="mt-2 text-sm text-red-700"></div>
+                                        <button type="button" id="retryBtn" class="mt-3 text-sm text-red-700 hover:text-red-900 font-medium underline">
+                                            Coba Upload Ulang
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
+
                         </div>
 
                         <!-- Buttons -->
@@ -177,10 +208,9 @@
         (function() {
             'use strict';
             
-            console.log('=== SCRIPT STARTED ===');
-            
             let step1Data = {};
             let isDocumentVerified = false;
+            let detectedDocType = null;
             const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}';
 
             if (document.readyState === 'loading') {
@@ -190,41 +220,62 @@
             }
 
             function init() {
-                console.log('=== INITIALIZING ===');
                 loadSavedData();
                 attachEvents();
-                console.log('=== READY ===');
             }
 
             function attachEvents() {
                 const nextBtn = document.getElementById('nextBtn');
                 const backBtn = document.getElementById('backBtn');
+                const retryBtn = document.getElementById('retryBtn');
                 const fileInput = document.getElementById('foto_verifikasi');
-                const radioButtons = document.querySelectorAll('input[name="jenis_verifikasi"]');
+                const nikNimInput = document.getElementById('nik_nim');
                 const form = document.getElementById('registerForm');
 
-                if (nextBtn) {
-                    nextBtn.onclick = goToStep2;
-                    console.log('✓ Next button attached');
+                if (nextBtn) nextBtn.onclick = goToStep2;
+                if (backBtn) backBtn.onclick = goToStep1;
+                if (retryBtn) retryBtn.onclick = resetUpload;
+                if (fileInput) fileInput.onchange = handleFileSelect;
+                if (form) form.onsubmit = handleSubmit;
+                
+                // Real-time validation untuk NIK/NIM
+                if (nikNimInput) {
+                    nikNimInput.oninput = validateNikNim;
+                    nikNimInput.onblur = validateNikNim;
                 }
+            }
 
-                if (backBtn) {
-                    backBtn.onclick = goToStep1;
-                    console.log('✓ Back button attached');
+            /**
+             * Validasi dan deteksi format NIK/NIM
+             */
+            function validateNikNim() {
+                const value = document.getElementById('nik_nim').value.trim();
+                const helper = document.getElementById('nikNimHelper');
+                
+                if (!value) {
+                    helper.className = 'mt-1 text-xs text-gray-500';
+                    helper.textContent = 'Format NIM: A11.2023.15194 | Format NIK: 16 digit';
+                    detectedDocType = null;
+                    return;
                 }
-
-                if (fileInput) {
-                    fileInput.onchange = handleFileSelect;
-                    console.log('✓ File input attached');
-                }
-
-                radioButtons.forEach(radio => {
-                    radio.onchange = updateDocumentType;
-                });
-
-                if (form) {
-                    form.onsubmit = handleSubmit;
-                    console.log('✓ Form submit attached');
+                
+                // Cek format NIM: huruf + angka dengan titik (A11.2023.15194)
+                const nimPattern = /^[A-E]\d{2}\.\d{4}\.\d+$/i;
+                // Cek format NIK: 16 digit angka
+                const nikPattern = /^\d{16}$/;
+                
+                if (nimPattern.test(value)) {
+                    detectedDocType = 'ktm';
+                    helper.className = 'mt-1 text-xs text-green-600 font-medium';
+                    helper.innerHTML = 'NIM terdeteksi. Dokumen verifikasi: Kartu Tanda Mahasiswa';
+                } else if (nikPattern.test(value)) {
+                    detectedDocType = 'ktp';
+                    helper.className = 'mt-1 text-xs text-green-600 font-medium';
+                    helper.innerHTML = 'NIK terdeteksi. Dokumen verifikasi: Kartu Tanda Penduduk';
+                } else {
+                    detectedDocType = null;
+                    helper.className = 'mt-1 text-xs text-red-600 font-medium';
+                    helper.innerHTML = 'Format tidak valid. Harap gunakan format NIM (A11.2023.15194) atau NIK (16 digit)';
                 }
             }
 
@@ -241,8 +292,6 @@
             }
 
             function goToStep2() {
-                console.log('=== GO TO STEP 2 ===');
-                
                 const noHp = document.getElementById('no_hp_toko').value.trim();
                 const email = document.getElementById('email_mahasiswa').value.trim();
                 const namaToko = document.getElementById('nama_toko').value.trim();
@@ -254,8 +303,39 @@
                     return;
                 }
 
-                step1Data = { no_hp_toko: noHp, email_mahasiswa: email, nama_toko: namaToko, nama_lengkap: namaLengkap, nik_nim: nikNim };
+                // Validasi format NIK/NIM
+                if (!detectedDocType) {
+                    alert('Format NIK/NIM tidak valid!\n\nGunakan format:\n- NIM: A11.2023.15194\n- NIK: 16 digit angka');
+                    return;
+                }
+
+                // Validasi email untuk KTM
+                if (detectedDocType === 'ktm' && !email.endsWith('@mhs.dinus.ac.id')) {
+                    alert('Untuk verifikasi KTM, email harus berformat @mhs.dinus.ac.id');
+                    return;
+                }
+
+                step1Data = { 
+                    no_hp_toko: noHp, 
+                    email_mahasiswa: email, 
+                    nama_toko: namaToko, 
+                    nama_lengkap: namaLengkap, 
+                    nik_nim: nikNim 
+                };
                 localStorage.setItem('registerTokoStep1', JSON.stringify(step1Data));
+
+                // Set jenis dokumen otomatis
+                if (detectedDocType === 'ktm') {
+                    document.getElementById('radioKTM').checked = true;
+                    document.getElementById('docTypeText').innerHTML = 'Jenis Dokumen Verifikasi: <strong>Kartu Tanda Mahasiswa</strong>';
+                    document.getElementById('ktpExample').style.display = 'none';
+                    document.getElementById('ktmExample').style.display = 'block';
+                } else {
+                    document.getElementById('radioKTP').checked = true;
+                    document.getElementById('docTypeText').innerHTML = 'Jenis Dokumen Verifikasi: <strong>Kartu Tanda Penduduk</strong>';
+                    document.getElementById('ktpExample').style.display = 'block';
+                    document.getElementById('ktmExample').style.display = 'none';
+                }
 
                 document.getElementById('step1').style.display = 'none';
                 document.getElementById('step2').style.display = 'block';
@@ -283,9 +363,7 @@
             }
 
             function handleFileSelect(event) {
-                console.log('File selected');
                 const file = event.target.files[0];
-                
                 if (!file) return;
 
                 const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
@@ -306,15 +384,12 @@
                     document.getElementById('previewImg').src = e.target.result;
                     document.getElementById('uploadPlaceholder').style.display = 'none';
                     document.getElementById('imagePreview').style.display = 'block';
-                    
                     verifyDocument(file);
                 };
                 reader.readAsDataURL(file);
             }
 
             async function verifyDocument(file) {
-                console.log('Starting OCR verification...');
-                
                 document.getElementById('verificationStatus').style.display = 'block';
                 document.getElementById('loadingStatus').style.display = 'block';
                 document.getElementById('successStatus').style.display = 'none';
@@ -325,6 +400,7 @@
                     formData.append('image', file);
                     formData.append('nik_nim', step1Data.nik_nim);
                     formData.append('nama_lengkap', step1Data.nama_lengkap);
+                    formData.append('email_mahasiswa', step1Data.email_mahasiswa);
                     formData.append('jenis_dokumen', document.querySelector('input[name="jenis_verifikasi"]:checked').value);
 
                     const response = await fetch('{{ route("register.toko.validate") }}', {
@@ -337,38 +413,10 @@
                     });
 
                     const result = await response.json();
-                    console.log('OCR Result:', result);
-
                     document.getElementById('loadingStatus').style.display = 'none';
 
                     if (result.success) {
-                        // ✅ SIMPAN HASIL OCR KE LOCALSTORAGE
-                        const ocrData = {
-                            extracted_text: result.extracted_text,
-                            detected_type: result.detected_type,
-                            match_details: result.match_details,
-                            verified_at: new Date().toISOString()
-                        };
-                        localStorage.setItem('registerTokoOCR', JSON.stringify(ocrData));
-                        console.log('✓ OCR data saved to localStorage:', ocrData);
-                        
-                        // Update success message dengan info detected type
-                        const successMsg = document.getElementById('successStatus');
-                        successMsg.style.display = 'block';
-                        
-                        let detectedTypeText = '';
-                        if (result.detected_type === 'ktm') {
-                            detectedTypeText = '<p class="text-xs mt-2">✓ Terdeteksi: Kartu Tanda Mahasiswa (KTM)</p>';
-                        } else if (result.detected_type === 'ktp') {
-                            detectedTypeText = '<p class="text-xs mt-2">✓ Terdeteksi: Kartu Tanda Penduduk (KTP)</p>';
-                        }
-                        
-                        successMsg.innerHTML = `
-                            <p class="font-semibold">✓ Verifikasi Berhasil!</p>
-                            <p class="text-sm mt-1">${result.message}</p>
-                            ${detectedTypeText}
-                        `;
-                        
+                        document.getElementById('successStatus').style.display = 'block';
                         isDocumentVerified = true;
                         
                         const btn = document.getElementById('submitBtn');
@@ -377,60 +425,51 @@
                         
                         localStorage.setItem('registerTokoVerified', 'true');
                     } else {
-                        document.getElementById('errorStatus').style.display = 'block';
+                        // Buat pesan error yang simple
+                        let errorMsg = 'Data tidak sesuai: ';
+                        let errors = [];
                         
-                        let errorDetails = result.message;
                         if (result.match_details) {
-                            errorDetails += '<div class="text-xs mt-2 space-y-1">';
-                            if (result.match_details.universitas !== undefined) {
-                                errorDetails += `<div>Universitas: ${result.match_details.universitas ? '✓' : '✗'}</div>`;
-                            }
-                            if (result.match_details.nik !== undefined) {
-                                errorDetails += `<div>NIK: ${result.match_details.nik ? '✓' : '✗'}</div>`;
-                            }
-                            if (result.match_details.nim !== undefined) {
-                                errorDetails += `<div>NIM: ${result.match_details.nim ? '✓' : '✗'}</div>`;
-                            }
-                            if (result.match_details.matched_words) {
-                                errorDetails += `<div>Nama cocok: ${result.match_details.matched_words}</div>`;
-                            }
-                            errorDetails += '</div>';
+                            if (result.match_details.universitas === false) errors.push('Universitas tidak ditemukan');
+                            if (result.match_details.nik === false) errors.push('NIK tidak sesuai');
+                            if (result.match_details.nim === false) errors.push('NIM tidak sesuai');
+                            if (result.match_details.nama === false) errors.push('Nama tidak sesuai');
+                            if (result.match_details.email_nim_match === false) errors.push('Email tidak sesuai dengan NIM');
                         }
                         
-                        document.getElementById('errorMessage').innerHTML = errorDetails;
-                        
-                        if (result.debug) {
-                            console.log('Extracted text:', result.debug);
+                        if (errors.length > 0) {
+                            errorMsg += errors.join(', ');
+                        } else {
+                            errorMsg = result.user_message || result.message || 'Verifikasi gagal';
                         }
                         
-                        // Simpan hasil gagal juga untuk debugging
-                        const ocrData = {
-                            extracted_text: result.extracted_text || result.debug || '',
-                            detected_type: result.detected_type || 'unknown',
-                            match_details: result.match_details,
-                            verified_at: new Date().toISOString(),
-                            success: false
-                        };
-                        localStorage.setItem('registerTokoOCR', JSON.stringify(ocrData));
-                        console.log('✗ OCR failed, data saved for debugging:', ocrData);
-                        
-                        resetUpload();
+                        document.getElementById('errorMessage').innerHTML = `<p>${errorMsg}</p>`;
+                        document.getElementById('errorStatus').style.display = 'block';
+                        resetUploadButton();
                     }
 
                 } catch (error) {
                     console.error('OCR Error:', error);
                     document.getElementById('loadingStatus').style.display = 'none';
+                    document.getElementById('errorMessage').innerHTML = '<p>Tidak dapat menghubungi server. Coba lagi.</p>';
                     document.getElementById('errorStatus').style.display = 'block';
-                    document.getElementById('errorMessage').textContent = 'Gagal menghubungi server. Coba lagi.';
-                    resetUpload();
+                    resetUploadButton();
                 }
+            }
+
+            function resetUploadButton() {
+                const btn = document.getElementById('submitBtn');
+                btn.disabled = true;
+                btn.className = 'bg-gray-400 text-white py-2 px-6 rounded-lg font-semibold cursor-not-allowed';
+                isDocumentVerified = false;
             }
 
             function resetUpload() {
                 document.getElementById('foto_verifikasi').value = '';
                 document.getElementById('uploadPlaceholder').style.display = 'block';
                 document.getElementById('imagePreview').style.display = 'none';
-                isDocumentVerified = false;
+                document.getElementById('verificationStatus').style.display = 'none';
+                resetUploadButton();
             }
 
             function handleSubmit(e) {
@@ -439,54 +478,11 @@
                     alert('Harap upload dan verifikasi dokumen KTP/KTM terlebih dahulu!');
                     return false;
                 }
-
-                // Log data yang akan dikirim untuk debugging
-                const ocrData = JSON.parse(localStorage.getItem('registerTokoOCR') || '{}');
-                console.log('=== SUBMIT FORM ===');
-                console.log('Step 1 Data:', step1Data);
-                console.log('OCR Data:', ocrData);
-                console.log('Jenis Verifikasi:', document.querySelector('input[name="jenis_verifikasi"]:checked').value);
                 
-                // Clear localStorage setelah submit
                 localStorage.removeItem('registerTokoStep1');
                 localStorage.removeItem('registerTokoVerified');
-                localStorage.removeItem('registerTokoOCR');
-                
                 return true;
             }
-
-            // Fungsi untuk melihat data localStorage (debugging)
-            window.debugRegisterToko = function() {
-                console.log('=== DEBUG REGISTER TOKO ===');
-                console.log('Step 1 Data:', JSON.parse(localStorage.getItem('registerTokoStep1') || '{}'));
-                console.log('OCR Data:', JSON.parse(localStorage.getItem('registerTokoOCR') || '{}'));
-                console.log('Verified:', localStorage.getItem('registerTokoVerified'));
-            };
-            
-            // Fungsi untuk test detection manual
-            window.testDetection = function(text) {
-                const normalized = text.toLowerCase().replace(/[\n\r]/g, ' ').replace(/\s+/g, ' ');
-                console.log('=== TEST DETECTION ===');
-                console.log('Original text:', text.substring(0, 100));
-                console.log('Normalized:', normalized.substring(0, 100));
-                console.log('Has "kartu tanda mahasiswa"?', normalized.includes('kartu tanda mahasiswa'));
-                console.log('Has "kartu tanda penduduk"?', normalized.includes('kartu tanda penduduk'));
-                
-                if (normalized.includes('kartu tanda mahasiswa')) {
-                    console.log('✓ RESULT: KTM');
-                    return 'ktm';
-                } else if (normalized.includes('kartu tanda penduduk')) {
-                    console.log('✓ RESULT: KTP');
-                    return 'ktp';
-                } else {
-                    console.log('⚠️ RESULT: UNKNOWN');
-                    return 'unknown';
-                }
-            };
-            
-            console.log('💡 Debug commands:');
-            console.log('  - debugRegisterToko() : Lihat data localStorage');
-            console.log('  - testDetection(text) : Test detection logic');
         })();
     </script>
 
