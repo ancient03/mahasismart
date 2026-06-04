@@ -41,3 +41,7 @@
 ` php artisan make:component folder/namafile`
 
 # TESTING BACKUP
+
+# Selesai
+
+
