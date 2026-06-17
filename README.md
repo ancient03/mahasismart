@@ -2,6 +2,14 @@
 
 MahasiSmart is a modern e-commerce and marketplace platform tailored for university students. It facilitates buying, selling, and managing products with seamless payment gateway integration.
 
+## 👥 Project Team
+
+*   [@toffann](https://github.com/toffann) ( Project Manager)
+*   [@RestuArdiannsyah](https://github.com/RestuArdiannsyah) (Front End Developer)
+*   [@ancient03](https://github.com/ancient03) (Backend Developer)
+*   [@NandikaPrapanca](https://github.com/NandikaPrapanca) (UI/UX Designer)
+*   [@fikrialif1](https://github.com/fikrialif1) (UI/UX Designer)
+
 ## 🌟 Key Features
 
 *   **Student-Centric:** Registration and authentication tied to student emails.
@@ -122,38 +130,13 @@ npm run dev
 
 This project uses Midtrans for payments. Ensure you have the following in your `.env` file based on your Midtrans Dashboard (Sandbox/Production):
 
-<<<<<<< HEAD
 ```env
 MIDTRANS_MERCHANT_ID=your_merchant_id
 MIDTRANS_CLIENT_KEY=your_client_key
 MIDTRANS_SERVER_KEY=your_server_key
 MIDTRANS_IS_PRODUCTION=false
 ```
-Webhook Notification URL (set in Midtrans Dashboard): `https://your-domain.com/midtrans/notification`
-=======
-`php artisan migrate`
-
-### jika ada edit di database update menggunakan
-
-`php artisan migrate:fresh`
-
-### clear config
-
-`php artisan config:clear`
-
-### Untuk membuat component untuk view
-
-`php artisan make:component`
-
-`Jika Membuat di dalam folder custom`
-` php artisan make:component folder/namafile`
-
-# TESTING BACKUP
-
-### Status
-` Pengujian backup berhasil dilakukan`
-
-# SELESAI 
 
 
->>>>>>> 9292a947d0fea6b5b5a2331f9a44c0abc0eb4bd9
+
+

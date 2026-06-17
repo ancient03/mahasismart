@@ -21,27 +21,27 @@ class KategoriSeeder extends Seeder
             [
                 'id_kategori' => 1,
                 'nama_kategori' => 'Makanan & Minuman',
-                'gambar' => 'img/fotokategori/makanan.png' // Ganti dengan path gambar Anda
+                'gambar' => 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=400&auto=format&fit=crop'
             ],
             [
                 'id_kategori' => 2,
                 'nama_kategori' => 'Kebutuhan Harian',
-                'gambar' => 'img/fotokategori/kos.png'
+                'gambar' => 'https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=400&auto=format&fit=crop'
             ],
             [
                 'id_kategori' => 3,
                 'nama_kategori' => 'Elektronik',
-                'gambar' => 'img/fotokategori/elektronik.png'
+                'gambar' => 'https://images.unsplash.com/photo-1498049794561-7780e7231661?q=80&w=400&auto=format&fit=crop'
             ],
             [
                 'id_kategori' => 4,
                 'nama_kategori' => 'Fashion',
-                'gambar' => 'img/fotokategori/fashion.png'
+                'gambar' => 'https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=400&auto=format&fit=crop'
             ],
             [
                 'id_kategori' => 5,
                 'nama_kategori' => 'Jasa & Layanan',
-                'gambar' => 'img/fotokategori/jasa.png'
+                'gambar' => 'https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=400&auto=format&fit=crop'
             ],
 
 
