@@ -122,6 +122,7 @@ npm run dev
 
 This project uses Midtrans for payments. Ensure you have the following in your `.env` file based on your Midtrans Dashboard (Sandbox/Production):
 
+<<<<<<< HEAD
 ```env
 MIDTRANS_MERCHANT_ID=your_merchant_id
 MIDTRANS_CLIENT_KEY=your_client_key
@@ -129,3 +130,30 @@ MIDTRANS_SERVER_KEY=your_server_key
 MIDTRANS_IS_PRODUCTION=false
 ```
 Webhook Notification URL (set in Midtrans Dashboard): `https://your-domain.com/midtrans/notification`
+=======
+`php artisan migrate`
+
+### jika ada edit di database update menggunakan
+
+`php artisan migrate:fresh`
+
+### clear config
+
+`php artisan config:clear`
+
+### Untuk membuat component untuk view
+
+`php artisan make:component`
+
+`Jika Membuat di dalam folder custom`
+` php artisan make:component folder/namafile`
+
+# TESTING BACKUP
+
+### Status
+` Pengujian backup berhasil dilakukan`
+
+# SELESAI 
+
+
+>>>>>>> 9292a947d0fea6b5b5a2331f9a44c0abc0eb4bd9
